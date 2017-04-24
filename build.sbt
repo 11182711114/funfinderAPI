@@ -18,6 +18,8 @@ libraryDependencies ++= Seq(
   javaWs
 )
 
+scalacOptions += "-target:jvm-1.8"
+
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint")
 
 initialize := {
