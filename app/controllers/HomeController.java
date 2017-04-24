@@ -21,7 +21,7 @@ public class HomeController extends Controller {
      */
     public Result index() {
     	ObjectNode result = Json.newObject();
-    	result.put("content", "Test Tessdst Test");
+    	result.put("content", "Test Test Test");
         return ok(result);
     }
 
