@@ -2,6 +2,8 @@ import NativePackagerKeys._
 
 herokuAppName in Compile := "morning-meadow-19114"
 
+herokuJdkVersion in Compile := "1.8"
+
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.27"
 
 name := """funfinder"""
