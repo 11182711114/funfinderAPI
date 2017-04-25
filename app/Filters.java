@@ -5,7 +5,7 @@ import play.http.HttpFilters;
 import play.mvc.*;
 
 import filters.ExampleFilter;
-
+//test
 /**
  * This class configures filters that run on every request. This
  * class is queried by Play to get a list of filters.
