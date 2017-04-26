@@ -3,7 +3,7 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
 
-import org.eclipse.jetty.util.log.Log;
+//import org.eclipse.jetty.util.log.Log;
 
 import org.json.*;
 
@@ -46,10 +46,10 @@ public class PlaceFinder {
 			}
 
 		}catch(MalformedURLException e){
-			Log.e(LOG_TAG, "URL ERROR", e);
+			System.out.println("URL ERROR");
 			return resultsList;
 		}catch(IOException e){
-			Log.e(LOG_TAG, "CONNECTION ERROR", e);
+			System.out.println("CONNECTION ERROR"+ e);
 			return resultsList;
 		}finally{
 			if(conn!=null){
@@ -72,7 +72,7 @@ public class PlaceFinder {
 				resultsList.add(place);
 			}
 		}catch(JSONException e){
-			Log.e(LOG_TAG, "ERROR PROCESSING JSON", e);
+			System.out.println("JSON ERROR"+ e);
 		}
 		return resultsList;
 	}
@@ -98,10 +98,10 @@ public class PlaceFinder {
 				jsonResults.append(buff, 0, read);
 			}
 		}catch(MalformedURLException e){
-			Log.e(LOG_TAG, "URL ERROR", e);
+			System.out.println("URL ERROR"+ e);
 			return null;
 		}catch(IOException e){
-			Log.e(LOG_TAG, "CONNECTION ERROR", e);
+			System.out.println("CONNECTION ERROR"+ e);
 			return null;
 		}finally{
 			if(conn!=null){
@@ -118,7 +118,7 @@ public class PlaceFinder {
 			place.name = jsonObj.getString("name");
 
 		}catch(JSONException e){
-			Log.e(LOG_TAG, "JSON ERROR", e);
+			System.out.println("JSON ERROR"+ e);
 		}
 		return place;
 	}
