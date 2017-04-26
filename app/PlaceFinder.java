@@ -14,7 +14,7 @@ public class PlaceFinder {
 	private static final String TYPE_DETAILS = "/details";
 	private static final String TYPE_SEARCH = "/search";
 
-	private static final String KEY = "AIzaSyCEJku8qbNsDR7R1yGx5KGDr4g8ROw5LtU";
+	private static final String KEY = "";
 
 	private static final String JSON_OUT = "/json";
 
@@ -84,7 +84,7 @@ public class PlaceFinder {
 			StringBuilder strb = new StringBuilder(PLACES_API_SOURCE);
 			strb.append(TYPE_DETAILS);
 			strb.append(JSON_OUT);
-//			strb.append("?sensor=false");
+			//			strb.append("?sensor=false");
 			strb.append("&key="+KEY);
 			strb.append("&reference="+URLEncoder.encode(ref, "utf-8"));
 
