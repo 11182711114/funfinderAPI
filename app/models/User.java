@@ -11,7 +11,7 @@ public class User extends Model{
 	
 	@Id
 	@Column(name = "idUser")
-	public Long id;
+	public int id;
 	
 	@Constraints.Required
 	@Column(name = "firstName")
@@ -32,5 +32,5 @@ public class User extends Model{
 		this.lastName = lName;
 	}
 	
-	public static Finder<Long, User> find = new Finder<Long,User>(User.class);
+	public static Finder<int, User> find = new Finder<int,User>(User.class);
 }
