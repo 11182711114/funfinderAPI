@@ -9,8 +9,7 @@ import play.mvc.*;
 public class UserController extends Controller {
 	
 	public Result getUser() {
-		int id = 2;
-		User user = User.find.byId(id);
+		User user = User.find.byId(2L);
 		JsonNode result = Json.toJson(user);
 		return ok(result);
 	}
