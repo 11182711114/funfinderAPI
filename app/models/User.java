@@ -1,7 +1,9 @@
 package models;
 
-import javax.persistence.*;
 
+import java.sql.Date;
+
+import javax.persistence.*;
 import com.avaje.ebean.Model;
 import play.data.validation.*;
 
@@ -10,7 +12,7 @@ import play.data.validation.*;
 public class User extends Model{
 	
 	@Id
-	@Column(name = "idUser")
+	@Column(name = "id")
 	public int id;
 	
 	@Constraints.Required
@@ -21,11 +23,14 @@ public class User extends Model{
 	@Column(name = "lastName")
 	public String lastName;
 
-	@Column(name = "age")
-	public int age;
+	@Column(name = "birthdate")
+	public Date birthDate;
 
 	@Column(name = "email")
 	public String email;
+	
+	@Column(name = "password")
+	private String password;
 	
 	public User(String fName, String lName) {
 		this.firstName = fName;
