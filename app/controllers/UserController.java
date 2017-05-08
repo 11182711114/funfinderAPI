@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.List;
 
+import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.User;
 import play.libs.Json;
@@ -26,5 +27,12 @@ public class UserController extends Controller {
 		return ok(result);
 	}
 	
+	public Result createUser(String firstName, String lastName, String birthDate, String email, String password) {
+		User newUser = new User(firstName, lastName, birthDate, email, password);
+		
+		Ebean.save(newUser);
+	
+		return getUserById(Integer.toString(newUser.id));
+	}
 	
 }

@@ -2,6 +2,8 @@ package models;
 
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -11,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
+
+import jdk.nashorn.internal.parser.DateParser;
 import play.data.validation.*;
 
 @Entity
@@ -30,11 +34,12 @@ public class User extends Model{
 	public String lastName;
 
 	@Column(name = "birthdate")
-	public Date birthDate;
+	public LocalDate birthDate;
 
 	@Column(name = "email")
 	public String email;
 	
+	//FIXME Needs to be secured
 	@Column(name = "password")
 	private String password;
 	
@@ -44,6 +49,15 @@ public class User extends Model{
 	public User(String fName, String lName) {
 		this.firstName = fName;
 		this.lastName = lName;
+	}
+	
+	public User(String fName, String lName, String birthdate, String email, String password) {
+		this.firstName = fName;
+		this.lastName = lName;
+		this.birthDate = LocalDate.parse(birthdate);
+		this.email = email;
+		this.password = password;
+		
 	}
 	
 	public static Finder<Long, User> find = new Finder<Long,User>(User.class);

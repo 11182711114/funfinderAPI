@@ -19,3 +19,9 @@ GET		/user/all					controllers.UserController.getAllUsers
 
 #	Get specific user by ID - url ~ "localhost:9000/user?uid=4" where 4 is userId
 GET		/user						controllers.UserController.getUserById(uid)
+
+#	Add user >>ONLY GET FOR TESTING PURPOSES<<
+#	url ~ "http://localhost:9000/user/create?firstName=testCreate&lastName=createTest&birthDate=2012-11-12&email=createTest@test.com&password=123"
+GET		/user/create				controllers.UserController.createUser(firstName, lastName, birthDate, email, password)
+
+# ~~ /USER ~~
