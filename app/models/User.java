@@ -1,12 +1,9 @@
 package models;
 
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -14,7 +11,6 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
 
-import jdk.nashorn.internal.parser.DateParser;
 import play.data.validation.*;
 
 @Entity
