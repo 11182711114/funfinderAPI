@@ -9,8 +9,13 @@ import play.mvc.*;
 
 public class UserController extends Controller {
 	
-	public Result getUserByID(Long id) {
-		User user = User.find.byId(id);
+	public Result getUserById(String id) {
+		User user = User.find.byId(Long.parseLong(id));
+		
+		//FIXME Return something better?
+		if(user == null)
+			return notFound();
+		
 		JsonNode result = Json.toJson(user);
 		return ok(result);
 	}
