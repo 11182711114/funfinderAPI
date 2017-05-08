@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.avaje.ebean.Model.Finder;
+
 @Entity
 public class Restaurant {
 	
@@ -16,4 +18,6 @@ public class Restaurant {
 	
 	@OneToOne
 	private Location location;
+	
+	public static Finder<Long, Restaurant> find = new Finder<Long,Restaurant>(Restaurant.class);
 }
