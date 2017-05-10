@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -53,10 +54,10 @@ public class User extends Model{
 	@JoinColumn(name = "loc_id")
 	private Location loc;
 	
-	@OneToMany(mappedBy = "from")
+	@OneToMany(mappedBy = "from", fetch = FetchType.LAZY)
 	private List<Message> messagesSent;
 	
-	@OneToMany(mappedBy = "to")
+	@OneToMany(mappedBy = "to", fetch = FetchType.LAZY)
 	private List<Message> messagesReceived;
 	
 	public User(String fname, String lname) {
