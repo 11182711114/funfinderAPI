@@ -2,11 +2,13 @@ package models;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -32,7 +34,7 @@ public class User extends Model{
 	public String lastname;
 
 	@Column(name = "birthdate")
-	public LocalDate birthDate;
+	public LocalDate birthdate;
 
 	@Column(name = "email")
 	public String email;
@@ -41,7 +43,14 @@ public class User extends Model{
 	@Column(name = "password")
 	private String password;
 	
+	@Column(name = "created")
+	private LocalDateTime created;
+	
+	@Column(name = "updated")
+	private LocalDateTime updated;
+	
 	@OneToOne
+	@JoinColumn(name = "loc_id")
 	private Location loc;
 	
 	@OneToMany(mappedBy = "from")
@@ -58,7 +67,7 @@ public class User extends Model{
 	public User(String fname, String lname, String birthdate, String email, String password) {
 		this.firstname = fname;
 		this.lastname = lname;
-		this.birthDate = LocalDate.parse(birthdate);
+		this.birthdate = LocalDate.parse(birthdate);
 		this.email = email;
 		this.password = password;
 		
