@@ -74,7 +74,7 @@ public class ResultParser{
 	 * returns up to 20 matching places
 	 * 
 	 */
-	public ArrayList<Restaurant> searchNearby(String keyword, double lat, double lang, int radius){
+	public ArrayList<Restaurant> searchNearby(double lat, double lang, int radius){
 		typeSearch = "/nearbysearch";
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
@@ -85,7 +85,7 @@ public class ResultParser{
 			request.append(JSON_OUT);
 			request.append("?location=" + String.valueOf(lat)+",%20"+String.valueOf(lang));
 			request.append("&radius=" + String.valueOf(radius));
-			request.append("&keyword=" + URLEncoder.encode(keyword, "utf-8"));
+			request.append("&keyword=restaurants");
 			request.append("&key=" + KEY);
 
 			System.out.println("Connecting.."); //TODO remove: TEST
