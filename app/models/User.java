@@ -2,10 +2,12 @@ package models;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,12 +24,12 @@ public class User extends Model{
 	public int id;
 	
 	@Constraints.Required
-	@Column(name = "firstName")
-	public String firstName;
+	@Column(name = "firstname")
+	public String firstname;
 
 	@Constraints.Required
-	@Column(name = "lastName")
-	public String lastName;
+	@Column(name = "lastname")
+	public String lastname;
 
 	@Column(name = "birthdate")
 	public LocalDate birthDate;
@@ -42,14 +44,20 @@ public class User extends Model{
 	@OneToOne
 	private Location loc;
 	
-	public User(String fName, String lName) {
-		this.firstName = fName;
-		this.lastName = lName;
+	@OneToMany(mappedBy = "from")
+	private List<Message> messagesSent;
+	
+	@OneToMany(mappedBy = "to")
+	private List<Message> messagesReceived;
+	
+	public User(String fname, String lname) {
+		this.firstname = fname;
+		this.lastname = lname;
 	}
 	
-	public User(String fName, String lName, String birthdate, String email, String password) {
-		this.firstName = fName;
-		this.lastName = lName;
+	public User(String fname, String lname, String birthdate, String email, String password) {
+		this.firstname = fname;
+		this.lastname = lname;
 		this.birthDate = LocalDate.parse(birthdate);
 		this.email = email;
 		this.password = password;
