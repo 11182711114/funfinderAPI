@@ -45,6 +45,7 @@ public class UserController extends Controller {
 	
 	public Result authenticateUser() {
 		JsonNode data = request().body().asJson();
+		System.out.println(data);
 		String email = data.get("email").textValue();
 		String password = data.get("password").textValue();
 		
