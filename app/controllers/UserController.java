@@ -32,6 +32,17 @@ public class UserController extends Controller {
 		return ok(result);
 	}
 	
+	public Result getUserByEmail(String email) {
+		User user = User.find.where().eq(user.email, email).findUnique();
+		
+		if (user == null)
+			return notFound();
+		
+		JsonNode result = Json.toJson(user);
+		return ok(result);
+		
+	}
+	
 	/** Returns all current users in Json
 	 * @return All current users in Json
 	 */
