@@ -91,7 +91,7 @@ public class UserController extends Controller {
 //		if (Integer.toString(newUser.id) == null)
 //			return badRequest("User with that email already found");
 //		return created(Json.toJson(newUser));
-		return getUserById(Integer.toString(newUser.id));
+		return ok("user created");
 	}
 	
 }
