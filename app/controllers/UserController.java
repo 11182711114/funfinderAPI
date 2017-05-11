@@ -43,6 +43,19 @@ public class UserController extends Controller {
 		
 	}
 	
+	public Result authenticateUser() {
+		JsonNode data = request().body().asJson();
+		String email = data.get("email").textValue();
+		String password = data.get("password").textValue();
+		
+		User user = Ebean.find(User.class).where().eq("email", email).and().eq("password", password).findUnique();
+		
+		if (user == null)
+			return notFound();
+		
+		return ok("K");
+	}
+	
 	/** Returns all current users in Json
 	 * @return All current users in Json
 	 */
