@@ -66,7 +66,7 @@ public class UserController extends Controller {
 		return ok(result);
 	}
 	
-	/** Creates a new user with a generated Id from a HTML form sent by POST
+	/** Creates a new user with a generated Id from json sent by POST
 	 * @param firstname
 	 * @param lastname
 	 * @param birthdate - String "yyyy-MM-dd" e.g. "2012-12-24"
@@ -75,12 +75,12 @@ public class UserController extends Controller {
 	 * @return the user as it would be returened by {@link #getUserById(String)}
 	 */
 	public Result createUser() {
-		DynamicForm df = formFactory.form().bindFromRequest();
-		String firstname = df.get("firstname");
-		String lastname = df.get("lastname");
-		String birthdate = df.get("birthdate");
-		String email = df.get("email");
-		String password = df.get("password");
+		JsonNode jn = request().body().asJson();
+		String firstname = jn.get("firstname").asText();
+		String lastname = jn.get("lastname").asText();
+		String birthdate = jn.get("birthdate").asText();
+		String email = jn.get("email").asText();
+		String password = jn.get("password").asText();
 		User newUser = new User(firstname, lastname, birthdate, email, password);
 		
 		try {
