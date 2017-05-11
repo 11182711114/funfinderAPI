@@ -33,7 +33,7 @@ public class UserController extends Controller {
 	}
 	
 	public Result getUserByEmail(String email) {
-		User user = User.find.where().eq(user.email, email).findUnique();
+		User user = Ebean.find(User.class).where().eq("email", email).findUnique();
 		
 		if (user == null)
 			return notFound();

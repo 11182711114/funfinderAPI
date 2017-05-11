@@ -21,7 +21,7 @@ GET		/user/all				controllers.UserController.getAllUsers
 GET		/user					controllers.UserController.getUserById(uid)
 
 #	Get specific user by email
-GET		/user					controllers.UserController.getUserByEmail(email)
+GET		/user/email					controllers.UserController.getUserByEmail(email)
 
 #	Add user
 POST	/user/create			controllers.UserController.createUser()
