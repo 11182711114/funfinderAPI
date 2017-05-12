@@ -1,0 +1,227 @@
+package parser;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import org.json.*;
+
+
+/* 
+ * The ResultParser class connects the users query to the Google Places API (web-service)
+ * It allows for a search to be made on either the location of the user 
+ * (coordinates) or a selected location (written in text).
+ * 
+ * It parses the results from google places api and returns a arrayList of created restaurants
+ */
+
+public class ResultParser{
+	
+	private static final String PLACES_API_SOURCE = "https://maps.googleapis.com/maps/api/place";
+	private static final String JSON_OUT = "/json";
+	private static final String NEXT_PAGE_TOKEN = "next_page_token";
+	private static String typeSearch = null;
+	private static final String KEY = "AIzaSyCEJku8qbNsDR7R1yGx5KGDr4g8ROw5LtU"; //TODO TA BORT KEY INNAN PUSH?
+
+
+	/*
+	 * Allows restaurants to be searched from user given location,
+	 * takes the location name as a parameter
+	 * User declares location and method retrieves answer from google places api
+	 *   (should) return up to 20 results
+	 */
+	public ArrayList<Restaurant> searchText(String location){
+		typeSearch = "/textsearch";
+		HttpURLConnection conn = null;
+		StringBuilder jsonResults = new StringBuilder();
+
+		try{
+			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
+			request.append(typeSearch);
+			request.append(JSON_OUT);
+			request.append("?query=restaurants+in+");
+			request.append(location);
+			request.append("&key=" + KEY);
+
+			System.out.println("Connecting.."); //TODO remove: TEST
+
+			URL url = new URL(request.toString());
+			conn = (HttpURLConnection) url.openConnection();
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				jsonResults.append(line);
+			}
+		}catch(MalformedURLException e){
+			System.out.println("URL ERROR [search] ");
+			//			return null;
+		}catch(IOException e){
+			System.out.println("CONNECTION ERROR [search] "+ e);
+			//			return resultsList;
+		}finally{
+			if(conn!=null)
+				conn.disconnect();
+		}
+		parseResults(jsonResults);
+		ArrayList<Restaurant> results = parseResults(jsonResults);
+		return results;
+	}
+
+	/*
+	 * Allows for restaurants to be retrieved by providing users coordinates
+	 * takes latitude, longitude and radius for the search as method parameter
+	 * 
+	 * returns up to 20 matching places
+	 * 
+	 */
+	public ArrayList<Restaurant> searchNearby(double lat, double lang, int radius){
+		typeSearch = "/nearbysearch";
+		HttpURLConnection conn = null;
+		StringBuilder jsonResults = new StringBuilder();
+
+		try{
+			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
+			request.append(typeSearch);
+			request.append(JSON_OUT);
+			request.append("?location=" + String.valueOf(lat)+",%20"+String.valueOf(lang));
+			request.append("&radius=" + String.valueOf(radius));
+			request.append("&keyword=restaurants");
+			request.append("&key=" + KEY);
+
+			System.out.println("Connecting.."); //TODO remove: TEST
+
+			URL url = new URL(request.toString());
+			conn = (HttpURLConnection) url.openConnection();
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				jsonResults.append(line);
+			}
+		}catch(MalformedURLException e){
+			System.out.println("URL ERROR [search] ");
+		}catch(IOException e){
+			System.out.println("CONNECTION ERROR [search] "+ e);
+		}finally{
+			if(conn!=null)
+				conn.disconnect();
+		}
+		ArrayList<Restaurant> results = parseResults(jsonResults);
+		return results;
+	}
+
+	/*
+	 * takes the next page token from searchNearby or searchLocation,
+	 * if these searches have +20 object the rest is delivered on a separate json call
+	 * 
+	 * takes the nextPageTokes as parameter, returns results for parsing
+	 */
+	//	private static void searchNextPage(String nextToken){
+	private static StringBuilder searchNextPage(String nextToken){
+		HttpURLConnection conn = null;
+		StringBuilder jsonResults = new StringBuilder();
+		try{
+			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
+			request.append(typeSearch);
+			request.append(JSON_OUT);
+			request.append("?pagetoken=");
+			request.append(nextToken);
+			request.append("&key=");
+			request.append(KEY);
+
+			URL url = new URL(request.toString());
+			conn = (HttpURLConnection) url.openConnection();
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				jsonResults.append(line);
+			}
+		}catch(MalformedURLException e){
+			System.out.println("URL ERROR [search] ");
+		}catch(IOException e){
+			System.out.println("CONNECTION ERROR [search] "+ e);
+		}finally{
+			if(conn!=null)
+				conn.disconnect();
+		}
+		return jsonResults;
+	}
+
+	/*
+	 * takes the StringBuilder returned from Google places API request (fetched by 
+	 * nearbySearch or textSearch) and parses the results to instances of Restaurant class.
+	 * 
+	 * returns a arraylist of Restaurants
+	 */
+	private static ArrayList<Restaurant> parseResults(StringBuilder jsonResults){
+		ArrayList<Restaurant> resultsList = null;
+		try{ 
+			JSONObject jsonObj = new JSONObject(jsonResults.toString());
+
+			//CREATES results from array with tag "results" 
+			JSONArray prediJsonArr = jsonObj.getJSONArray("results");
+
+			if(prediJsonArr!=null){
+				resultsList = new ArrayList<Restaurant>();
+				for(int i=0; i<prediJsonArr.length(); i++){
+					JSONObject objInArr = prediJsonArr.getJSONObject(i);
+
+					// Create Restaurant instance
+					Restaurant newRest = new Restaurant();
+					newRest.setName(objInArr.getString("name"));
+					newRest.setId(objInArr.getString("place_id"));	
+					if(objInArr.has("rating"))
+						newRest.setRating(objInArr.getDouble("rating"));
+					else
+						newRest.setRating(-1);
+
+					/*
+					 * Here we can check for types and remove those who
+					 * are not of interest, fast-food or such.
+					 * TODO remove tags: bookstore, store, convenience_store,
+					 */
+					JSONArray taggedTypes = objInArr.getJSONArray("types");
+					for(int j=0; j<taggedTypes.length(); j++){
+						newRest.addTypes(taggedTypes.getString(j));
+					}
+
+					//Create location instance
+					Location loc = new Location();
+					loc.setLattitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
+					loc.setLongitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
+					if(objInArr.has("vicinity"))
+						loc.setAddress(objInArr.getString("vicinity")); //VICINITY OR FORMATTED ADDRESS
+					else if (objInArr.has("formatted_address"))
+						loc.setAddress(objInArr.getString("formatted_address"));
+					else
+						loc.setAddress("not avaliable..");
+					newRest.setLocation(loc);
+					resultsList.add(newRest);					
+				}
+			}
+
+			/*
+			 * the time from the JSON results is delivered to when the next page is
+			 * created is slightly delayed, this allows the method to sleep for 1 second
+			 * and then runs search for the nextPage 
+			 */
+			try {
+				TimeUnit.SECONDS.sleep(2);
+			} catch (InterruptedException e) {
+				System.out.println("TIMEUNIT REST ERROR "+ e);
+			}
+
+			String nextPageToken = null;
+
+			if (jsonObj.has(NEXT_PAGE_TOKEN)) {
+				nextPageToken = jsonObj.getString("next_page_token");
+				resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
+			}
+
+		}catch(JSONException e){
+			System.out.println("JSON ERROR "+ e);
+		}
+		return resultsList;
+	}
+
+}

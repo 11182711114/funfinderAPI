@@ -29,3 +29,13 @@ POST	/user/create			controllers.UserController.createUser()
 # ~~ MESSAGES ~~
 
 POST	/message/send			controllers.MessageController.sendMessage()
+
+
+#  ~~ RESTAURANT ~~
+
+#	Get restaurants by nearby search method
+#GET		/restaurants/nearby		
+
+#	Get restaurants by searching on location name
+GET		/restaurants/location/		controllers.RestuarantController.getRestaurantsByLocation(kista)
+

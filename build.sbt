@@ -10,14 +10,15 @@ name := """funfinder"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   javaJdbc,
   cache,
-  javaWs
+  javaWs,
+  "org.json" % "org.json" % "chargebee-1.0"
 )
 
 scalacOptions += "-target:jvm-1.8"
@@ -29,5 +30,3 @@ initialize := {
   if (sys.props("java.specification.version") != "1.8")
     sys.error("Java 8 is required for this project.")
 }
-
-fork in run := true

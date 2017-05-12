@@ -1,0 +1,13 @@
+New log file opened at Fri May 12 12:45:46 CEST 2017 by 7372@MarcusDator
+Taking next connection to: 52151
+New client attempting to connect on port: 52152-52151
+  Address = /192.168.0.190:52151
+This client on port 52152 has uuid 9e2f5dd2-3812-4e09-bbbc-c95dcff63982 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-9e2f5dd2-3812-4e09-bbbc-c95dcff63982
+Taking next connection to: 52151
+Checking to see if clients are empty...
+No non-daemon clients connected after 3 min. Shutting down.
+Server socket thread exiting.
+0 clients open, will close them...
+All client sockets have been closed.
+Closing the 7372@MarcusDator logs at Fri May 12 12:48:50 CEST 2017, goodbye.
