@@ -7,6 +7,8 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import models.Profile;
 import models.User;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -43,6 +45,20 @@ public class UserController extends Controller {
 		
 	}
 	
+	public Result authenticateUser() {
+		JsonNode data = request().body().asJson();
+		System.out.println(data);
+		String email = data.get("email").textValue();
+		String password = data.get("password").textValue();
+		
+		User user = Ebean.find(User.class).where().eq("email", email).and().eq("password", password).findUnique();
+		
+		if (user == null)
+			return notFound();
+		
+		return ok("K");
+	}
+	
 	/** Returns all current users in Json
 	 * @return All current users in Json
 	 */
@@ -52,7 +68,7 @@ public class UserController extends Controller {
 		return ok(result);
 	}
 	
-	/** Creates a new user with a generated Id from a HTML form sent by POST
+	/** Creates a new user with a generated Id from json sent by POST
 	 * @param firstname
 	 * @param lastname
 	 * @param birthdate - String "yyyy-MM-dd" e.g. "2012-12-24"
@@ -61,12 +77,12 @@ public class UserController extends Controller {
 	 * @return the user as it would be returened by {@link #getUserById(String)}
 	 */
 	public Result createUser() {
-		DynamicForm df = formFactory.form().bindFromRequest();
-		String firstname = df.get("firstname");
-		String lastname = df.get("lastname");
-		String birthdate = df.get("birthdate");
-		String email = df.get("email");
-		String password = df.get("password");
+		JsonNode jn = request().body().asJson();
+		String firstname = jn.get("firstname").asText();
+		String lastname = jn.get("lastname").asText();
+		String birthdate = jn.get("birthdate").asText();
+		String email = jn.get("email").asText();
+		String password = jn.get("password").asText();
 		User newUser = new User(firstname, lastname, birthdate, email, password);
 		
 		try {
@@ -77,7 +93,20 @@ public class UserController extends Controller {
 //		if (Integer.toString(newUser.id) == null)
 //			return badRequest("User with that email already found");
 //		return created(Json.toJson(newUser));
-		return getUserById(Integer.toString(newUser.id));
+		return ok("user created");
+	}
+	
+	public Result updateProfile() {
+		JsonNode jn = request().body().asJson();
+		String uid = jn.get("uid").asText();
+		String bio = jn.get("bio").asText();
+		String hobbies = jn.get("hobbies").asText();
+		
+		Profile newProfile = new Profile(uid,bio,hobbies);
+		
+		Ebean.save(newProfile);
+		
+		return ok("profile updated");
 	}
 	
 }

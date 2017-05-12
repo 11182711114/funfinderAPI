@@ -21,10 +21,16 @@ GET		/user/all				controllers.UserController.getAllUsers
 GET		/user					controllers.UserController.getUserById(uid)
 
 #	Get specific user by email
-GET		/user/email					controllers.UserController.getUserByEmail(email)
+GET		/user/email				controllers.UserController.getUserByEmail(email)
 
 #	Add user
 POST	/user/create			controllers.UserController.createUser()
+
+#	Authenticate user
+POST	/user/authenticate		controllers.UserController.authenticateUser()
+
+POST	/user/updateProfile		controllers.UserController.updateProfile()
+
 
 # ~~ MESSAGES ~~
 
