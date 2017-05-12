@@ -56,7 +56,7 @@ public class UserController extends Controller {
 		if (user == null)
 			return notFound();
 		
-		return ok(""+user.id);
+		return ok("K"+ ","+ user.id);
 	}
 	
 	/** Returns all current users in Json
