@@ -34,6 +34,7 @@ CREATE TABLE Message (
 	message varchar(500) NOT NULL,
 	`from` int(11) NOT NULL,
 	`to` int(11) NOT NULL,
+	sent TIMESTAMP DEFAULT now(),
 	FOREIGN KEY (`from`) REFERENCES User(id) ON DELETE cascade,
 	FOREIGN KEY (`to`) REFERENCES User(id) ON DELETE cascade,
 	PRIMARY KEY (id)

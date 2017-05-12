@@ -15,12 +15,17 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # ~~ USER ~~
 
 #	Get all users
-GET		/user/all					controllers.UserController.getAllUsers
+GET		/user/all				controllers.UserController.getAllUsers
 
 #	Get specific user by ID - url ~ "localhost:9000/user?uid=4" where 4 is userId
-GET		/user						controllers.UserController.getUserById(uid)
+GET		/user					controllers.UserController.getUserById(uid)
+
+#	Get specific user by email
+GET		/user/email					controllers.UserController.getUserByEmail(email)
 
 #	Add user
-POST		/user/create				controllers.UserController.createUser()
+POST	/user/create			controllers.UserController.createUser()
 
-# ~~ /USER ~~
+# ~~ MESSAGES ~~
+
+POST	/message/send			controllers.MessageController.sendMessage()

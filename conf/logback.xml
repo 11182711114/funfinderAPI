@@ -3,12 +3,13 @@
 
   <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
 
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home:-.}/logs/application.log</file>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
+        <pattern>%-5level - %msg%n</pattern>
     </encoder>
-  </appender>
+</appender>
+
+<logger name="org.avaje.ebean.SQL" level="TRACE" />
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -24,8 +25,13 @@
     <appender-ref ref="STDOUT" />
   </appender>
 
-  <logger name="play" level="INFO" />
-  <logger name="application" level="DEBUG" />
+  <logger name="play" level="DEBUG">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <logger name="application" level="DEBUG">
+    <appender-ref ref="STDOUT" />
+  </logger>
 
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
   <logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF" />
