@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.json.*;
 
@@ -17,14 +18,19 @@ import org.json.*;
  */
 
 public class ResultParser{
-	
+
 	private static final String PLACES_API_SOURCE = "https://maps.googleapis.com/maps/api/place";
 	private static final String JSON_OUT = "/json";
 	private static final String NEXT_PAGE_TOKEN = "next_page_token";
-	private static String typeSearch = null;
 	private static final String KEY = "AIzaSyCEJku8qbNsDR7R1yGx5KGDr4g8ROw5LtU"; //TODO TA BORT KEY INNAN PUSH?
+	private final static ArrayList<String> UNWANTED_TYPES = new ArrayList<String>(){{
+		add("book_store"); 
+		add("store");
+		add("convenience store");
+		add("fastfood");
+	}};
 
-
+	private static String typeSearch = null;
 	/*
 	 * Allows restaurants to be searched from user given location,
 	 * takes the location name as a parameter
@@ -152,6 +158,7 @@ public class ResultParser{
 	 * returns a arraylist of Restaurants
 	 */
 	private static ArrayList<Restaurant> parseResults(StringBuilder jsonResults){
+		boolean validObject = true;
 		ArrayList<Restaurant> resultsList = null;
 		try{ 
 			JSONObject jsonObj = new JSONObject(jsonResults.toString());
@@ -175,26 +182,38 @@ public class ResultParser{
 
 					/*
 					 * Here we can check for types and remove those who
-					 * are not of interest, fast-food or such.
-					 * TODO remove tags: bookstore, store, convenience_store,
+					 * are not of interest, that we have saved in UNWANTED_TYPES list.
+					 * else we set the id to 0
 					 */
 					JSONArray taggedTypes = objInArr.getJSONArray("types");
 					for(int j=0; j<taggedTypes.length(); j++){
-						newRest.addTypes(taggedTypes.getString(j));
+						if(!UNWANTED_TYPES.contains(taggedTypes.getString(j)))
+							newRest.addTypes(taggedTypes.getString(j));
+						else{
+							validObject = false; 
+							System.out.println(newRest.getName()+" not wanted");
+							break;
+						}
 					}
-
-					//Create location instance
-					Location loc = new Location();
-					loc.setLattitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
-					loc.setLongitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
-					if(objInArr.has("vicinity"))
-						loc.setAddress(objInArr.getString("vicinity")); //VICINITY OR FORMATTED ADDRESS
-					else if (objInArr.has("formatted_address"))
-						loc.setAddress(objInArr.getString("formatted_address"));
-					else
-						loc.setAddress("not avaliable..");
-					newRest.setLocation(loc);
-					resultsList.add(newRest);					
+					/*
+					 * if the place id is not 0, the object is valid to add
+					 *  else we don't add it.
+					 */
+					if(validObject){
+						//Create location instance
+						Location loc = new Location();
+						loc.setLattitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
+						loc.setLongitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
+						if(objInArr.has("vicinity"))
+							loc.setAddress(objInArr.getString("vicinity")); //VICINITY OR FORMATTED ADDRESS
+						else if (objInArr.has("formatted_address"))
+							loc.setAddress(objInArr.getString("formatted_address"));
+						else
+							loc.setAddress("not avaliable..");
+						newRest.setLocation(loc);
+						resultsList.add(newRest);	
+					}
+					validObject = true;
 				}
 			}
 
