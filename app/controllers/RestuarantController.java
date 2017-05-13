@@ -1,6 +1,10 @@
 package controllers;
 
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
+
 import models.Restaurant;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -25,17 +29,39 @@ public class RestuarantController extends Controller {
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.Restaurant> results = respesp.searchNearby(lat, lng, rad);
 
-//		for(parser.Restaurant res : results)
-//			System.out.println(res.toString()); //TODO remove tester.
 
-		return results != null ? ok(Json.toJson(results)) : notFound();
+//		PrettyPrinted Json (use this while testing)
+		JsonNode node = Json.toJson(results);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			String pretty = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
+			return ok(pretty);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+//		Clean JSON response
+//		return results != null ? ok(Json.toJson(results), "UTF-8") : notFound();
 	}
 
 	public Result getRestaurantsByLocation(String location){
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.Restaurant> results = respesp.searchText(location);
 		
-		return results != null ? ok(Json.toJson(results)) : notFound();
+//		PrettyPrinted Json (use this while testing)
+		JsonNode node = Json.toJson(results);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			String pretty = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
+			return ok(pretty);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+//		Clean JSON response
+//		return results != null ? ok(Json.toJson(results), "UTF-8") : notFound();
 	}
 
 }

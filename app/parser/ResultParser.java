@@ -191,7 +191,7 @@ public class ResultParser{
 							newRest.addTypes(taggedTypes.getString(j));
 						else{
 							validObject = false; 
-							System.out.println(newRest.getName()+" not wanted");
+//							System.out.println(newRest.getName()+" not wanted");
 							break;
 						}
 					}
