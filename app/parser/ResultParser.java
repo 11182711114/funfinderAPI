@@ -55,10 +55,8 @@ public class ResultParser{
 			}
 		}catch(MalformedURLException e){
 			System.out.println("URL ERROR [search] ");
-			//			return null;
 		}catch(IOException e){
 			System.out.println("CONNECTION ERROR [search] "+ e);
-			//			return resultsList;
 		}finally{
 			if(conn!=null)
 				conn.disconnect();
@@ -116,7 +114,7 @@ public class ResultParser{
 	 * 
 	 * takes the nextPageTokes as parameter, returns results for parsing
 	 */
-	//	private static void searchNextPage(String nextToken){
+
 	private static StringBuilder searchNextPage(String nextToken){
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
@@ -131,7 +129,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -217,7 +215,6 @@ public class ResultParser{
 				nextPageToken = jsonObj.getString("next_page_token");
 				resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
 			}
-
 		}catch(JSONException e){
 			System.out.println("JSON ERROR "+ e);
 		}

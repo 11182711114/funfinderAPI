@@ -40,7 +40,7 @@ POST	/message/send			controllers.MessageController.sendMessage()
 #  ~~ RESTAURANT ~~
 
 #	Get restaurants by nearby search method
-#GET	/restaurants/nearby		
+GET		/restaurants/nearby/location=:lat,:lng&radie=:rdi		controllers.RestuarantController.getRestaurantsNearby(lat:Double, lng:Double, rdi:Int)
 
 #	Get restaurants by searching on location name
 GET		/restaurants/location/:location			controllers.RestuarantController.getRestaurantsByLocation(location:String)

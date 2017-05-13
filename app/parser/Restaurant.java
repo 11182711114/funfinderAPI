@@ -72,7 +72,6 @@ public class Restaurant{
 		return Collections.unmodifiableList(types);
 	}
 
-	//	protected Restaurant addTypes(Collection<String> placeTypes){
 	protected Restaurant addTypes(String type){
 		this.types.add(type);
 		return this;
