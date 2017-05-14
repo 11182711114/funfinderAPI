@@ -75,5 +75,12 @@ public class User extends Model{
 		
 	}
 	
+	public List<Message> getMessagesReceived() {
+		return messagesReceived;		
+	}
+	public List<Message> getMessagesSent() {
+		return messagesSent;		
+	}
+	
 	public static Finder<Long, User> find = new Finder<Long,User>(User.class);
 }
