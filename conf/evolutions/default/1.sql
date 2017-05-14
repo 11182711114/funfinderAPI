@@ -66,6 +66,8 @@ CREATE TABLE Restaurant (
 
 # --- !Downs
 
+DROP TABLE Profile;
+
 DROP TABLE Message;
 
 DROP TABLE UserSettings;
