@@ -29,6 +29,14 @@ CREATE TRIGGER insertCreatedTrigger BEFORE INSERT ON User
 FOR EACH ROW 
 SET NEW.created = now();
 
+CREATE TABLE Profile (
+	user int NOT NULL,
+	bio varchar(1000),
+	hobbies varchar(1000),
+	FOREIGN KEY (user) REFERENCES User(id) ON DELETE cascade,
+	PRIMARY KEY (user)
+);
+
 CREATE TABLE Message (
 	id int NOT NULL,
 	message varchar(500) NOT NULL,
@@ -57,6 +65,8 @@ CREATE TABLE Restaurant (
 );
 
 # --- !Downs
+
+DROP TABLE Profile;
 
 DROP TABLE Message;
 

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -54,10 +55,10 @@ public class User extends Model{
 	@JoinColumn(name = "loc_id")
 	private Location loc;
 	
-	@OneToMany(mappedBy = "from", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "from")
 	private List<Message> messagesSent;
 	
-	@OneToMany(mappedBy = "to", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "to")
 	private List<Message> messagesReceived;
 	
 	public User(String fname, String lname) {

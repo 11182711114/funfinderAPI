@@ -29,6 +29,9 @@ POST	/user/create			controllers.UserController.createUser()
 #	Authenticate user
 POST	/user/authenticate		controllers.UserController.authenticateUser()
 
+POST	/user/updateProfile		controllers.UserController.updateProfile()
+
+
 # ~~ MESSAGES ~~
 
 POST	/message/send			controllers.MessageController.sendMessage()

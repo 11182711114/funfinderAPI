@@ -7,6 +7,8 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import models.Profile;
 import models.User;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -54,7 +56,7 @@ public class UserController extends Controller {
 		if (user == null)
 			return notFound();
 		
-		return ok("K");
+		return ok("K"+ ","+ user.id);
 	}
 	
 	/** Returns all current users in Json
@@ -90,6 +92,19 @@ public class UserController extends Controller {
 		}
 		
 		return ok("user created");
+	}
+	
+	public Result updateProfile() {
+		JsonNode jn = request().body().asJson();
+		String uid = jn.get("uid").asText();
+		String bio = jn.get("bio").asText();
+		String hobbies = jn.get("hobbies").asText();
+		
+		Profile newProfile = new Profile(uid,bio,hobbies);
+		
+		Ebean.save(newProfile);
+		
+		return ok("profile updated");
 	}
 	
 }
