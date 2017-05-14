@@ -64,7 +64,7 @@ CREATE TABLE Restaurant (
 	PRIMARY KEY (id)	
 );
 
-# -- !Downs
+# --- !Downs
 
 DROP TABLE Profile;
 
