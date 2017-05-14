@@ -26,7 +26,7 @@ public class UserController extends Controller {
 		
 		//FIXME Return something better?
 		if(user == null)
-			return notFound();
+			return notFound("user not found");
 		
 		JsonNode result = Json.toJson(user);
 		return ok(result);
@@ -88,9 +88,7 @@ public class UserController extends Controller {
 		} catch (PersistenceException pe) { // duplicate user
 			return badRequest("exists");
 		}
-//		if (Integer.toString(newUser.id) == null)
-//			return badRequest("User with that email already found");
-//		return created(Json.toJson(newUser));
+		
 		return ok("user created");
 	}
 	
