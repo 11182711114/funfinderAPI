@@ -34,9 +34,17 @@ public class Profile {
 		this.bio = bio;
 		this.hobbies = hobbies;
 	}
+	
+	public String getBio() {
+		return bio;
+	}
+	
+	public String getHobbies() {
+		return hobbies;
+	}
 
 	@Override
 	public String toString() {
-		return user.id + bio + hobbies;
+		return user.id + " " + bio + " " + hobbies;
 	}
 }

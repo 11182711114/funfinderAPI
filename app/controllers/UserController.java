@@ -117,7 +117,11 @@ public class UserController extends Controller {
 		
 		System.out.println(prof);
 		
-		return ok(Json.toJson(prof));
+		
+		String json = "{\"uid\":" + user.id + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\"}";
+		
+		JsonNode jn = Json.parse(json);
+		return ok(jn);
 	}
 	
 }
