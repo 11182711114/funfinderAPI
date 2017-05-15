@@ -99,10 +99,29 @@ public class UserController extends Controller {
 		String bio = jn.get("bio").asText();
 		String hobbies = jn.get("hobbies").asText();
 		
-		Profile newProfile = new Profile(uid,bio,hobbies);
+		User user = User.find.byId(Long.parseLong(uid));
 		
-		Ebean.save(newProfile);
+		Profile toUpdate = Ebean.find(Profile.class).where().eq("user", user).findUnique();
+		boolean newProfile = false;
+		if(toUpdate == null) {
+			toUpdate = new Profile();
+			toUpdate.setUser(user);
+			newProfile = true;
+		}
+		if (bio != null && bio != "")
+			toUpdate.setBio(bio);
+		if (hobbies != null && hobbies != "")
+			toUpdate.setHobbies(hobbies);
 		
+		if (newProfile)
+			Ebean.save(toUpdate);
+		else {
+//			Ebean.update(toUpdate);
+			Profile tmp = toUpdate.copy();
+			Ebean.createQuery(Profile.class).where().eq("user", user).delete();
+			Ebean.save(tmp);
+			
+		}
 		return ok("profile updated");
 	}
 	
