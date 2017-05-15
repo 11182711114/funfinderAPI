@@ -55,10 +55,10 @@ public class User extends Model{
 	@JoinColumn(name = "loc_id")
 	private Location loc;
 	
-	@OneToMany(mappedBy = "from", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "from")
 	private List<Message> messagesSent;
 	
-	@OneToMany(mappedBy = "to", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "to")
 	private List<Message> messagesReceived;
 	
 	public User(String fname, String lname) {
@@ -73,6 +73,13 @@ public class User extends Model{
 		this.email = email;
 		this.password = password;
 		
+	}
+	
+	public List<Message> getMessagesReceived() {
+		return messagesReceived;		
+	}
+	public List<Message> getMessagesSent() {
+		return messagesSent;		
 	}
 	
 	public static Finder<Long, User> find = new Finder<Long,User>(User.class);

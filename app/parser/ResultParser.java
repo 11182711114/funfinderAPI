@@ -19,6 +19,7 @@ import org.json.*;
 
 public class ResultParser{
 
+	private static String typeSearch = null;
 	private static final String PLACES_API_SOURCE = "https://maps.googleapis.com/maps/api/place";
 	private static final String JSON_OUT = "/json";
 	private static final String NEXT_PAGE_TOKEN = "next_page_token";
@@ -30,7 +31,7 @@ public class ResultParser{
 		add("fastfood");
 	}};
 
-	private static String typeSearch = null;
+
 	/*
 	 * Allows restaurants to be searched from user given location,
 	 * takes the location name as a parameter
@@ -76,8 +77,7 @@ public class ResultParser{
 	 * Allows for restaurants to be retrieved by providing users coordinates
 	 * takes latitude, longitude and radius for the search as method parameter
 	 * 
-	 * returns up to 20 matching places
-	 * 
+	 * returns up to 20 matching places 
 	 */
 	public ArrayList<Restaurant> searchNearby(double lat, double lang, int radius){
 		typeSearch = "/nearbysearch";
@@ -190,8 +190,7 @@ public class ResultParser{
 						if(!UNWANTED_TYPES.contains(taggedTypes.getString(j)))
 							newRest.addTypes(taggedTypes.getString(j));
 						else{
-							validObject = false; 
-//							System.out.println(newRest.getName()+" not wanted");
+							validObject = false;
 							break;
 						}
 					}
@@ -221,19 +220,21 @@ public class ResultParser{
 			 * the time from the JSON results is delivered to when the next page is
 			 * created is slightly delayed, this allows the method to sleep for 1 second
 			 * and then runs search for the nextPage 
+			 * 
+			 * UNCOMMENT TO ALLOW +20 PLACES TO BE FETCHED
 			 */
-			try {
-				TimeUnit.SECONDS.sleep(2);
-			} catch (InterruptedException e) {
-				System.out.println("TIMEUNIT REST ERROR "+ e);
-			}
-
-			String nextPageToken = null;
-
-			if (jsonObj.has(NEXT_PAGE_TOKEN)) {
-				nextPageToken = jsonObj.getString("next_page_token");
-				resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
-			}
+//			try {
+//				TimeUnit.MILLISECONDS.sleep(1800);
+//			} catch (InterruptedException e) {
+//				System.out.println("TIMEUNIT REST ERROR "+ e);
+//			}
+//
+//			String nextPageToken = null;
+//
+//			if (jsonObj.has(NEXT_PAGE_TOKEN)) {
+//				nextPageToken = jsonObj.getString("next_page_token");
+//				resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
+//			}
 		}catch(JSONException e){
 			System.out.println("JSON ERROR "+ e);
 		}

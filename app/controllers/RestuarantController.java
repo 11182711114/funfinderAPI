@@ -29,7 +29,6 @@ public class RestuarantController extends Controller {
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.Restaurant> results = respesp.searchNearby(lat, lng, rad);
 
-
 //		PrettyPrinted Json (use this while testing)
 		JsonNode node = Json.toJson(results);
 		ObjectMapper mapper = new ObjectMapper();
@@ -40,7 +39,6 @@ public class RestuarantController extends Controller {
 			e.printStackTrace();
 		}
 		return null;
-		
 //		Clean JSON response
 //		return results != null ? ok(Json.toJson(results), "UTF-8") : notFound();
 	}

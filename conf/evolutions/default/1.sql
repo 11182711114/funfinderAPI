@@ -29,7 +29,7 @@ CREATE TRIGGER insertCreatedTrigger BEFORE INSERT ON User
 FOR EACH ROW 
 SET NEW.created = now();
 
-CREATE TABLE Profile (
+CREATE TABLE `Profile` (
 	user int NOT NULL,
 	bio varchar(1000),
 	hobbies varchar(1000),
@@ -65,6 +65,8 @@ CREATE TABLE Restaurant (
 );
 
 # --- !Downs
+
+DROP TABLE `Profile`;
 
 DROP TABLE Message;
 
