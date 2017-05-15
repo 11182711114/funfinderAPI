@@ -51,7 +51,7 @@ public class ResultParser{
 			request.append(location);
 			request.append("&key=" + KEY);
 
-			System.out.println("Connecting.."); //TODO remove: TEST
+			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
@@ -93,7 +93,7 @@ public class ResultParser{
 			request.append("&keyword=restaurants");
 			request.append("&key=" + KEY);
 
-			System.out.println("Connecting.."); //TODO remove: TEST
+			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();

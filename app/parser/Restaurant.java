@@ -43,11 +43,9 @@ public class Restaurant{
 		this.name = name;
 	}
 
-
 	public Location getLocation() {
 		return location;
 	}
-
 
 	public void setLocation(Location location) {
 		this.location = location;
@@ -59,7 +57,6 @@ public class Restaurant{
 	protected void setRating(double rating){
 		this.rating = rating;
 	}
-
 
 	public String getWebsite(){
 		return website;

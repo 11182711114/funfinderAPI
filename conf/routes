@@ -36,7 +36,8 @@ POST	/user/updateProfile		controllers.UserController.updateProfile()
 
 POST	/message/send			controllers.MessageController.sendMessage()
 
-<<<<<<< HEAD
+GET		/message/:id			controllers.MessageController.getMessages(id)
+
 
 #  ~~ RESTAURANT ~~
 
@@ -46,6 +47,3 @@ GET		/restaurants/nearby/location=:lat,:lng&radie=:rdi		controllers.RestuarantCo
 #	Get restaurants by searching on location name
 GET		/restaurants/location/query=:location			controllers.RestuarantController.getRestaurantsByLocation(location:String)
 
-=======
-GET		/message/:id			controllers.MessageController.getMessages(id)
->>>>>>> refs/remotes/origin/master
