@@ -1,11 +1,19 @@
 package controllers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import models.Message;
 import models.User;
@@ -42,6 +50,24 @@ public class MessageController extends Controller{
 		
 //		return ok(Json.toJson(toReturn));
 		// TODO Return actual messages
-		return ok();
+//		JsonNode jn = Json.toJson(toReturn, Message.class);
+		
+//		final OutputStream out = new ByteArrayOutputStream();
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter sw = new StringWriter();
+		try {
+			mapper.writeValue(sw, toReturn);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+//		JsonNode jn = Json.toJson(mapper.createObjectNode());
+		
+//		byte[] data = out.toByteArray();
+		return ok(sw.toString());
 	}
 }

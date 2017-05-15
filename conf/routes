@@ -35,3 +35,5 @@ POST	/user/updateProfile		controllers.UserController.updateProfile()
 # ~~ MESSAGES ~~
 
 POST	/message/send			controllers.MessageController.sendMessage()
+
+GET		/message/:id			controllers.MessageController.getMessages(id)
