@@ -1,23 +1,13 @@
 package controllers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.avaje.ebean.Ebean;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import models.Message;
 import models.User;
-import play.api.libs.json.Json;
+import play.libs.Json;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -37,37 +27,15 @@ public class MessageController extends Controller{
 		Message msg = new Message(from,to,message);
 		Ebean.save(msg);
 		
-		return null;
+		return ok(Json.toJson(msg));
 	}
 	
-	public Result getMessages(String userId) {
-		User user = User.find.byId(Long.parseLong(userId));
+	public Result getMessages(int userId) {
+		User user = User.find.byId(Integer.toUnsignedLong(userId));
 		
-		List<Message> toReturn = new ArrayList<>();
-		toReturn.addAll(user.getMessagesReceived());
-		toReturn.addAll(user.getMessagesSent());
-
+		List<Message> toReturn = Message.find.where().eq("sender", user).findList();
+		toReturn.addAll(Message.find.where().eq("receiver", user).findList());
 		
-//		return ok(Json.toJson(toReturn));
-		// TODO Return actual messages
-//		JsonNode jn = Json.toJson(toReturn, Message.class);
-		
-//		final OutputStream out = new ByteArrayOutputStream();
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter sw = new StringWriter();
-		try {
-			mapper.writeValue(sw, toReturn);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-//		JsonNode jn = Json.toJson(mapper.createObjectNode());
-		
-//		byte[] data = out.toByteArray();
-		return ok(sw.toString());
+		return ok(Json.toJson(toReturn));
 	}
 }

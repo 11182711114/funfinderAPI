@@ -31,9 +31,10 @@ POST	/user/authenticate		controllers.UserController.authenticateUser()
 
 POST	/user/updateProfile		controllers.UserController.updateProfile()
 
+GET 	/user/:id/profile		controllers.UserController.getProfile(id: Long)
 
 # ~~ MESSAGES ~~
 
 POST	/message/send			controllers.MessageController.sendMessage()
 
-GET		/message/:id			controllers.MessageController.getMessages(id)
+GET		/message/:id			controllers.MessageController.getMessages(id: Integer)
