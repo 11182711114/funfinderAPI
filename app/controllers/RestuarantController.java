@@ -40,7 +40,7 @@ public class RestuarantController extends Controller {
 		}
 		return null;
 //		Clean JSON response
-//		return results != null ? ok(Json.toJson(results), "UTF-8") : notFound();
+//		return results != null ? ok(Json.toJson(results)) : notFound();
 	}
 
 	public Result getRestaurantsByLocation(String location){
@@ -59,7 +59,7 @@ public class RestuarantController extends Controller {
 		return null;
 		
 //		Clean JSON response
-//		return results != null ? ok(Json.toJson(results), "UTF-8") : notFound();
+//		return results != null ? ok(Json.toJson(results)) : notFound();
 	}
 
 }

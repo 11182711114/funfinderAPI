@@ -55,7 +55,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -97,7 +97,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -135,7 +135,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -158,6 +158,7 @@ public class ResultParser{
 	 * returns a arraylist of Restaurants
 	 */
 	private static ArrayList<Restaurant> parseResults(StringBuilder jsonResults){
+		
 		boolean validObject = true;
 		ArrayList<Restaurant> resultsList = null;
 		try{ 

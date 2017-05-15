@@ -90,7 +90,7 @@ public class UserController extends Controller {
 			return badRequest("exists");
 		}
 		
-		return ok("user created");
+		return ok("user created: " + newUser.id);
 	}
 	
 	public Result updateProfile() {
@@ -104,6 +104,20 @@ public class UserController extends Controller {
 		Ebean.save(newProfile);
 		
 		return ok("profile updated");
+	}
+	
+	public Result getProfile(Long id) {
+		User user = User.find.byId(id);
+		if(user == null)
+			return notFound("user not found");
+		
+		Profile prof = Ebean.find(Profile.class).where().eq("user", user).findUnique();
+		if (prof == null)
+			return notFound("No profile found");
+		
+		System.out.println(prof);
+		
+		return ok(Json.toJson(prof));
 	}
 	
 }

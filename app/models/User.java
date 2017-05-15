@@ -3,13 +3,10 @@ package models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -53,11 +50,11 @@ public class User extends Model{
 	@JoinColumn(name = "loc_id")
 	private Location loc;
 	
-	@OneToMany(mappedBy = "from")
-	private List<Message> messagesSent;
-	
-	@OneToMany(mappedBy = "to")
-	private List<Message> messagesReceived;
+//	@OneToMany(mappedBy = "sender")
+//	private List<Message> messagesSent;
+//	
+//	@OneToMany(mappedBy = "receiver")
+//	private List<Message> messagesReceived;
 	
 	public User(String fname, String lname) {
 		this.firstname = fname;
@@ -73,12 +70,12 @@ public class User extends Model{
 		
 	}
 	
-	public List<Message> getMessagesReceived() {
-		return messagesReceived;		
-	}
-	public List<Message> getMessagesSent() {
-		return messagesSent;		
-	}
+//	public List<Message> getMessagesReceived() {
+//		return messagesReceived;		
+//	}
+//	public List<Message> getMessagesSent() {
+//		return messagesSent;		
+//	}
 	
 	public static Finder<Long, User> find = new Finder<Long,User>(User.class);
 }

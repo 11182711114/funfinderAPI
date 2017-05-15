@@ -16,19 +16,19 @@ public class Message {
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "from")
-	private User from;
+	@JoinColumn(name = "sender")
+	private User sender;
 	
 	@ManyToOne
-	@JoinColumn(name = "to")
-	private User to;
+	@JoinColumn(name = "receiver")
+	private User receiver;
 	
 	private String message;
 	
 
-	public Message(User from, User to, String message) {
-		this.from = from;
-		this.to = to;
+	public Message(User sender, User receiver, String message) {
+		this.sender = sender;
+		this.receiver = receiver;
 		this.message = message;
 	}
 
@@ -44,12 +44,12 @@ public class Message {
 		return id;
 	}
 
-	public User getFrom() {
-		return from;
+	public User getSender() {
+		return sender;
 	}
 
-	public User getTo() {
-		return to;
+	public User getReceiver() {
+		return receiver;
 	}
 	
 	public static Finder<Long, Message> find = new Finder<Long,Message>(Message.class);
