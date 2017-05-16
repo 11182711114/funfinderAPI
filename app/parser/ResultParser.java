@@ -48,7 +48,7 @@ public class ResultParser{
 			request.append(typeSearch);
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
-			request.append(location);
+			request.append(location+"+Stockholm");
 			request.append("&key=" + KEY);
 
 			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
@@ -158,7 +158,7 @@ public class ResultParser{
 	 * returns a arraylist of Restaurants
 	 */
 	private static ArrayList<Restaurant> parseResults(StringBuilder jsonResults){
-		
+
 		boolean validObject = true;
 		ArrayList<Restaurant> resultsList = null;
 		try{ 
@@ -175,7 +175,8 @@ public class ResultParser{
 					// Create Restaurant instance
 					Restaurant newRest = new Restaurant();
 					newRest.setName(objInArr.getString("name"));
-					newRest.setId(objInArr.getString("place_id"));	
+					newRest.setId(objInArr.getString("place_id"));
+					newRest.setPhotoref(objInArr.getString("photo_reference"));
 					if(objInArr.has("rating"))
 						newRest.setRating(objInArr.getDouble("rating"));
 					else
@@ -224,18 +225,18 @@ public class ResultParser{
 			 * 
 			 * UNCOMMENT TO ALLOW +20 PLACES TO BE FETCHED
 			 */
-//			try {
-//				TimeUnit.MILLISECONDS.sleep(1800);
-//			} catch (InterruptedException e) {
-//				System.out.println("TIMEUNIT REST ERROR "+ e);
-//			}
-//
-//			String nextPageToken = null;
-//
-//			if (jsonObj.has(NEXT_PAGE_TOKEN)) {
-//				nextPageToken = jsonObj.getString("next_page_token");
-//				resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
-//			}
+			//			try {
+			//				TimeUnit.MILLISECONDS.sleep(1800);
+			//			} catch (InterruptedException e) {
+			//				System.out.println("TIMEUNIT REST ERROR "+ e);
+			//			}
+			//
+			//			String nextPageToken = null;
+			//
+			//			if (jsonObj.has(NEXT_PAGE_TOKEN)) {
+			//				nextPageToken = jsonObj.getString("next_page_token");
+			//				resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
+			//			}
 		}catch(JSONException e){
 			System.out.println("JSON ERROR "+ e);
 		}

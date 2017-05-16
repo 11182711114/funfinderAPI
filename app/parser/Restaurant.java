@@ -12,8 +12,9 @@ public class Restaurant{
 	private String id;
 	private String name;
 	private double rating = -1;
-	private String website;
 	private Location location = null; //TODO add this
+	private boolean open;
+	private String photoref;
 	
 	
 //	 empty contructor
@@ -58,13 +59,6 @@ public class Restaurant{
 		this.rating = rating;
 	}
 
-	public String getWebsite(){
-		return website;
-	}
-	protected void setWebsite(String website){
-		this.website = website;
-	}
-
 	public List<String> getTypes(){
 		return Collections.unmodifiableList(types);
 	}
@@ -73,7 +67,22 @@ public class Restaurant{
 		this.types.add(type);
 		return this;
 	}
+
+	public boolean isOpen() {
+		return open;
+	}
+
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
 	
+	public String isPhotoref() {
+		return photoref;
+	}
+
+	protected void setPhotoref(String photoref) {
+		this.photoref = photoref;
+	}	
 	
 
 	@Override    
@@ -85,6 +94,10 @@ public class Restaurant{
 	public boolean equals(Object obj){
 		return obj instanceof Restaurant && ((Restaurant) obj).id.equals(id);
 	}
+
+
+
+
 
 
 

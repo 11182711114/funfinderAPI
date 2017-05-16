@@ -16,12 +16,12 @@ public class Profile {
 //	@Id
 //	@Column(name = "user")
 //	private int userId;
-
+	
 	@JsonInclude
 	@OneToOne
 	@JoinColumn(name = "user", referencedColumnName = "id")
 	private User user;
-	
+
 	@JsonInclude
 	private String bio;
 	
@@ -34,9 +34,43 @@ public class Profile {
 		this.bio = bio;
 		this.hobbies = hobbies;
 	}
+	
+	public Profile() {
+	}
+
+	public Profile(User user, String bio, String hobbies) {
+		this.user = user;
+		this.bio = bio;
+		this.hobbies = hobbies;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
+	public void setHobbies(String hobbies) {
+		this.hobbies = hobbies;
+	}
+	
+	public String getBio() {
+		return bio;
+	}
+	
+	public String getHobbies() {
+		return hobbies;
+	}
 
 	@Override
 	public String toString() {
-		return user.id + bio + hobbies;
+		return user.id + " " + bio + " " + hobbies;
 	}
+
+	public Profile copy() {
+		return new Profile(user,bio,hobbies);
+	}
+
 }

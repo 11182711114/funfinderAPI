@@ -14,11 +14,11 @@ import parser.*;
 public class RestuarantController extends Controller {
 
 
-		public Result getRestaurantById(String id) {
-			Restaurant rest = Restaurant.find.byId(Long.parseLong(id));
-			
-			return rest != null ? ok(Json.toJson(rest)) : notFound();
-		}
+	public Result getRestaurantById(String id) {
+		Restaurant rest = Restaurant.find.byId(Long.parseLong(id));
+
+		return rest != null ? ok(Json.toJson(rest)) : notFound();
+	}
 
 	/*
 	 * Results requested by client are not to be saved into the database but only parsed and 
@@ -29,7 +29,7 @@ public class RestuarantController extends Controller {
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.Restaurant> results = respesp.searchNearby(lat, lng, rad);
 
-//		PrettyPrinted Json (use this while testing)
+		//		PrettyPrinted Json (use this while testing)
 		JsonNode node = Json.toJson(results);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -39,15 +39,15 @@ public class RestuarantController extends Controller {
 			e.printStackTrace();
 		}
 		return null;
-//		Clean JSON response
-//		return results != null ? ok(Json.toJson(results)) : notFound();
+		//		Clean JSON response
+		//		return results != null ? ok(Json.toJson(results)) : notFound();
 	}
 
 	public Result getRestaurantsByLocation(String location){
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.Restaurant> results = respesp.searchText(location);
-		
-//		PrettyPrinted Json (use this while testing)
+
+		//		PrettyPrinted Json (use this while testing)
 		JsonNode node = Json.toJson(results);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -57,9 +57,9 @@ public class RestuarantController extends Controller {
 			e.printStackTrace();
 		}
 		return null;
-		
-//		Clean JSON response
-//		return results != null ? ok(Json.toJson(results)) : notFound();
+
+		//		Clean JSON response
+		//		return results != null ? ok(Json.toJson(results)) : notFound();
 	}
 
 }
