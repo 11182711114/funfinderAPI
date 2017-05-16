@@ -225,18 +225,18 @@ public class ResultParser{
 			 * 
 			 * UNCOMMENT TO ALLOW +20 PLACES TO BE FETCHED
 			 */
-			//			try {
-			//				TimeUnit.MILLISECONDS.sleep(1800);
-			//			} catch (InterruptedException e) {
-			//				System.out.println("TIMEUNIT REST ERROR "+ e);
-			//			}
-			//
-			//			String nextPageToken = null;
-			//
-			//			if (jsonObj.has(NEXT_PAGE_TOKEN)) {
-			//				nextPageToken = jsonObj.getString("next_page_token");
-			//				resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
-			//			}
+						try {
+							TimeUnit.MILLISECONDS.sleep(1800);
+						} catch (InterruptedException e) {
+							System.out.println("TIMEUNIT REST ERROR "+ e);
+						}
+			
+						String nextPageToken = null;
+			
+						if (jsonObj.has(NEXT_PAGE_TOKEN)) {
+							nextPageToken = jsonObj.getString("next_page_token");
+							resultsList.addAll(parseResults(searchNextPage(nextPageToken)));
+						}
 		}catch(JSONException e){
 			System.out.println("JSON ERROR "+ e);
 		}
