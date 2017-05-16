@@ -8,12 +8,10 @@ import java.util.*;
 public class Restaurant{
 
 	private final List<String> types = new ArrayList<>();
-//	private final String [] types = new String[10];
 	private String id;
 	private String name;
 	private double rating = -1;
 	private Location location = null; //TODO add this
-	private boolean open;
 	private String photoref;
 	
 	
@@ -66,14 +64,6 @@ public class Restaurant{
 	protected Restaurant addTypes(String type){
 		this.types.add(type);
 		return this;
-	}
-
-	public boolean isOpen() {
-		return open;
-	}
-
-	public void setOpen(boolean open) {
-		this.open = open;
 	}
 	
 	public String isPhotoref() {

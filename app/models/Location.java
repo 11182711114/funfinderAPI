@@ -16,6 +16,6 @@ public class Location {
 	private double longitude;
 	
 	@Id
-	private int id;
+	private String id;
 	
 }
