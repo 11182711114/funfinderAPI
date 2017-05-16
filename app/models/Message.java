@@ -25,6 +25,7 @@ public class Message {
 	
 	private String message;
 	
+	private boolean seen;
 
 	public Message(User sender, User receiver, String message) {
 		this.sender = sender;
@@ -52,5 +53,13 @@ public class Message {
 		return receiver;
 	}
 	
+	public boolean isSeen() {
+		return seen;
+	}
+
+	public void setSeen(boolean seen) {
+		this.seen = seen;
+	}
+
 	public static Finder<Long, Message> find = new Finder<Long,Message>(Message.class);
 }

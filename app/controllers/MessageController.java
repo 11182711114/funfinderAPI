@@ -1,6 +1,8 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -37,5 +39,21 @@ public class MessageController extends Controller{
 		toReturn.addAll(Message.find.where().eq("receiver", user).findList());
 		
 		return ok(Json.toJson(toReturn));
+	}
+	
+	public Result getMessagesFromSpecificUser(Long receiverId, Long senderId) {
+		User receiver = User.find.byId(receiverId);
+		User sender = User.find.byId(senderId);
+		List<Message> msgs = Message.find.where().eq("sender", sender).and().eq("receiver", receiver).findList();
+		return ok(Json.toJson(msgs));
+	}
+	
+	public Result getNewMeta(Long userId) {
+		User user = User.find.byId(userId);
+		
+		List<User> userActivityNotSeen = Message.find.select("sender").where().eq("seen", false).findList()
+				.stream().map(Message::getSender).distinct().collect(Collectors.toList());
+		
+		return ok(Json.toJson(userActivityNotSeen));
 	}
 }

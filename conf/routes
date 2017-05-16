@@ -31,3 +31,7 @@ GET 	/user/:id/profile		controllers.UserController.getProfile(id: Long)
 POST	/message/send			controllers.MessageController.sendMessage()
 
 GET		/message/:id			controllers.MessageController.getMessages(id: Long)
+
+GET 	/message/:id/new		controllers.MessageController.getNewMeta(id: Long)
+
+GET		/message/:receiver/:sender	controllers.MessageController.getMessagesFromSpecificUser(receiver: Long, sender: Long)

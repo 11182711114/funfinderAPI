@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import play.data.validation.*;
 
@@ -22,17 +24,16 @@ public class User extends Model{
 	@Column(name = "id")
 	private int id;
 	
-	@Constraints.Required
 	@Column(name = "firstname")
 	private String firstname;
-
-	@Constraints.Required
+	
 	@Column(name = "lastname")
 	private String lastname;
-
+	
 	@Column(name = "birthdate")
 	private LocalDate birthdate;
 
+	@JsonInclude
 	@Column(name = "email")
 	private String email;
 	
@@ -77,7 +78,15 @@ public class User extends Model{
 	public String getEmail() {
 		return email;
 	}
-	 
+	
+	public LocalDateTime getCreated() {
+		return created;
+	}
+
+	public LocalDateTime getUpdated() {
+		return updated;
+	}
+
 	public void setPassword(String newPassword) {
 		this.password = newPassword;
 	}
