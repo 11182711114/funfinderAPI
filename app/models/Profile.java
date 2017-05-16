@@ -66,7 +66,7 @@ public class Profile {
 
 	@Override
 	public String toString() {
-		return user.id + " " + bio + " " + hobbies;
+		return user.getId() + " " + bio + " " + hobbies;
 	}
 
 	public Profile copy() {

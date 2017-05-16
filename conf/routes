@@ -16,6 +16,9 @@ GET		/user/email				controllers.UserController.getUserByEmail(email)
 #	Add user
 POST	/user/create			controllers.UserController.createUser()
 
+#	Update user account information
+POST	/user/:id/update		controllers.UserController.updateUserInformation(id: Long)
+
 #	Authenticate user
 POST	/user/authenticate		controllers.UserController.authenticateUser()
 
