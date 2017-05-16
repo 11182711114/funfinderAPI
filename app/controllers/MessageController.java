@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import models.Message;
 import models.User;
 import play.libs.Json;
@@ -45,7 +47,15 @@ public class MessageController extends Controller{
 		User receiver = User.find.byId(receiverId);
 		User sender = User.find.byId(senderId);
 		List<Message> msgs = Message.find.where().eq("sender", sender).and().eq("receiver", receiver).findList();
-		return ok(Json.toJson(msgs));
+		
+		JsonNode toReturn = Json.toJson(msgs);
+		
+		msgs.forEach(msg -> { 
+			msg.setSeen(true);
+			Ebean.update(msg);
+		});
+		
+		return ok(toReturn);
 	}
 	
 	public Result getNewMeta(Long userId) {
