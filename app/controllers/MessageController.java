@@ -30,8 +30,8 @@ public class MessageController extends Controller{
 		return ok(Json.toJson(msg));
 	}
 	
-	public Result getMessages(int userId) {
-		User user = User.find.byId(Integer.toUnsignedLong(userId));
+	public Result getMessages(Long userId) {
+		User user = User.find.byId(userId);
 		
 		List<Message> toReturn = Message.find.where().eq("sender", user).findList();
 		toReturn.addAll(Message.find.where().eq("receiver", user).findList());
