@@ -7,6 +7,7 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import models.Profile;
 import models.User;
@@ -46,7 +47,9 @@ public class UserController extends Controller {
 	
 	public Result authenticateUser() {
 		JsonNode data = request().body().asJson();
-		System.out.println(data);
+		if(!data.has("email") || !data.has("password")) 
+			return badRequest("fields missing");
+			
 		String email = data.get("email").textValue();
 		String password = data.get("password").textValue();
 		
@@ -55,7 +58,24 @@ public class UserController extends Controller {
 		if (user == null)
 			return notFound();
 		
-		return ok("K"+ ","+ user.id);
+		return ok("K"+ ","+ user.getId());
+	}
+	
+	public Result updateUserInformation(Long userId) {
+		User user = User.find.byId(userId);
+		
+		if(user == null)
+			return notFound();
+		
+		JsonNode data = request().body().asJson();
+		if(data.has("email"))
+			user.setEmail(data.get("email").asText());
+		if(data.has("password"))
+			user.setPassword(data.get("password").asText());
+		
+		user.update();
+		
+		return ok("user updated");
 	}
 	
 	/** Returns all current users in Json
@@ -90,7 +110,7 @@ public class UserController extends Controller {
 			return badRequest("exists");
 		}
 		
-		return ok("user created: " + newUser.id);
+		return ok("user created: " + newUser.getId());
 	}
 	
 	public Result updateProfile() {
@@ -137,7 +157,7 @@ public class UserController extends Controller {
 		System.out.println(prof);
 		
 		
-		String json = "{\"uid\":" + user.id + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\"}";
+		String json = "{\"uid\":" + user.getId() + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\"}";
 		
 		JsonNode jn = Json.parse(json);
 		return ok(jn);

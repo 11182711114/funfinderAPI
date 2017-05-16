@@ -20,21 +20,21 @@ public class User extends Model{
 	
 	@Id
 	@Column(name = "id")
-	public int id;
+	private int id;
 	
 	@Constraints.Required
 	@Column(name = "firstname")
-	public String firstname;
+	private String firstname;
 
 	@Constraints.Required
 	@Column(name = "lastname")
-	public String lastname;
+	private String lastname;
 
 	@Column(name = "birthdate")
-	public LocalDate birthdate;
+	private LocalDate birthdate;
 
 	@Column(name = "email")
-	public String email;
+	private String email;
 	
 	//FIXME Needs to be secured
 	@Column(name = "password")
@@ -70,12 +70,25 @@ public class User extends Model{
 		
 	}
 	
-//	public List<Message> getMessagesReceived() {
-//		return messagesReceived;		
-//	}
-//	public List<Message> getMessagesSent() {
-//		return messagesSent;		
-//	}
+	public String getPassword() {
+		return password;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	 
+	public void setPassword(String newPassword) {
+		this.password = newPassword;
+	}
+	
+	public void setEmail(String newEmail) {
+		this.email = newEmail;
+	}
 	
 	public static Finder<Long, User> find = new Finder<Long,User>(User.class);
+
+	public int getId() {
+		return id;
+	}
 }
