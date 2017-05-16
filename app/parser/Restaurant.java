@@ -8,6 +8,7 @@ import java.util.*;
 public class Restaurant{
 
 	private final List<String> types = new ArrayList<>();
+	
 	private String id;
 	private String name;
 	private double rating = -1;
