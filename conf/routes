@@ -30,4 +30,4 @@ GET 	/user/:id/profile		controllers.UserController.getProfile(id: Long)
 
 POST	/message/send			controllers.MessageController.sendMessage()
 
-GET		/message/:id			controllers.MessageController.getMessages(id: Integer)
+GET		/message/:id			controllers.MessageController.getMessages(id: Long)
