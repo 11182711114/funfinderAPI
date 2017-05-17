@@ -115,11 +115,11 @@ public class UserController extends Controller {
 	
 	public Result updateProfile() {
 		JsonNode jn = request().body().asJson();
-		String uid = jn.get("uid").asText();
+		Long uid = jn.get("uid").asLong();
 		String bio = jn.get("bio").asText();
 		String hobbies = jn.get("hobbies").asText();
 		
-		User user = User.find.byId(Long.parseLong(uid));
+		User user = User.find.byId(uid);
 		
 		Profile toUpdate = Ebean.find(Profile.class).where().eq("user", user).findUnique();
 		boolean newProfile = false;
