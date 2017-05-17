@@ -61,7 +61,6 @@ public class UserController extends Controller {
 	
 	public Result updateUserInformation(Long userId) {
 		User user = User.find.byId(userId);
-		
 		if(user == null)
 			return notFound();
 		
@@ -72,7 +71,6 @@ public class UserController extends Controller {
 			user.setPassword(data.get("password").asText());
 		
 		user.update();
-		
 		return ok("user updated");
 	}
 	
@@ -153,7 +151,6 @@ public class UserController extends Controller {
 			return notFound("No profile found");		
 		
 		String json = "{\"uid\":" + user.getId() + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\"}";
-		
 		JsonNode jn = Json.parse(json);
 		return ok(jn);
 	}
