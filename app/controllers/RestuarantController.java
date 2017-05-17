@@ -27,7 +27,7 @@ public class RestuarantController extends Controller {
 	 *  forwarded to the client.
 	 */
 
-	public void getRestaurantsNearby(double lat, double lng, int rad){
+	public Result getRestaurantsNearby(double lat, double lng, int rad){
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.Restaurant> results = respesp.searchNearby(lat, lng, rad);
 
@@ -43,15 +43,29 @@ public class RestuarantController extends Controller {
 				pe.printStackTrace();
 			}
 		}
+		return ok("success");
 	}
 
-	public void getRestaurantsByLocation(String location){
+	public Result getRestaurantsByLocation(String location){
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.Restaurant> results = respesp.searchText(location);
+		for(parser.Restaurant rest : results){
+			String name = rest.getName();
+			double rating = rest.getRating();
+			String id = rest.getId();
 
+			Restaurant newRestaurant = new Restaurant(id, name, rating);
+			try {
+				System.out.println("saved");
+				newRestaurant.save();
+			} catch (PersistenceException pe) { // duplicate user
+				pe.printStackTrace();
+			}
+		}
+		return ok("success");
 
 		//		Clean JSON response
-		//		return results != null ? ok(Json.toJson(results)) : notFound();
+//				return results != null ? ok(Json.toJson(results)) : notFound();
 	}
 
 	//	public Result getRestaurant(String id){

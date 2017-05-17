@@ -19,8 +19,8 @@ ALTER TABLE Message
 DROP COLUMN seen;	
 
 
-ALTER TABLE Restaurant(
-MODIFY id int(11) NOT NULL,
-MODIFY rating int(11),
-DROP loc_id,
+#ALTER TABLE Restaurant(
+#MODIFY id int(11) NOT NULL,
+#MODIFY rating int(11),
+#DROP loc_id,
 );

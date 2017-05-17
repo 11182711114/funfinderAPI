@@ -1,17 +1,18 @@
 package models;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
-import com.avaje.ebean.Model.Finder;
 
 import parser.Location;
 
@@ -33,9 +34,9 @@ public class Restaurant extends Model{
 	@Column(name = "rating")
 	private double rating = -1;
 	
-	@OneToOne
-	@JoinColumn(name = "loc_id")
-	private Location location;
+//	@OneToOne
+//	@JoinColumn(name = "loc_id")
+//	private Location location;
 	
 	
 	

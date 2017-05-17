@@ -58,10 +58,12 @@ CREATE TABLE UserSettings (
 );
 
 CREATE TABLE Restaurant (
-	id int(11) NOT NULL,
+	id varchar(30) NOT NULL,
 	name varchar(45) NOT NULL,
-	rating int(11),
-	PRIMARY KEY (id)	
+	rating double(10,1),	
+	loc_id int(11),
+	PRIMARY KEY (id),
+	FOREIGN KEY (loc_id) REFERENCES Location(id) ON DELETE SET NULL
 );
 
 # --- !Downs
