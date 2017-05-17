@@ -7,8 +7,6 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import models.Profile;
 import models.User;
 import play.data.FormFactory;
@@ -23,10 +21,8 @@ public class UserController extends Controller {
 	 * @param id - the id of the user to be returned
 	 * @return the user in Json
 	 */
-	public Result getUserById(String id) {
-		User user = User.find.byId(Long.parseLong(id));
-		
-		//FIXME Return something better?
+	public Result getUserById(Long id) {
+		User user = User.find.byId(id);
 		if(user == null)
 			return notFound("user not found");
 		
@@ -36,9 +32,8 @@ public class UserController extends Controller {
 	
 	public Result getUserByEmail(String email) {
 		User user = Ebean.find(User.class).where().eq("email", email).findUnique();
-		
 		if (user == null)
-			return notFound();
+			return notFound("user not found");
 		
 		JsonNode result = Json.toJson(user);
 		return ok(result);
@@ -54,18 +49,16 @@ public class UserController extends Controller {
 		String password = data.get("password").textValue();
 		
 		User user = Ebean.find(User.class).where().eq("email", email).and().eq("password", password).findUnique();
-		
 		if (user == null)
-			return notFound();
+			return notFound("user not found");
 		
 		return ok("K"+ ","+ user.getId());
 	}
 	
 	public Result updateUserInformation(Long userId) {
 		User user = User.find.byId(userId);
-		
 		if(user == null)
-			return notFound();
+			return notFound("user not found");
 		
 		JsonNode data = request().body().asJson();
 		if(data.has("email"))
@@ -74,7 +67,6 @@ public class UserController extends Controller {
 			user.setPassword(data.get("password").asText());
 		
 		user.update();
-		
 		return ok("user updated");
 	}
 	
@@ -115,11 +107,13 @@ public class UserController extends Controller {
 	
 	public Result updateProfile() {
 		JsonNode jn = request().body().asJson();
-		String uid = jn.get("uid").asText();
+		Long uid = jn.get("uid").asLong();
 		String bio = jn.get("bio").asText();
 		String hobbies = jn.get("hobbies").asText();
 		
-		User user = User.find.byId(Long.parseLong(uid));
+		User user = User.find.byId(uid);
+		if (user == null)
+			return notFound("user not found");
 		
 		Profile toUpdate = Ebean.find(Profile.class).where().eq("user", user).findUnique();
 		boolean newProfile = false;
@@ -136,7 +130,7 @@ public class UserController extends Controller {
 		if (newProfile)
 			Ebean.save(toUpdate);
 		else {
-//			Ebean.update(toUpdate);
+			//FIXME shitty workaround for no @Id in profile
 			Profile tmp = toUpdate.copy();
 			Ebean.createQuery(Profile.class).where().eq("user", user).delete();
 			Ebean.save(tmp);
@@ -152,13 +146,9 @@ public class UserController extends Controller {
 		
 		Profile prof = Ebean.find(Profile.class).where().eq("user", user).findUnique();
 		if (prof == null)
-			return notFound("No profile found");
-		
-		System.out.println(prof);
-		
+			return notFound("No profile found");		
 		
 		String json = "{\"uid\":" + user.getId() + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\"}";
-		
 		JsonNode jn = Json.parse(json);
 		return ok(jn);
 	}

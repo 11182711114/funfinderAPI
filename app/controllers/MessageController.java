@@ -1,6 +1,5 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +18,8 @@ import play.mvc.Result;
 
 public class MessageController extends Controller{
 	
-	@Inject FormFactory formFactory;
+	@Inject 
+	FormFactory formFactory;
 	
 	public Result sendMessage() {
 		DynamicForm df = formFactory.form().bindFromRequest();
@@ -65,5 +65,18 @@ public class MessageController extends Controller{
 				.stream().map(Message::getSender).distinct().collect(Collectors.toList());
 		
 		return ok(Json.toJson(userActivityNotSeen));
+	}
+	
+	public Result getAllMeta(Long userId) {
+		User user = User.find.byId(userId);
+		
+		List<Message> msgs = Message.find.select("sender").where().eq("receiver", user).findList();
+		List<Message> sender = Message.find.select("receiver").where().eq("sender", user).findList();
+		
+		List<User> userActivity = msgs.stream().map(Message::getSender).distinct().collect(Collectors.toList());
+		userActivity.addAll(sender.stream().map(Message::getReceiver).distinct().collect(Collectors.toList()));
+		
+		
+		return ok(Json.toJson(userActivity));
 	}
 }
