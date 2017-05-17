@@ -18,7 +18,8 @@ import play.mvc.Result;
 
 public class MessageController extends Controller{
 	
-	@Inject FormFactory formFactory;
+	@Inject 
+	FormFactory formFactory;
 	
 	public Result sendMessage() {
 		DynamicForm df = formFactory.form().bindFromRequest();
