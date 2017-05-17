@@ -36,7 +36,7 @@ public class UserController extends Controller {
 		User user = Ebean.find(User.class).where().eq("email", email).findUnique();
 		
 		if (user == null)
-			return notFound();
+			return notFound("user not found");
 		
 		JsonNode result = Json.toJson(user);
 		return ok(result);
@@ -54,7 +54,7 @@ public class UserController extends Controller {
 		User user = Ebean.find(User.class).where().eq("email", email).and().eq("password", password).findUnique();
 		
 		if (user == null)
-			return notFound();
+			return notFound("user not found");
 		
 		return ok("K"+ ","+ user.getId());
 	}
@@ -62,7 +62,7 @@ public class UserController extends Controller {
 	public Result updateUserInformation(Long userId) {
 		User user = User.find.byId(userId);
 		if(user == null)
-			return notFound();
+			return notFound("user not found");
 		
 		JsonNode data = request().body().asJson();
 		if(data.has("email"))
