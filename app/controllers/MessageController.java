@@ -66,4 +66,17 @@ public class MessageController extends Controller{
 		
 		return ok(Json.toJson(userActivityNotSeen));
 	}
+	
+	public Result getAllMeta(Long userId) {
+		User user = User.find.byId(userId);
+		
+		List<Message> msgs = Message.find.select("sender").where().eq("receiver", user).findList();
+		List<Message> sender = Message.find.select("receiver").where().eq("sender", user).findList();
+		
+		List<User> userActivity = msgs.stream().map(Message::getSender).distinct().collect(Collectors.toList());
+		userActivity.addAll(sender.stream().map(Message::getReceiver).distinct().collect(Collectors.toList()));
+		
+		
+		return ok(Json.toJson(userActivity));
+	}
 }
