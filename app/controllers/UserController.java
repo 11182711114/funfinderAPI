@@ -152,10 +152,7 @@ public class UserController extends Controller {
 		
 		Profile prof = Ebean.find(Profile.class).where().eq("user", user).findUnique();
 		if (prof == null)
-			return notFound("No profile found");
-		
-		System.out.println(prof);
-		
+			return notFound("No profile found");		
 		
 		String json = "{\"uid\":" + user.getId() + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\"}";
 		
