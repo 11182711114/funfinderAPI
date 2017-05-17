@@ -137,6 +137,7 @@ public class UserController extends Controller {
 			Ebean.save(toUpdate);
 		else {
 //			Ebean.update(toUpdate);
+			//FIXME shitty workaround for no @Id in profile
 			Profile tmp = toUpdate.copy();
 			Ebean.createQuery(Profile.class).where().eq("user", user).delete();
 			Ebean.save(tmp);
