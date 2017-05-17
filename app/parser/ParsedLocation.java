@@ -4,15 +4,15 @@ package parser;
  * TODO fix toString() and equals()
  */
 
-public class Location {
+public class ParsedLocation {
 
 	private String address;
 	private double latitude = -1;
 	private double longitude = -1;
 	
-	public Location(){}
+	public ParsedLocation(){}
 	
-	public Location(String adress, double lattitude, double longitude){
+	public ParsedLocation(String adress, double lattitude, double longitude){
 		this.address = adress;
 		this.setLattitude(lattitude);
 		this.setLongitude(longitude);
@@ -49,6 +49,6 @@ public class Location {
 	
 	@Override
 	public boolean equals(Object obj){
-		return obj instanceof Location && ((Location) obj).latitude == latitude && ((Location) obj).longitude == longitude;
+		return obj instanceof ParsedLocation && ((ParsedLocation) obj).latitude == latitude && ((ParsedLocation) obj).longitude == longitude;
 	}
 }

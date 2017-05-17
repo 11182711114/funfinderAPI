@@ -38,7 +38,7 @@ public class ResultParser{
 	 * User declares location and method retrieves answer from google places api
 	 *   (should) return up to 20 results
 	 */
-	public ArrayList<Restaurant> searchText(String location){
+	public ArrayList<ParsedRestaurant> searchText(String location){
 		typeSearch = "/textsearch";
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
@@ -69,7 +69,7 @@ public class ResultParser{
 				conn.disconnect();
 		}
 		parseResults(jsonResults);
-		ArrayList<Restaurant> results = parseResults(jsonResults);
+		ArrayList<ParsedRestaurant> results = parseResults(jsonResults);
 		return results;
 	}
 
@@ -79,7 +79,7 @@ public class ResultParser{
 	 * 
 	 * returns up to 20 matching places 
 	 */
-	public ArrayList<Restaurant> searchNearby(double lat, double lang, int radius){
+	public ArrayList<ParsedRestaurant> searchNearby(double lat, double lang, int radius){
 		typeSearch = "/nearbysearch";
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
@@ -110,7 +110,7 @@ public class ResultParser{
 			if(conn!=null)
 				conn.disconnect();
 		}
-		ArrayList<Restaurant> results = parseResults(jsonResults);
+		ArrayList<ParsedRestaurant> results = parseResults(jsonResults);
 		return results;
 	}
 
@@ -157,10 +157,10 @@ public class ResultParser{
 	 * 
 	 * returns a arraylist of Restaurants
 	 */
-	private static ArrayList<Restaurant> parseResults(StringBuilder jsonResults){
+	private static ArrayList<ParsedRestaurant> parseResults(StringBuilder jsonResults){
 
 		boolean validObject = true;
-		ArrayList<Restaurant> resultsList = null;
+		ArrayList<ParsedRestaurant> resultsList = null;
 		try{ 
 			JSONObject jsonObj = new JSONObject(jsonResults.toString());
 
@@ -168,12 +168,12 @@ public class ResultParser{
 			JSONArray prediJsonArr = jsonObj.getJSONArray("results");
 
 			if(prediJsonArr!=null){
-				resultsList = new ArrayList<Restaurant>();
+				resultsList = new ArrayList<ParsedRestaurant>();
 				for(int i=0; i<prediJsonArr.length(); i++){
 					JSONObject objInArr = prediJsonArr.getJSONObject(i);
 
 					// Create Restaurant instance
-					Restaurant newRest = new Restaurant();
+					ParsedRestaurant newRest = new ParsedRestaurant();
 					newRest.setName(objInArr.getString("name"));
 					newRest.setId(objInArr.getString("place_id"));
 					if(objInArr.has("rating"))
@@ -201,7 +201,7 @@ public class ResultParser{
 					 */
 					if(validObject){
 						//Create location instance
-						Location loc = new Location();
+						ParsedLocation loc = new ParsedLocation();
 						loc.setLattitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
 						loc.setLongitude(objInArr.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
 						if(objInArr.has("vicinity"))

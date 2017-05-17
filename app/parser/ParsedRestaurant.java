@@ -5,23 +5,23 @@ import java.util.*;
  * TODO fix toString() and equals()
  */
 
-public class Restaurant{
+public class ParsedRestaurant{
 
 	private final List<String> types = new ArrayList<>();
 	
 	private String id;
 	private String name;
 	private double rating = -1;
-	private Location location = null; //TODO add this
+	private ParsedLocation location = null; //TODO add this
 	private String photoref;
 	
 	
 //	 empty contructor
-	  public Restaurant (){}
+	  public ParsedRestaurant (){}
 	  
 	  
 //	  constructor that takes name, id, rating and location class to create a Restaurant
-	  public Restaurant(String name, String id, int rating, Location loc){
+	  public ParsedRestaurant(String name, String id, int rating, ParsedLocation loc){
 	  this.name = name;
 	  this.id = id;
 	  this.setLocation(loc);
@@ -43,11 +43,11 @@ public class Restaurant{
 		this.name = name;
 	}
 
-	public Location getLocation() {
+	public ParsedLocation getLocation() {
 		return location;
 	}
 
-	public void setLocation(Location location) {
+	public void setLocation(ParsedLocation location) {
 		this.location = location;
 	}
 
@@ -62,7 +62,7 @@ public class Restaurant{
 		return Collections.unmodifiableList(types);
 	}
 
-	protected Restaurant addTypes(String type){
+	protected ParsedRestaurant addTypes(String type){
 		this.types.add(type);
 		return this;
 	}
@@ -83,7 +83,7 @@ public class Restaurant{
 
 	@Override
 	public boolean equals(Object obj){
-		return obj instanceof Restaurant && ((Restaurant) obj).id.equals(id);
+		return obj instanceof ParsedRestaurant && ((ParsedRestaurant) obj).id.equals(id);
 	}
 
 

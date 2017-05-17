@@ -13,8 +13,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import parser.Location;
+import parser.ParsedLocation;
 
 
 @Entity
@@ -26,25 +27,35 @@ public class Restaurant extends Model{
 	@Column(name = "id")
 	private String id;
 	
-//	private final List<String> types = new ArrayList<>();
-	
 	@Column(name = "name")
 	private String name;
 	
 	@Column(name = "rating")
 	private double rating = -1;
 	
-//	@OneToOne
-//	@JoinColumn(name = "loc_id")
-//	private Location location;
+	@JsonInclude
+	@OneToOne
+	@JoinColumn(name = "loc", referencedColumnName = "id")
+	private Location loc;
 	
 	
+	
+	public Restaurant(String id, String name, double rating, String locid){
+		this.id = id;
+		this.name = name;
+		this.rating = rating;
+		this.loc = Location.find.byId(locid);
+	}
 	
 	public Restaurant(String id, String name, double rating){
 		this.id = id;
 		this.name = name;
 		this.rating = rating;
 	}
+	
+	public Restaurant(){
+		
+	};
 	
 	public String getId(){
 		return id;
@@ -57,7 +68,9 @@ public class Restaurant extends Model{
 	public double getRating(){
 		return rating;
 	}
+	
 
 	public static Finder<String, Restaurant> find = new Finder<String,Restaurant>(Restaurant.class);
+	
 	
 }

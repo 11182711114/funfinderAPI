@@ -6,7 +6,7 @@ CREATE TABLE Location (
 	adress varchar(45) NOT NULL,
 	latitude varchar(45) NOT NULL,
 	longitude varchar(45) NOT NULL,
-	id int(11) NOT NULL,
+	id int(11) NOT NULL AUTO_INCREMENT,
 	PRIMARY KEY (id)
 );
 
