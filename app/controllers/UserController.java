@@ -23,8 +23,6 @@ public class UserController extends Controller {
 	 */
 	public Result getUserById(Long id) {
 		User user = User.find.byId(id);
-		
-		//FIXME Return something better?
 		if(user == null)
 			return notFound("user not found");
 		
@@ -34,7 +32,6 @@ public class UserController extends Controller {
 	
 	public Result getUserByEmail(String email) {
 		User user = Ebean.find(User.class).where().eq("email", email).findUnique();
-		
 		if (user == null)
 			return notFound("user not found");
 		
@@ -52,7 +49,6 @@ public class UserController extends Controller {
 		String password = data.get("password").textValue();
 		
 		User user = Ebean.find(User.class).where().eq("email", email).and().eq("password", password).findUnique();
-		
 		if (user == null)
 			return notFound("user not found");
 		
