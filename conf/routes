@@ -8,7 +8,7 @@
 GET		/user/all				controllers.UserController.getAllUsers
 
 #	Get specific user by ID - url ~ "localhost:9000/user?uid=4" where 4 is userId
-GET		/user					controllers.UserController.getUserById(uid)
+GET		/user					controllers.UserController.getUserById(uid: Long)
 
 #	Get specific user by email
 GET		/user/email				controllers.UserController.getUserByEmail(email)

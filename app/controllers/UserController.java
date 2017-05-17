@@ -21,8 +21,8 @@ public class UserController extends Controller {
 	 * @param id - the id of the user to be returned
 	 * @return the user in Json
 	 */
-	public Result getUserById(String id) {
-		User user = User.find.byId(Long.parseLong(id));
+	public Result getUserById(Long id) {
+		User user = User.find.byId(id);
 		
 		//FIXME Return something better?
 		if(user == null)
@@ -134,7 +134,6 @@ public class UserController extends Controller {
 		if (newProfile)
 			Ebean.save(toUpdate);
 		else {
-//			Ebean.update(toUpdate);
 			//FIXME shitty workaround for no @Id in profile
 			Profile tmp = toUpdate.copy();
 			Ebean.createQuery(Profile.class).where().eq("user", user).delete();
