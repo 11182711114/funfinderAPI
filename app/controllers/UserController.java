@@ -112,6 +112,8 @@ public class UserController extends Controller {
 		String hobbies = jn.get("hobbies").asText();
 		
 		User user = User.find.byId(uid);
+		if (user == null)
+			return notFound("user not found");
 		
 		Profile toUpdate = Ebean.find(Profile.class).where().eq("user", user).findUnique();
 		boolean newProfile = false;
