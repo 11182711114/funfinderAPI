@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.org.apache.xpath.internal.operations.And;
 
 import models.Message;
 import models.User;
@@ -61,7 +62,7 @@ public class MessageController extends Controller{
 	public Result getNewMeta(Long userId) {
 		User user = User.find.byId(userId);
 		
-		List<User> userActivityNotSeen = Message.find.select("sender").where().eq("seen", false).findList()
+		List<User> userActivityNotSeen = Message.find.select("sender").where().eq("receiver", user).and().eq("seen", false).findList()
 				.stream().map(Message::getSender).distinct().collect(Collectors.toList());
 		
 		return ok(Json.toJson(userActivityNotSeen));

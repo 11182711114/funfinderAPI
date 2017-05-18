@@ -84,7 +84,6 @@ public class User extends Model{
 		return firstname;
 	}
 	
-	
 	public void setPassword(String newPassword) {
 		this.password = newPassword;
 	}
