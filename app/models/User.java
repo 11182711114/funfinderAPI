@@ -83,7 +83,12 @@ public class User extends Model{
 	public LocalDateTime getUpdated() {
 		return updated;
 	}
-
+	
+	public String getFirstname() {
+		return firstname;
+	}
+	
+	
 	public void setPassword(String newPassword) {
 		this.password = newPassword;
 	}
