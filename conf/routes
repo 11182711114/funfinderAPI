@@ -46,8 +46,8 @@ GET		/message/:receiver/:sender	controllers.MessageController.getMessagesFromSpe
 #  ~~ RESTAURANT ~~
 
 #	Get restaurants by nearby search method
-GET		/restaurants/nearby/location=:lat,:lng&radie=:rdi		controllers.RestuarantController.getRestaurantsNearby(lat:Double, lng:Double, rdi:Int)
+GET		/restaurants/nearbysearch/location=:lat,:lng&radie=:rdi		controllers.RestuarantController.getRestaurantsNearby(lat:Double, lng:Double, rdi:Int)
 
 #	Get restaurants by searching on location name
-GET		/restaurants/location/query=:location			controllers.RestuarantController.getRestaurantsByLocation(location:String)
+GET		/restaurants/textsearch/query=:location			controllers.RestuarantController.getRestaurantsByText(location:String)
 
