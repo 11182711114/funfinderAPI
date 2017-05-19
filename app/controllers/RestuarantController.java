@@ -1,17 +1,15 @@
 package controllers;
 
+
 import java.util.ArrayList;
 
-import javax.persistence.PersistenceException;
+import javax.persistence.*;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Model;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 
 import models.Location;
 import models.Restaurant;
-import models.User;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -20,8 +18,7 @@ import parser.*;
 
 public class RestuarantController extends Controller {
 
-
-
+	
 /**
  * Gets restaurant by location, saves in db
  * @param userLat - user lattitude
@@ -39,6 +36,7 @@ public class RestuarantController extends Controller {
 			double lat = pl.getLocation().getLattitude();
 			double lng = pl.getLocation().getLongitude();
 			Location locat = new Location(adress, lat, lng);
+			try{
 			Ebean.save(locat);
 
 			String name = pl.getName();
@@ -46,14 +44,14 @@ public class RestuarantController extends Controller {
 			String id = pl.getId();
 			String locid = ""+locat.getId();
 			Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
-			try {
+//			try {
 				newRestaurant.save();
 			} catch (PersistenceException pe) { // duplicate user
-				System.out.println("SAVE ERROR " + pe);
-				return internalServerError("FAILED EXECUTING COMMAND");
-			}
+				System.out.println("DUPLICATE ERROR: " + pe);
+//				return internalServerError("FAILED EXECUTING COMMAND");
+			} 
 		}
-		return ok("SUCESSFULLY EXECUTED COMMAND");
+		return ok("SUCCESSFULLY EXECUTED COMMAND");
 	}
 
 	/**
@@ -84,11 +82,10 @@ public class RestuarantController extends Controller {
 			try {
 				newRestaurant.save();
 			} catch (PersistenceException pe) { // duplicate user
-				System.out.println("SAVE ERROR " + pe);
-				return internalServerError("FAILED EXECUTING COMMAND");
+				System.out.println("DUPLICATION ERROR: " + pe);
 			}
 		}
-		return ok("SUCESSFULLY EXECUTED COMMAND");
+		return ok("SUCCESSFULLY EXECUTED COMMAND");
 	}
 
 
@@ -99,13 +96,12 @@ public class RestuarantController extends Controller {
 	 * @return restaurant as json, or not found message
 	 */
 	public Result getRestaurantById(String id){
-		Restaurant rest = Restaurant.find.byId(id);
+//		Restaurant rest = Restaurant.find.byId(id);
+		Restaurant rest = Ebean.find(Restaurant.class).where().eq("id", id).findUnique();
 		if(rest == null)
 			return notFound("Restaurant doesn't exist");
-		String json = "{\"restid\":" + rest.getId() + ",\"name\":\"" + rest.getName() + "\",\"rating\":\"" + rest.getRating() + "\"}";
-
-		JsonNode jn = Json.parse(json);
-		return ok(jn);
+		JsonNode result = Json.toJson(rest);
+		return ok(result);
 	}
 
 	/**

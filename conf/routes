@@ -51,3 +51,8 @@ GET		/restaurants/nearbysearch/location=:lat,:lng&radie=:rdi		controllers.Restua
 #	Get restaurants by searching on location name
 GET		/restaurants/textsearch/query=:location			controllers.RestuarantController.getRestaurantsByText(location:String)
 
+#	fetches specific restaurant through search on id
+GET		/restaurants/fetch/byid=:id						controllers.RestuarantController.getRestaurantById(id:String)
+
+#	fetches specific restaurant through search on id
+GET		/restaurants/fetch/byname=:name					controllers.RestuarantController.getRestaurantByName(name:String)

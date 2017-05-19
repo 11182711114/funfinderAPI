@@ -3,11 +3,11 @@
 # --- !Ups
 
 CREATE TABLE Location (
-	adress varchar(50) NOT NULL,
+	adress varchar(160) NOT NULL,
 	latitude varchar(45) NOT NULL,
 	longitude varchar(45) NOT NULL,
 	id int(11) NOT NULL AUTO_INCREMENT,
-#	UNIQUE KEY(latitude, longitude), 
+	CONSTRAINT UNIQUE (adress, latitude, longitude), 
 	PRIMARY KEY (id)
 );
 
