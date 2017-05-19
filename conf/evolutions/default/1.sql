@@ -2,6 +2,7 @@
 
 # --- !Ups
 
+
 CREATE TABLE Location (
 	adress varchar(160) NOT NULL,
 	latitude varchar(45) NOT NULL,
@@ -11,27 +12,46 @@ CREATE TABLE Location (
 	PRIMARY KEY (id)
 );
 
+CREATE TABLE Restaurant (
+	id varchar(30) NOT NULL,
+	name varchar(45) NOT NULL,
+	rating double(10,1),	
+	location int(11),
+	PRIMARY KEY (id),
+	FOREIGN KEY (location) REFERENCES Location(id) ON DELETE SET NULL
+);
+
+CREATE TABLE Event (
+	eventId int(11) NOT NULL AUTO_INCREMENT,
+	time varchar(45) NOT NULL,
+	date varchar(45) NOT NULL,
+	PRIMARY KEY (eventId)
+);
 
 CREATE TABLE User (
     id int(11) NOT NULL AUTO_INCREMENT,
     firstName varchar(45) NOT NULL,
     lastName varchar(45) NOT NULL,
     birthdate date NOT NULL,
+    loc int(11),
+    event int(11),
     email varchar(45) NOT NULL,
     password varchar(255) NOT NULL,
-    loc_id int(11),
     created TIMESTAMP DEFAULT '0000-00-00 00:00:00',
 	updated TIMESTAMP DEFAULT now() ON UPDATE now(),
-    FOREIGN KEY (loc_id) REFERENCES Location(id) ON DELETE cascade,
+    FOREIGN KEY (loc) REFERENCES Location(id) ON DELETE SET NULL,
+    FOREIGN KEY (event) REFERENCES Event(eventId) ON DELETE SET NULL,
     PRIMARY KEY (id),
     CONSTRAINT emailAK UNIQUE (email)
 );
+
+
 
 CREATE TRIGGER insertCreatedTrigger BEFORE INSERT ON User 
 FOR EACH ROW 
 SET NEW.created = now();
 
-CREATE TABLE `Profile` (
+CREATE TABLE Profile (
 	user int NOT NULL,
 	bio varchar(1000),
 	hobbies varchar(1000),
@@ -68,9 +88,11 @@ CREATE TABLE Restaurant (
 	FOREIGN KEY (location) REFERENCES Location(id) ON DELETE SET NULL    
 );
 
+
+
 # --- !Downs
 
-DROP TABLE `Profile`;
+DROP TABLE Profile;
 
 DROP TABLE Message;
 
@@ -82,3 +104,4 @@ DROP TABLE Restaurant;
 
 DROP TABLE Location;
 
+DROP TABLE Event;

@@ -18,40 +18,38 @@ import parser.*;
 
 public class RestuarantController extends Controller {
 
-	
-/**
- * Gets restaurant by location, saves in db
- * @param userLat - user lattitude
- * @param userLng - user longitude
- * @param searchRadie - radie from the users location to search
- * 
- * @return successmessage if successfully loaded to db or failmessage
- */
+
+	/**
+	 * Gets restaurant by location, saves in db
+	 * @param userLat - user lattitude
+	 * @param userLng - user longitude
+	 * @param searchRadie - radie from the users location to search
+	 * 
+	 * @return successmessage if successfully loaded to db or failmessage
+	 */
 	public Result getRestaurantsNearby(double userLat, double userLng, int searchRadie){
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
 
 		for(ParsedRestaurant pl : results){
-			String adress = pl.getLocation().getAddress();
-			double lat = pl.getLocation().getLattitude();
-			double lng = pl.getLocation().getLongitude();
-			Location locat = new Location(adress, lat, lng);
 			try{
-			Ebean.save(locat);
+				String adress = pl.getLocation().getAddress();
+				double lat = pl.getLocation().getLattitude();
+				double lng = pl.getLocation().getLongitude();
+				Location locat = new Location(adress, lat, lng);
+				Ebean.save(locat);
 
-			String name = pl.getName();
-			double rating = pl.getRating();
-			String id = pl.getId();
-			String locid = ""+locat.getId();
-			Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
-//			try {
+				String name = pl.getName();
+				double rating = pl.getRating();
+				String id = pl.getId();
+				String locid = ""+locat.getId();
+				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
 				newRestaurant.save();
 			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATE ERROR: " + pe);
-//				return internalServerError("FAILED EXECUTING COMMAND");
 			} 
 		}
-		return ok("SUCCESSFULLY EXECUTED COMMAND");
+		return ok("SUCCESSFULL");
 	}
 
 	/**
@@ -69,24 +67,23 @@ public class RestuarantController extends Controller {
 
 		for(ParsedRestaurant pl : results){
 			try {
-			String adress = pl.getLocation().getAddress();
-			double lat = pl.getLocation().getLattitude();
-			double lng = pl.getLocation().getLongitude();
-			Location locat = new Location(adress, lat, lng);
-			Ebean.save(locat);
+				String adress = pl.getLocation().getAddress();
+				double lat = pl.getLocation().getLattitude();
+				double lng = pl.getLocation().getLongitude();
+				Location locat = new Location(adress, lat, lng);
+				Ebean.save(locat);
 
-			String name = pl.getName();
-			double rating = pl.getRating();
-			String id = pl.getId();
-			String locid = ""+locat.getId();
-			Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
-			
+				String name = pl.getName();
+				double rating = pl.getRating();
+				String id = pl.getId();
+				String locid = ""+locat.getId();
+				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
 				newRestaurant.save();
 			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATION ERROR: " + pe);
 			}
 		}
-		return ok("SUCCESSFULLY EXECUTED COMMAND");
+		return ok("SUCCESSFULL");
 	}
 
 
@@ -97,7 +94,6 @@ public class RestuarantController extends Controller {
 	 * @return restaurant as json, or not found message
 	 */
 	public Result getRestaurantById(String id){
-//		Restaurant rest = Restaurant.find.byId(id);
 		Restaurant rest = Ebean.find(Restaurant.class).where().eq("id", id).findUnique();
 		if(rest == null)
 			return notFound("Restaurant doesn't exist");
@@ -118,6 +114,7 @@ public class RestuarantController extends Controller {
 		JsonNode result = Json.toJson(rest);
 		return ok(result);
 	}
-	
+
+
 
 }

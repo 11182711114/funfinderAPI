@@ -1,14 +1,16 @@
 package models;
 
-import java.util.ArrayList;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,56 +23,57 @@ import parser.ParsedLocation;
 @Entity
 @Table(name = "Restaurant")
 public class Restaurant extends Model{
-	
+
 
 	@Id
 	@Column(name = "id")
 	private String id;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "rating")
 	private double rating = -1;
-	
+
 
 	@OneToOne
 	@JoinColumn(name = "location", referencedColumnName = "id")
 	private Location location;
-	
-	
-	
+
+//	//Många event kan innehålla många restauranger - manytomany
+	@ManyToMany(mappedBy = "restaurants")
+	public List<Event> events;
+
 	public Restaurant(String id, String name, double rating, String locid){
 		this.location = Location.find.byId(Long.parseLong(locid));
 		this.id = id;
 		this.name = name;
 		this.rating = rating;
 	}
-	
+
 	public Restaurant(String id, String name, double rating, Location locz){
 		this.id = id;
 		this.name = name;
 		this.rating = rating;
 		this.location = locz;
 	}
-	
-	public Restaurant(){
-	};
-	
+
+	public Restaurant(){};
+
 	public String getId(){
 		return id;
 	}
-	
+
 	public String getName(){
 		return name;
 	}
-	
+
 	public double getRating(){
 		return rating;
 	}
-	
+
 
 	public static Finder<String, Restaurant> find = new Finder<String,Restaurant>(Restaurant.class);
-	
-	
+
+
 }
