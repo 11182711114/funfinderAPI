@@ -36,6 +36,8 @@ public class RestuarantController extends Controller {
 		ArrayList<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
 
 		for(ParsedRestaurant pl : results){
+
+//			System.out.println("ADDING: "+pl.toString()+" "+pl.getLocation().getAddress());//TODO remove testline
 			
 			String adress = pl.getLocation().getAddress();
 			double lat = pl.getLocation().getLattitude();
@@ -47,24 +49,48 @@ public class RestuarantController extends Controller {
 			double rating = pl.getRating();
 			String id = pl.getId();
 			String locid = ""+locat.getId();
-			System.out.println(">>>LOC ID : "+locid);
+//			System.out.println(">>>LOC ID : "+locid); //TODO remove testline
 			
 			Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
 			try {
 				newRestaurant.save();
 			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("SAVE ERROR " + pe);
-				return badRequest("FAILED");
+				return internalServerError("FAILED EXECUTING COMMAND");
 			}
 		}
-		return ok("success");
+		return ok("SUCESSFULLY EXECUTED COMMAND");
 	}
 
 	public Result getRestaurantsByLocation(String location){
 		ResultParser respesp = new ResultParser();
-		ArrayList<parser.ParsedRestaurant> results = respesp.searchText(location);
-	
-		return ok("success");
+		ArrayList<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
+
+		for(ParsedRestaurant pl : results){
+
+//			System.out.println("ADDING: "+pl.toString()+" "+pl.getLocation().getAddress());//TODO remove testline
+			
+			String adress = pl.getLocation().getAddress();
+			double lat = pl.getLocation().getLattitude();
+			double lng = pl.getLocation().getLongitude();
+			Location locat = new Location(adress, lat, lng);
+			Ebean.save(locat);
+		
+			String name = pl.getName();
+			double rating = pl.getRating();
+			String id = pl.getId();
+			String locid = ""+locat.getId();
+//			System.out.println(">>>LOC ID : "+locid); //TODO remove testline
+			
+			Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
+			try {
+				newRestaurant.save();
+			} catch (PersistenceException pe) { // duplicate user
+				System.out.println("SAVE ERROR " + pe);
+				return internalServerError("FAILED EXECUTING COMMAND");
+			}
+		}
+		return ok("SUCESSFULLY EXECUTED COMMAND");
 	}
 
 
