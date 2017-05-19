@@ -35,18 +35,18 @@ public class Event extends Model {
 	public String time;
 
 	
-	//Många event kan innehålla många restauranger - manytomany
+	//Many events can be held near many restaurants, and vice versa.
 	@ManyToMany
 	@JoinTable(name= "EVENT_REST",
-				joinColumns=@JoinColumn(name="event", referencedColumnName="eventId"),
-				inverseJoinColumns=@JoinColumn(name="restaurant", referencedColumnName="id"))
+				joinColumns={@JoinColumn(name="event", referencedColumnName="eventId")},
+				inverseJoinColumns={@JoinColumn(name="restaurant", referencedColumnName="id")})
 	public List<Restaurant> restaurants;
 
 
-	//ett event kan ha många rest och viseversa
-	@ManyToOne
-	@JoinColumn(name = "user", referencedColumnName = "id")
-	private User user;
+	//One user may only hold one event at a time?
+//	@ManyToOne
+//	@JoinColumn(name = "user", referencedColumnName = "id")
+//	private User user;
 
 
 	public Event(String date, String time) {
