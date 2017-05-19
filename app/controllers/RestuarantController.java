@@ -68,6 +68,7 @@ public class RestuarantController extends Controller {
 		ArrayList<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
 
 		for(ParsedRestaurant pl : results){
+			try {
 			String adress = pl.getLocation().getAddress();
 			double lat = pl.getLocation().getLattitude();
 			double lng = pl.getLocation().getLongitude();
@@ -79,7 +80,7 @@ public class RestuarantController extends Controller {
 			String id = pl.getId();
 			String locid = ""+locat.getId();
 			Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
-			try {
+			
 				newRestaurant.save();
 			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATION ERROR: " + pe);
@@ -117,5 +118,6 @@ public class RestuarantController extends Controller {
 		JsonNode result = Json.toJson(rest);
 		return ok(result);
 	}
+	
 
 }

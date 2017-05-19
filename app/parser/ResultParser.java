@@ -48,7 +48,7 @@ public class ResultParser{
 			request.append(typeSearch);
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
-			request.append(location+"+Stockholm");
+			request.append(location);//+"+Stockholm");//TODO use this to search in sthlm vicinity
 			request.append("&key=" + KEY);
 
 			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
