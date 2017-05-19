@@ -33,28 +33,28 @@ public class Restaurant extends Model{
 	@Column(name = "rating")
 	private double rating = -1;
 	
-	@JsonInclude
+
 	@OneToOne
-	@JoinColumn(name = "loc", referencedColumnName = "id")
-	private Location loc;
+	@JoinColumn(name = "location", referencedColumnName = "id")
+	private Location location;
 	
 	
 	
 	public Restaurant(String id, String name, double rating, String locid){
+		this.location = Location.find.byId(Long.parseLong(locid));
 		this.id = id;
 		this.name = name;
 		this.rating = rating;
-		this.loc = Location.find.byId(locid);
 	}
 	
-	public Restaurant(String id, String name, double rating){
+	public Restaurant(String id, String name, double rating, Location locz){
 		this.id = id;
 		this.name = name;
 		this.rating = rating;
+		this.location = locz;
 	}
 	
 	public Restaurant(){
-		
 	};
 	
 	public String getId(){

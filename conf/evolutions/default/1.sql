@@ -7,8 +7,10 @@ CREATE TABLE Location (
 	latitude varchar(45) NOT NULL,
 	longitude varchar(45) NOT NULL,
 	id int(11) NOT NULL AUTO_INCREMENT,
+#	UNIQUE KEY(latitude, longitude), 
 	PRIMARY KEY (id)
 );
+
 
 CREATE TABLE User (
     id int(11) NOT NULL AUTO_INCREMENT,
@@ -61,9 +63,9 @@ CREATE TABLE Restaurant (
 	id varchar(30) NOT NULL,
 	name varchar(45) NOT NULL,
 	rating double(10,1),	
-	loc_id int(11),
+	location int(11),
 	PRIMARY KEY (id),
-	FOREIGN KEY (loc_id) REFERENCES Location(id) ON DELETE SET NULL
+	FOREIGN KEY (location) REFERENCES Location(id) ON DELETE SET NULL    
 );
 
 # --- !Downs

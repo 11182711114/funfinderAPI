@@ -23,7 +23,9 @@ public class Location extends Model{
 	private double longitude;
 	
 	@Id
-	private String id;
+	@Column(name = "id")
+	private int id;
+	
 	
 	public Location (String adress, double latitude, double longitude){
 		this.adress = adress;
@@ -42,10 +44,18 @@ public class Location extends Model{
 	public double getLang(){
 		return longitude;
 	}
-
-	public static Finder<String, Location> find = new Finder<String, Location>(Location.class);
 	
-	public String getId(){
+	@Override
+	public boolean equals(Object obj){
+		return obj instanceof Location && ((Location) obj).latitude == latitude && ((Location) obj).longitude == longitude;
+	} 
+
+	public static Finder<Long, Location> find = new Finder<Long, Location>(Location.class);
+
+//	public static Finder<String, Location> find = new Finder<String, Location>(Location.class);
+	
+	public int getId(){
 		return id;
 	}
+	
 }
