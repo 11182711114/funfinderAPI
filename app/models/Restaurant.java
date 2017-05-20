@@ -9,8 +9,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -40,10 +42,12 @@ public class Restaurant extends Model{
 	@JoinColumn(name = "location", referencedColumnName = "id")
 	private Location location;
 
-//	//Många event kan innehålla många restauranger - manytomany
-	@ManyToMany(mappedBy = "restaurants")
+	@ManyToMany
+	@JoinTable(name="Event_Rest",
+			joinColumns=@JoinColumn(name="atRest", referencedColumnName="id"),
+			inverseJoinColumns=@JoinColumn(name="atEvent", referencedColumnName="eventId"))
 	public List<Event> events;
-
+	
 	public Restaurant(String id, String name, double rating, String locid){
 		this.location = Location.find.byId(Long.parseLong(locid));
 		this.id = id;
@@ -72,6 +76,9 @@ public class Restaurant extends Model{
 		return rating;
 	}
 
+	public List<Event> getEvents(){
+		return events;
+	}
 
 	public static Finder<String, Restaurant> find = new Finder<String,Restaurant>(Restaurant.class);
 

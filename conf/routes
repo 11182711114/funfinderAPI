@@ -56,3 +56,10 @@ GET		/restaurants/fetch/byid=:id						controllers.RestuarantController.getRestau
 
 #	fetches specific restaurant through search on id
 GET		/restaurants/fetch/byname=:name					controllers.RestuarantController.getRestaurantByName(name:String)
+
+
+
+#	~~ EVENT ~~
+
+#	Creates new Event
+#POST	/event/create/

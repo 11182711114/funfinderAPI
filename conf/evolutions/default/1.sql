@@ -45,6 +45,12 @@ CREATE TABLE User (
     CONSTRAINT emailAK UNIQUE (email)
 );
 
+CREATE TABLE Event_Rest (
+	atRest varchar(30),
+	atEvent int(11),
+	FOREIGN KEY(atRest) REFERENCES Restaurant(id) ON DELETE CASCADE,
+	FOREIGN KEY(atEvent) REFERENCES Event(eventId) ON DELETE CASCADE
+);
 
 
 CREATE TRIGGER insertCreatedTrigger BEFORE INSERT ON User 

@@ -34,19 +34,8 @@ public class Event extends Model {
 	@Column(name = "time")
 	public String time;
 
-	
-	//Many events can be held near many restaurants, and vice versa.
-	@ManyToMany
-	@JoinTable(name= "EVENT_REST",
-				joinColumns={@JoinColumn(name="event", referencedColumnName="eventId")},
-				inverseJoinColumns={@JoinColumn(name="restaurant", referencedColumnName="id")})
+	@ManyToMany(mappedBy ="events")
 	public List<Restaurant> restaurants;
-
-
-	//One user may only hold one event at a time?
-//	@ManyToOne
-//	@JoinColumn(name = "user", referencedColumnName = "id")
-//	private User user;
 
 
 	public Event(String date, String time) {
@@ -64,6 +53,10 @@ public class Event extends Model {
 	
 	public int getId(){
 		return eventId;
+	}
+	
+	public List<Restaurant> getRestaurants(){
+		return restaurants;
 	}
 
 	public static Finder<Long, Event> find = new Finder<Long, Event>(Event.class);
