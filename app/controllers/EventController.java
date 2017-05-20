@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import com.avaje.ebean.enhance.agent.SysoutMessageOutput;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Event;
@@ -56,6 +57,8 @@ public class EventController extends Controller{
 			}
 		}catch(PersistenceException pe){
 			return badRequest("DUPLICATE ERROR: "+pe);
+		}catch(Exception exp){
+			System.out.println("ERROR: "+ exp);
 		}
 		return ok("Event created: "+newEvent.getId());
 	}
@@ -66,11 +69,16 @@ public class EventController extends Controller{
 		return ok(result);
 	}
 
-	public void fillEvent(String textsearch){
+	/*
+	 * fillEvent method "fill the event" with the nearby restaurants
+	 * 	either as a textsearch on the location or by supplying the coordinates
+	 * submethod supplied by the restaurantcontroller, classic spaghetti-coding  
+	 */
+	private void fillEvent(String textsearch){
 		RestuarantController rest = new RestuarantController();
 		rest.getRestaurantsByText(textsearch);
 	}
-	public void fillEvent(double lat, double lng){
+	private void fillEvent(double lat, double lng){
 		RestuarantController rest = new RestuarantController();
 		rest.getRestaurantsNearby(lat, lng, 800);
 	}
