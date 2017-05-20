@@ -21,7 +21,15 @@ public class EventController extends Controller{
         JsonNode result = Json.toJson(user);
         return ok(result);
     }
-
+    
+    public Result createEvent(){
+    	JsonNode jn = request().body().asJson();
+    	String date = jn.get("date").asText();
+    	String time = jn.get("time").asText();
+    	String location = jn.get("location").asText();
+    	
+    	return ok();
+    }
 
 }
 

@@ -3,6 +3,7 @@ package models;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,30 +25,36 @@ public class Event extends Model {
 
 	@Id
 	@Column(name = "eventId")
-	public int eventId;
+	private int eventId;
 
 	@Constraints.Required
 	@Column(name = "date")
-	public String date;
+	private LocalDate date;
 
 	@Constraints.Required
 	@Column(name = "time")
-	public String time;
+	private LocalDate time;
 
 	@ManyToMany(mappedBy ="events")
 	public List<Restaurant> restaurants;
 
+	
+	//FIXME CHANGE AND CONNECT TO LOCATION TABLE
+	@Column(name = "location")
+	public String location;
+	
 
-	public Event(String date, String time) {
-		this.date = date;
-		this.time = time;
+	public Event(String date, String time, String location) {
+		this.date = LocalDate.parse(date);
+		this.time = LocalDate.parse(time);
+		this.location = location;
 	}
 
-	public String getDate(){
+	public LocalDate getDate(){
 		return date;
 	}
 
-	public String getTime(){
+	public LocalDate getTime(){
 		return time;
 	}
 	
