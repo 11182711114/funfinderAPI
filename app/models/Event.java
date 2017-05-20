@@ -36,20 +36,33 @@ public class Event extends Model {
 	private LocalDate time;
 
 	@ManyToMany(mappedBy ="events")
-	public List<Restaurant> restaurants;
+	private List<Restaurant> restaurants;
 
 	
 	//FIXME CHANGE AND CONNECT TO LOCATION TABLE
 	@Column(name = "location")
-	public String location;
+	private String location;
 	
 
+	/*
+	 * If user sends the text name of the location for the event
+	 */
 	public Event(String date, String time, String location) {
 		this.date = LocalDate.parse(date);
 		this.time = LocalDate.parse(time);
 		this.location = location;
 	}
 
+	/*
+	 * if user sends the geo-location of their location for the event
+	 * 	could also be made to take the searchradius for the event
+	 */
+	public Event(String date, String time, double lat, double lng) {
+		this.date = LocalDate.parse(date);
+		this.time = LocalDate.parse(time);
+	}
+	
+	
 	public LocalDate getDate(){
 		return date;
 	}
@@ -61,6 +74,7 @@ public class Event extends Model {
 	public int getId(){
 		return eventId;
 	}
+	
 	
 	public List<Restaurant> getRestaurants(){
 		return restaurants;

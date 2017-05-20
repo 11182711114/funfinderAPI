@@ -15,48 +15,74 @@ import play.mvc.Result;
 
 public class EventController extends Controller{
 
-    public Result getUser() {
-        User user = User.find.byId(2L);
-        JsonNode result = Json.toJson(user);
-        return ok(result);
-    }
+	public Result getUser() {
+		User user = User.find.byId(2L);
+		JsonNode result = Json.toJson(user);
+		return ok(result);
+	}
 
-    @Transactional
-    public Result getUserByID(Long id) {
-        User user = User.find.byId(id);
-        JsonNode result = Json.toJson(user);
-        return ok(result);
-    }
-    
-    public Result createEvent(){
-    	JsonNode jn = request().body().asJson();
-    	String date = jn.get("date").asText();
-    	String time = jn.get("time").asText();
-    	String location = jn.get("location").asText();
-    	
-    	Event newEvent = new Event(date, time, location);
-    	try{
-    		newEvent.save();
-    	}catch(PersistenceException pe){
-    		return badRequest("DUPLICATE ERROR: "+pe);
-    	}
-    	return ok("Event created: "+newEvent.getId());
-    }
+	@Transactional
+	public Result getUserByID(Long id) {
+		User user = User.find.byId(id);
+		JsonNode result = Json.toJson(user);
+		return ok(result);
+	}
 
-    public Result getAllEvents(){
-    	List<Event> events = Event.find.all();
-    	JsonNode result = Json.toJson(events);
-    	return ok(result);
-    }
-    
-    public Result getEventById(Long id){
-    	Event event = Event.find.byId(id);
-    	if(event==null)
-    		return notFound("event not found");
-    	
-    	JsonNode result = Json.toJson(event);
-    	return ok(result);
-    }
-    
+	/*
+	 * creates from user input a new event, takes two possible routes
+	 * 	if the user entered text location it saves the textlocation and fills 
+	 * 		with restaurants based on that textsearch
+	 * else if the user gives event her nearby position the search for restaurants are
+	 *  made from the coordinates of the user.
+	 */
+	public Result createEvent(){
+		JsonNode jn = request().body().asJson();
+		String date = jn.get("date").asText();
+		String time = jn.get("time").asText();
+		Event newEvent = null;
+		try{
+			if(jn.has("textlocation")){
+				String location = jn.get("textlocation").asText();
+				newEvent = new Event(date, time, location);
+				newEvent.save();
+				fillEvent(location);
+			}
+			else{
+				double lat = jn.get("latitude").asDouble();
+				double lng = jn.get("longitude").asDouble();
+				newEvent = new Event(date, time, lat, lng);
+				newEvent.save();
+				fillEvent(lat,lng);
+			}
+		}catch(PersistenceException pe){
+			return badRequest("DUPLICATE ERROR: "+pe);
+		}
+		return ok("Event created: "+newEvent.getId());
+	}
+
+	public Result getAllEvents(){
+		List<Event> events = Event.find.all();
+		JsonNode result = Json.toJson(events);
+		return ok(result);
+	}
+
+	public void fillEvent(String textsearch){
+		RestuarantController rest = new RestuarantController();
+		rest.getRestaurantsByText(textsearch);
+	}
+	public void fillEvent(double lat, double lng){
+		RestuarantController rest = new RestuarantController();
+		rest.getRestaurantsNearby(lat, lng, 800);
+	}
+
+	public Result getEventById(Long id){
+		Event event = Event.find.byId(id);
+		if(event==null)
+			return notFound("event not found");
+
+		JsonNode result = Json.toJson(event);
+		return ok(result);
+	}
+
 }
 

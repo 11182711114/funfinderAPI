@@ -46,7 +46,7 @@ public class Restaurant extends Model{
 	@JoinTable(name="Event_Rest",
 			joinColumns=@JoinColumn(name="atRest", referencedColumnName="id"),
 			inverseJoinColumns=@JoinColumn(name="atEvent", referencedColumnName="eventId"))
-	public List<Event> events;
+	private List<Event> events;
 	
 	public Restaurant(String id, String name, double rating, String locid){
 		this.location = Location.find.byId(Long.parseLong(locid));

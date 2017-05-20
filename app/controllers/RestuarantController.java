@@ -59,9 +59,10 @@ public class RestuarantController extends Controller {
 	 * 			this can also be used to search on restaurants name and it will return
 	 * 			 all restaurants by that name in sthlm
 	 * 
-	 * @return successmessage if successfully loaded to db or failmessage
+	 * @return successmessage if successfully loaded to db or failmessage //FIXME
+	 * @return void
 	 */
-	public Result getRestaurantsByText(String textSearch){
+	public void getRestaurantsByText(String textSearch){
 		ResultParser respesp = new ResultParser();
 		ArrayList<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
 
@@ -83,7 +84,7 @@ public class RestuarantController extends Controller {
 				System.out.println("DUPLICATION ERROR: " + pe);
 			}
 		}
-		return ok("SUCCESSFULL");
+//		return ok("SUCCESSFULL");
 	}
 
 
