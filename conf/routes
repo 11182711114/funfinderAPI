@@ -59,7 +59,14 @@ GET		/restaurants/fetch/byname=:name					controllers.RestuarantController.getRes
 
 
 
+
 #	~~ EVENT ~~
 
 #	Creates new Event
-#POST	/event/create/
+#POST	/event/create/									controllers.EventController.createEvent()
+
+#	Gets specific Event from eventId presented
+#GET	/event/											controllers.EventController.getEventById(evid:Long)
+
+#	Gets all stored Events
+#GET	/event/all										controllers.EventController.getAllEvents()

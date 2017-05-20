@@ -1,6 +1,12 @@
 package controllers;
 
+import java.util.List;
+
+import javax.persistence.PersistenceException;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
+import models.Event;
 import models.User;
 import play.db.ebean.Transactional;
 import play.libs.Json;
@@ -28,8 +34,29 @@ public class EventController extends Controller{
     	String time = jn.get("time").asText();
     	String location = jn.get("location").asText();
     	
-    	return ok();
+    	Event newEvent = new Event(date, time, location);
+    	try{
+    		newEvent.save();
+    	}catch(PersistenceException pe){
+    		return badRequest("DUPLICATE ERROR: "+pe);
+    	}
+    	return ok("Event created: "+newEvent.getId());
     }
 
+    public Result getAllEvents(){
+    	List<Event> events = Event.find.all();
+    	JsonNode result = Json.toJson(events);
+    	return ok(result);
+    }
+    
+    public Result getEventById(Long id){
+    	Event event = Event.find.byId(id);
+    	if(event==null)
+    		return notFound("event not found");
+    	
+    	JsonNode result = Json.toJson(event);
+    	return ok(result);
+    }
+    
 }
 
