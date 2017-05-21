@@ -4,6 +4,8 @@ import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class Event extends Model {
 
 	@Constraints.Required
 	@Column(name = "time")
-	private LocalDate time;
+	private LocalTime time;
 
 	@ManyToMany(mappedBy ="events")
 	private List<Restaurant> restaurants;
@@ -49,7 +51,7 @@ public class Event extends Model {
 	 */
 	public Event(String date, String time, String location) {
 		this.date = LocalDate.parse(date);
-		this.time = LocalDate.parse(time);
+		this.time = LocalTime.parse(time);
 		this.location = location;
 	}
 
@@ -59,7 +61,7 @@ public class Event extends Model {
 	 */
 	public Event(String date, String time, double lat, double lng) {
 		this.date = LocalDate.parse(date);
-		this.time = LocalDate.parse(time);
+		this.time = LocalTime.parse(time);
 	}
 	
 	
@@ -67,7 +69,7 @@ public class Event extends Model {
 		return date;
 	}
 
-	public LocalDate getTime(){
+	public LocalTime getTime(){
 		return time;
 	}
 	

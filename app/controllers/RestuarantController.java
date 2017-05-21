@@ -2,6 +2,7 @@ package controllers;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -29,7 +30,7 @@ public class RestuarantController extends Controller {
 	 */
 	public Result getRestaurantsNearby(double userLat, double userLng, int searchRadie){
 		ResultParser respesp = new ResultParser();
-		ArrayList<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
+		List<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
 
 		for(ParsedRestaurant pl : results){
 			try{
@@ -64,7 +65,7 @@ public class RestuarantController extends Controller {
 	 */
 	public void getRestaurantsByText(String textSearch){
 		ResultParser respesp = new ResultParser();
-		ArrayList<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
+		List<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
 
 		for(ParsedRestaurant pl : results){
 			try {
@@ -115,7 +116,5 @@ public class RestuarantController extends Controller {
 		JsonNode result = Json.toJson(rest);
 		return ok(result);
 	}
-
-
 
 }

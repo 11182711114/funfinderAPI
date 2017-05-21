@@ -23,8 +23,9 @@ CREATE TABLE Restaurant (
 
 CREATE TABLE Event (
 	eventId int(11) NOT NULL AUTO_INCREMENT,
-	time date NOT NULL,
 	date date NOT NULL,
+	time time NOT NULL,
+	location varchar(160),
 	PRIMARY KEY (eventId)
 );
 

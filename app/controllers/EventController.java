@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.enhance.agent.SysoutMessageOutput;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Event;
 import models.User;
+import play.data.FormFactory;
 import play.db.ebean.Transactional;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -16,6 +18,9 @@ import play.mvc.Result;
 
 public class EventController extends Controller{
 
+	@Inject FormFactory formFactory;
+	
+	
 	public Result getUser() {
 		User user = User.find.byId(2L);
 		JsonNode result = Json.toJson(user);
@@ -38,37 +43,37 @@ public class EventController extends Controller{
 	 */
 	public Result createEvent(){
 		JsonNode jn = request().body().asJson();
-		String date = jn.get("date").asText();
-		String time = jn.get("time").asText();
-		Event newEvent = null;
+//		String date = jn.get("date").asText();
+//		String time = jn.get("time").asText();
+		String date = jn.findPath("date").asText();
+		String time = jn.findPath("time").asText();
+		
 		try{
-			if(jn.has("textlocation")){
-				String location = jn.get("textlocation").asText();
+			Event newEvent;
+//			if(jn.has("location")){
+				String location = jn.findPath("location").asText();
 				newEvent = new Event(date, time, location);
 				newEvent.save();
 				fillEvent(location);
-			}
-			else{
-				double lat = jn.get("latitude").asDouble();
-				double lng = jn.get("longitude").asDouble();
-				newEvent = new Event(date, time, lat, lng);
-				newEvent.save();
-				fillEvent(lat,lng);
-			}
+//			}
+//			else{
+//				double lat = jn.get("latitude").asDouble();
+//				double lng = jn.get("longitude").asDouble();
+//				newEvent = new Event(date, time, lat, lng);
+//				newEvent.save();
+//				fillEvent(lat,lng);
+//			}
+		}catch(NullPointerException np){
+			return badRequest("NULLPOINTER ERROR: "+np);
 		}catch(PersistenceException pe){
-			return badRequest("DUPLICATE ERROR: "+pe);
+			return badRequest("DML BIND ERROR: "+pe);
 		}catch(Exception exp){
-			System.out.println("ERROR: "+ exp);
+			return badRequest("OTHER ERROR: "+ exp);
 		}
-		return ok("Event created: "+newEvent.getId());
+		return ok("SUCCESS: Event created");
 	}
 
-	public Result getAllEvents(){
-		List<Event> events = Event.find.all();
-		JsonNode result = Json.toJson(events);
-		return ok(result);
-	}
-
+	
 	/*
 	 * fillEvent method "fill the event" with the nearby restaurants
 	 * 	either as a textsearch on the location or by supplying the coordinates
@@ -80,7 +85,7 @@ public class EventController extends Controller{
 	}
 	private void fillEvent(double lat, double lng){
 		RestuarantController rest = new RestuarantController();
-		rest.getRestaurantsNearby(lat, lng, 800);
+		rest.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
 	}
 
 	public Result getEventById(Long id){
@@ -89,6 +94,12 @@ public class EventController extends Controller{
 			return notFound("event not found");
 
 		JsonNode result = Json.toJson(event);
+		return ok(result);
+	}
+
+	public Result getAllEvents(){
+		List<Event> events = Event.find.all();
+		JsonNode result = Json.toJson(events);
 		return ok(result);
 	}
 
