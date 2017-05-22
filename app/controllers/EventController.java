@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.Event;
 import models.Restaurant;
 import models.User;
-import parser.ParsedRestaurant;
+import play.Logger;
 import play.data.FormFactory;
 import play.db.ebean.Transactional;
 import play.libs.Json;
@@ -55,13 +55,20 @@ public class EventController extends Controller{
 			Event newEvent;
 //			if(jn.has("location")){
 				String location = jn.findPath("location").asText();
+				Logger.info("Making a new event @"+ location);
 				newEvent = new Event(date, time, location);
-//				newEvent.save();
+				Logger.info("Saving");
 				List<Restaurant> rests = fillEvent(location);
 				newEvent.setRestaurant(rests);
+				Logger.info("fetched");
+				List<Restaurant> rere= newEvent.getRestaurants();
+				for(Restaurant r : rere){
+					System.out.println("IN LIST: "+r.getName());
+				}
 				newEvent.save();
-//				Ebean.deleteManyToManyAssociations(newEvent, "restaurants");
-//				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
+				//				Ebean.deleteManyToManyAssociations(newEvent, "restaurants");
+				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
+
 				//			}
 //			else{
 //				double lat = jn.get("latitude").asDouble();
@@ -87,19 +94,16 @@ public class EventController extends Controller{
 	 * submethod supplied by the restaurantcontroller, classic spaghetti-coding  
 	 */
 	private List<Restaurant> fillEvent(String textsearch){
-//		RestuarantController rest = new RestuarantController();
 		return RestuarantController.getRestaurantsByText(textsearch);
 	}
-	private void fillEvent(double lat, double lng){
-//		RestuarantController rest = new RestuarantController();
-		RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
+	private List<Restaurant> fillEvent(double lat, double lng){
+		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
 	}
 
 	public Result getEventById(Long id){
 		Event event = Event.find.byId(id);
 		if(event==null)
 			return notFound("event not found");
-
 		JsonNode result = Json.toJson(event);
 		return ok(result);
 	}

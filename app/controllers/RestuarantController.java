@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.*;
 
 import models.Location;
 import models.Restaurant;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -28,10 +29,11 @@ public class RestuarantController extends Controller {
 	 * 
 	 * @return successmessage if successfully loaded to db or failmessage
 	 */
-	public static Result getRestaurantsNearby(double userLat, double userLng, int searchRadie){
+	public static List<Restaurant> getRestaurantsNearby(double userLat, double userLng, int searchRadie){
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
 
+		List<Restaurant> returnList = new ArrayList<Restaurant>();
 		for(ParsedRestaurant pl : results){
 			try{
 				String adress = pl.getLocation().getAddress();
@@ -46,11 +48,12 @@ public class RestuarantController extends Controller {
 				String locid = ""+locat.getId();
 				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
 				newRestaurant.save();
+				returnList.add(newRestaurant);
 			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATE ERROR: " + pe);
 			} 
 		}
-		return ok("SUCCESSFULL");
+		return returnList;
 	}
 
 	/**
@@ -68,7 +71,7 @@ public class RestuarantController extends Controller {
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
 
-		List<Restaurant> returnList = null;
+		List<Restaurant> returnList = new ArrayList<Restaurant>();
 		for(ParsedRestaurant pl : results){
 			try {
 				String adress = pl.getLocation().getAddress();
