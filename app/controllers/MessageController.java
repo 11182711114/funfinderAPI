@@ -77,7 +77,6 @@ public class MessageController extends Controller{
 		List<User> userActivity = msgs.stream().map(Message::getSender).distinct().collect(Collectors.toList());
 		userActivity.addAll(sender.stream().map(Message::getReceiver).distinct().collect(Collectors.toList()));
 		
-		
 		return ok(Json.toJson(userActivity));
 	}
 }
