@@ -61,10 +61,7 @@ public class EventController extends Controller{
 				List<Restaurant> rests = fillEvent(location);
 				newEvent.setRestaurant(rests);
 				Logger.info("fetched");
-				List<Restaurant> rere= newEvent.getRestaurants();
-				for(Restaurant r : rere){
-					System.out.println("IN LIST: "+r.getName());
-				}
+
 				newEvent.save();
 				//				Ebean.deleteManyToManyAssociations(newEvent, "restaurants");
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
@@ -96,10 +93,11 @@ public class EventController extends Controller{
 	private List<Restaurant> fillEvent(String textsearch){
 		return RestuarantController.getRestaurantsByText(textsearch);
 	}
-	private List<Restaurant> fillEvent(double lat, double lng){
-		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
-	}
+//	private List<Restaurant> fillEvent(double lat, double lng){
+//		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
+//	}
 
+	
 	public Result getEventById(Long id){
 		Event event = Event.find.byId(id);
 		if(event==null)

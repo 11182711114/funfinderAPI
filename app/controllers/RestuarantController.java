@@ -32,8 +32,8 @@ public class RestuarantController extends Controller {
 	public static List<Restaurant> getRestaurantsNearby(double userLat, double userLng, int searchRadie){
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
-
 		List<Restaurant> returnList = new ArrayList<Restaurant>();
+
 		for(ParsedRestaurant pl : results){
 			try{
 				String adress = pl.getLocation().getAddress();
@@ -46,6 +46,7 @@ public class RestuarantController extends Controller {
 				double rating = pl.getRating();
 				String id = pl.getId();
 				String locid = ""+locat.getId();
+
 				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
 				newRestaurant.save();
 				returnList.add(newRestaurant);
@@ -55,6 +56,7 @@ public class RestuarantController extends Controller {
 		}
 		return returnList;
 	}
+
 
 	/**
 	 * Gets restaurants nearby som text search,saves in db
@@ -70,10 +72,13 @@ public class RestuarantController extends Controller {
 	public static List<Restaurant> getRestaurantsByText(String textSearch){
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
-
 		List<Restaurant> returnList = new ArrayList<Restaurant>();
 		for(ParsedRestaurant pl : results){
 			try {
+				String id = pl.getId();
+				Restaurant res = Restaurant.find.byId(id);
+				
+				if(res==null){
 				String adress = pl.getLocation().getAddress();
 				double lat = pl.getLocation().getLattitude();
 				double lng = pl.getLocation().getLongitude();
@@ -82,16 +87,18 @@ public class RestuarantController extends Controller {
 
 				String name = pl.getName();
 				double rating = pl.getRating();
-				String id = pl.getId();
+				
 				String locid = ""+locat.getId();
 				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
 				newRestaurant.save();
 				returnList.add(newRestaurant);
-			} catch (PersistenceException pe) { // duplicate user
+				}
+				else
+					returnList.add(res);
+				} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATION ERROR: " + pe);
 			}
 		}
-//		return ok("SUCCESSFULL");
 		return returnList;
 	}
 
