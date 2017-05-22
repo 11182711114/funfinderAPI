@@ -13,6 +13,7 @@ import models.Event;
 import models.Restaurant;
 import models.User;
 import parser.ParsedRestaurant;
+import play.Logger;
 import play.data.FormFactory;
 import play.db.ebean.Transactional;
 import play.libs.Json;
@@ -55,7 +56,9 @@ public class EventController extends Controller{
 			Event newEvent;
 //			if(jn.has("location")){
 				String location = jn.findPath("location").asText();
+				Logger.info("Making a new event @"+ location);
 				newEvent = new Event(date, time, location);
+				Logger.info("Saving");
 				newEvent.save();
 				List<Restaurant> rests = fillEvent(location);
 				newEvent.setRestaurant(rests);
