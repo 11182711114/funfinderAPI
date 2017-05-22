@@ -1,11 +1,15 @@
 package models;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
+import java.time.LocalTime;
 import javax.persistence.*;
 
 import com.avaje.ebean.Model;
+
+/*
+ * 
+ */
 
 @Entity
 @Table(name ="BookedEvent")
@@ -25,9 +29,13 @@ public class BookedEvent extends Model{
 	@OneToOne
 	@JoinColumn(name= "restaurant", referencedColumnName="id")
 	private Restaurant restaurant;
-	
+
+
+	@Column(name="date")
 	private LocalDate date;
-	
+
+
+	@Column(name="time")
 	private LocalTime time;
 	
 	

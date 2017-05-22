@@ -53,6 +53,19 @@ CREATE TABLE Event_Rest (
 	FOREIGN KEY(atEvent) REFERENCES Event(eventId) ON DELETE CASCADE
 );
 
+CREATE TABLE BookedEvent (
+	id int(11) NOT NULL AUTO_INCREMENT,
+	user1 int(11),
+	user2 int(11),
+	restaurant varchar(30),
+	date date NOT NULL,
+	time time NOT NULL,
+	FOREIGN KEY(user1) REFERENCES User(id) ON DELETE CASCADE,
+	FOREIGN KEY(user2) REFERENCES User(id) ON DELETE CASCADE,
+	FOREIGN KEY(restaurant) REFERENCES Restaurant(id),
+	PRIMARY KEY (id)
+	);
+	
 
 CREATE TRIGGER insertCreatedTrigger BEFORE INSERT ON User 
 FOR EACH ROW 
@@ -112,3 +125,7 @@ DROP TABLE Restaurant;
 DROP TABLE Location;
 
 DROP TABLE Event;
+
+DROP TABLE Event_Rest;
+
+DROP TABLE BookedEvent;

@@ -46,16 +46,17 @@ public class EventController extends Controller{
 	 */
 	public Result createEvent(){
 		JsonNode jn = request().body().asJson();
-//		String date = jn.get("date").asText();
-//		String time = jn.get("time").asText();
-		String date = jn.findPath("date").asText();
-		String time = jn.findPath("time").asText();
+		String date = jn.get("date").asText();
+		String time = jn.get("time").asText();
+//		String date = jn.findPath("date").asText();
+//		String time = jn.findPath("time").asText();
 		
 		try{
 			Event newEvent;
 //			if(jn.has("location")){
 				String location = jn.findPath("location").asText();
 				Logger.info("Making a new event @"+ location);
+				
 				newEvent = new Event(date, time, location);
 				Logger.info("Saving");
 				List<Restaurant> rests = fillEvent(location);
@@ -63,10 +64,9 @@ public class EventController extends Controller{
 				Logger.info("fetched");
 
 				newEvent.save();
-				//				Ebean.deleteManyToManyAssociations(newEvent, "restaurants");
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 
-				//			}
+//			}
 //			else{
 //				double lat = jn.get("latitude").asDouble();
 //				double lng = jn.get("longitude").asDouble();
