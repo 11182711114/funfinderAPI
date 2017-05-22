@@ -76,7 +76,9 @@ public class Event extends Model {
 	public int getId(){
 		return eventId;
 	}
-	
+	public void setRestaurant(List<Restaurant> rests){
+		this.restaurants = rests;
+	}
 	
 	public List<Restaurant> getRestaurants(){
 		return restaurants;

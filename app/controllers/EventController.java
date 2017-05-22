@@ -5,11 +5,14 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.enhance.agent.SysoutMessageOutput;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Event;
+import models.Restaurant;
 import models.User;
+import parser.ParsedRestaurant;
 import play.data.FormFactory;
 import play.db.ebean.Transactional;
 import play.libs.Json;
@@ -54,8 +57,13 @@ public class EventController extends Controller{
 				String location = jn.findPath("location").asText();
 				newEvent = new Event(date, time, location);
 				newEvent.save();
-				fillEvent(location);
-//			}
+				List<Restaurant> rests = fillEvent(location);
+				newEvent.setRestaurant(rests);
+				Ebean.deleteManyToManyAssociations(newEvent, "restaurants");
+				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
+				
+//				newEvent.save();
+				//			}
 //			else{
 //				double lat = jn.get("latitude").asDouble();
 //				double lng = jn.get("longitude").asDouble();
@@ -79,13 +87,13 @@ public class EventController extends Controller{
 	 * 	either as a textsearch on the location or by supplying the coordinates
 	 * submethod supplied by the restaurantcontroller, classic spaghetti-coding  
 	 */
-	private void fillEvent(String textsearch){
-		RestuarantController rest = new RestuarantController();
-		rest.getRestaurantsByText(textsearch);
+	private List<Restaurant> fillEvent(String textsearch){
+//		RestuarantController rest = new RestuarantController();
+		return RestuarantController.getRestaurantsByText(textsearch);
 	}
 	private void fillEvent(double lat, double lng){
-		RestuarantController rest = new RestuarantController();
-		rest.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
+//		RestuarantController rest = new RestuarantController();
+		RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
 	}
 
 	public Result getEventById(Long id){

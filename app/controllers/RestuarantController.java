@@ -28,7 +28,7 @@ public class RestuarantController extends Controller {
 	 * 
 	 * @return successmessage if successfully loaded to db or failmessage
 	 */
-	public Result getRestaurantsNearby(double userLat, double userLng, int searchRadie){
+	public static Result getRestaurantsNearby(double userLat, double userLng, int searchRadie){
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchNearby(userLat, userLng, searchRadie);
 
@@ -59,14 +59,16 @@ public class RestuarantController extends Controller {
 	 * @param textSearch - the text input from user
 	 * 			this can also be used to search on restaurants name and it will return
 	 * 			 all restaurants by that name in sthlm
+	 * @return 
 	 * 
 	 * @return successmessage if successfully loaded to db or failmessage //FIXME
 	 * @return void
 	 */
-	public void getRestaurantsByText(String textSearch){
+	public static List<Restaurant> getRestaurantsByText(String textSearch){
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
 
+		List<Restaurant> returnList = null;
 		for(ParsedRestaurant pl : results){
 			try {
 				String adress = pl.getLocation().getAddress();
@@ -81,11 +83,13 @@ public class RestuarantController extends Controller {
 				String locid = ""+locat.getId();
 				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
 				newRestaurant.save();
+				returnList.add(newRestaurant);
 			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATION ERROR: " + pe);
 			}
 		}
 //		return ok("SUCCESSFULL");
+		return returnList;
 	}
 
 
