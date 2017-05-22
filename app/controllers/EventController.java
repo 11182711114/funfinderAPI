@@ -56,13 +56,12 @@ public class EventController extends Controller{
 //			if(jn.has("location")){
 				String location = jn.findPath("location").asText();
 				newEvent = new Event(date, time, location);
-				newEvent.save();
+//				newEvent.save();
 				List<Restaurant> rests = fillEvent(location);
 				newEvent.setRestaurant(rests);
-				Ebean.deleteManyToManyAssociations(newEvent, "restaurants");
-				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
-				
-//				newEvent.save();
+				newEvent.save();
+//				Ebean.deleteManyToManyAssociations(newEvent, "restaurants");
+//				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 				//			}
 //			else{
 //				double lat = jn.get("latitude").asDouble();
