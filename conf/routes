@@ -37,3 +37,5 @@ GET 	/message/:id/new		controllers.MessageController.getNewMeta(id: Long)
 GET 	/message/:id/all		controllers.MessageController.getAllMeta(id: Long)
 
 GET		/message/:receiver/:sender	controllers.MessageController.getMessagesFromSpecificUser(receiver: Long, sender: Long)
+
+GET		/message/:receiver/:sender/new	controllers.MessageController.getNewMessages(receiver: Long, sender: Long)
