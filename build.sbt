@@ -17,7 +17,8 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq(
   javaJdbc,
   cache,
-  javaWs
+  javaWs,
+  "org.json" % "org.json" % "chargebee-1.0"
 )
 
 scalacOptions += "-target:jvm-1.8"

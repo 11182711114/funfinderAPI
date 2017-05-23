@@ -39,3 +39,35 @@ GET 	/message/:id/all		controllers.MessageController.getAllMeta(id: Long)
 GET		/message/:receiver/:sender	controllers.MessageController.getMessagesFromSpecificUser(receiver: Long, sender: Long)
 
 GET		/message/:receiver/:sender/new	controllers.MessageController.getNewMessages(receiver: Long, sender: Long)
+
+#  ~~ RESTAURANT ~~
+
+#	Get restaurants by nearby search method
+#GET		/restaurants/nearbysearch/location=:lat,:lng&radie=:rdi		controllers.RestuarantController.getRestaurantsNearby(lat:Double, lng:Double, rdi:Int)
+
+#	Get restaurants by searching on location name
+#GET		/restaurants/textsearch/query=:location			controllers.RestuarantController.getRestaurantsByText(location:String)
+
+#	fetches specific restaurant through search on id
+#GET		/restaurants/fetch/byid=:id						controllers.RestuarantController.getRestaurantById(id:String)
+
+#	fetches specific restaurant through search on id
+#GET		/restaurants/fetch/byname=:name					controllers.RestuarantController.getRestaurantByName(name:String)
+
+
+
+
+#	~~ EVENT ~~
+
+#	Creates new Event
+POST	/event/create/								controllers.EventController.createEvent()
+
+#	Gets specific Event from eventId presented
+GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
+
+#	Gets all stored Events
+GET		/event/all									controllers.EventController.getAllEvents()
+
+
+#	Get BookedEvent bt ID
+#GET 	/event/booked/:bkid							controllers.EventController.getBookedEvent(bkid:Long)

@@ -2,6 +2,7 @@ package models;
 
 
 import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +48,11 @@ public class User extends Model{
 	@OneToOne
 	@JoinColumn(name = "loc_id")
 	private Location loc;
-	
+//
+	@OneToOne
+	@JoinColumn(name = "event")
+	private Event event;
+
 //	@OneToMany(mappedBy = "sender")
 //	private List<Message> messagesSent;
 //	
