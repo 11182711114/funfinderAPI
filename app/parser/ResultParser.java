@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.json.*;
 
+import play.Logger;
+
 
 /* 
  * The ResultParser class connects the users query to the Google Places API (web-service)
@@ -42,17 +44,18 @@ public class ResultParser{
 		typeSearch = "/textsearch";
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
-
+		location = location.replaceAll(" ", "+");
 		try{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
-			request.append(location);//+"+Stockholm");//TODO use this to search in sthlm vicinity
+			request.append(location);
+			//+"+Stockholm");//TODO use this to search in sthlm vicinity
 			request.append("&key=" + KEY);
 
-			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
-
+//			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
+			Logger.info("connected to Google API");
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));

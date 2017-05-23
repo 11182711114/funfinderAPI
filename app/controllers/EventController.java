@@ -23,8 +23,8 @@ import play.mvc.Result;
 public class EventController extends Controller{
 
 	@Inject FormFactory formFactory;
-	
-	
+
+
 	public Result getUser() {
 		User user = User.find.byId(2L);
 		JsonNode result = Json.toJson(user);
@@ -47,14 +47,16 @@ public class EventController extends Controller{
 	 */
 	public Result createEvent(){
 		JsonNode jn = request().body().asJson();
+		if(jn.get("location").asText().isEmpty())
+			return badRequest("fields missing");
 		String date = jn.get("date").asText();
 		String time = jn.get("time").asText();
 		try{
 			Event newEvent;
-//			if(jn.has("location")){
-				String location = jn.findPath("location").asText();
+			if(jn.has("location")){
+				String location = jn.get("location").asText();
 				Logger.info("Making a new event @"+ location);
-				
+
 				newEvent = new Event(date, time, location);
 				Logger.info("Saving");
 				List<Restaurant> rests = fillEvent(location);
@@ -64,14 +66,14 @@ public class EventController extends Controller{
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 				Logger.info("done");
-//			}
-//			else{
-//				double lat = jn.get("latitude").asDouble();
-//				double lng = jn.get("longitude").asDouble();
-//				newEvent = new Event(date, time, lat, lng);
-//				newEvent.save();
-//				fillEvent(lat,lng);
-//			}
+				//			}
+				//			else{
+				//				double lat = jn.get("latitude").asDouble();
+				//				double lng = jn.get("longitude").asDouble();
+				//				newEvent = new Event(date, time, lat, lng);
+				//				newEvent.save();
+				//				fillEvent(lat,lng);
+			}
 		}catch(NullPointerException np){
 			return badRequest("NULLPOINTER ERROR: "+np);
 		}catch(PersistenceException pe){
@@ -82,7 +84,7 @@ public class EventController extends Controller{
 		return ok("SUCCESS: Event created");
 	}
 
-	
+
 	/*
 	 * fillEvent method "fill the event" with the nearby restaurants
 	 * 	either as a textsearch on the location or by supplying the coordinates
@@ -96,11 +98,11 @@ public class EventController extends Controller{
 	 * don't implement until client has geolocation-method implementer
 	 * TODO don't forget to if-statement in createEvent() method
 	 */
-//	private List<Restaurant> fillEvent(double lat, double lng){
-//		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
-//	}
+	//	private List<Restaurant> fillEvent(double lat, double lng){
+	//		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
+	//	}
 
-	
+
 	public Result getEventById(Long id){
 		Event event = Event.find.byId(id);
 		if(event==null)
