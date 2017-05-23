@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import play.data.validation.Constraints;
 
@@ -27,6 +28,7 @@ public class Event extends Model {
 
 	@ManyToOne
 	@JoinColumn(name = "user")
+	@JsonManagedReference
 	User user;
 	
 	@Constraints.Required

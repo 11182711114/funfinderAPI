@@ -15,7 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.avaje.ebean.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
@@ -53,8 +54,8 @@ public class User extends Model{
 	@JoinColumn(name = "loc")
 	private Location loc;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "user")
+	@JsonBackReference
 	private List<Event> events;
 
 //	@OneToMany(mappedBy = "sender")
