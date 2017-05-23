@@ -49,10 +49,11 @@ public class Event extends Model {
 	/*
 	 * If user sends the text name of the location for the event
 	 */
-	public Event(String date, String time, String location) {
+	public Event(String date, String time, String location, User user) {
 		this.date = LocalDate.parse(date);
 		this.time = LocalTime.parse(time);
 		this.location = location;
+		this.user = user;
 	}
 
 	/*
