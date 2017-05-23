@@ -29,6 +29,9 @@ public class MessageController extends Controller{
 		User to = User.find.byId(Long.parseLong(df.get("to")));
 		String message = df.get("message");
 		
+		if (from == null || to == null || message == null || message.isEmpty())
+			return badRequest();
+		
 		Message msg = new Message(from,to,message);
 		Ebean.save(msg);
 		
@@ -37,6 +40,8 @@ public class MessageController extends Controller{
 	
 	public Result getMessages(Long userId) {
 		User user = User.find.byId(userId);
+		if(user == null)
+			return notFound();
 		
 		List<Message> toReturn = Message.find.where().eq("sender", user).findList();
 		toReturn.addAll(Message.find.where().eq("receiver", user).findList());
@@ -47,6 +52,9 @@ public class MessageController extends Controller{
 	public Result getMessagesFromSpecificUser(Long receiverId, Long senderId) {
 		User receiver = User.find.byId(receiverId);
 		User sender = User.find.byId(senderId);
+		if(receiver == null || sender == null)
+			return notFound();
+		
 		List<Message> msgs = Message.find.where().eq("sender", sender).and().eq("receiver", receiver).findList();
 		
 		JsonNode toReturn = Json.toJson(msgs);
@@ -62,6 +70,9 @@ public class MessageController extends Controller{
 	public Result getNewMessages(Long receiverId, Long senderId) {
 		User receiver = User.find.byId(receiverId);
 		User sender = User.find.byId(senderId);
+		if(receiver == null || sender == null)
+			return notFound();
+		
 		
 		List<Message> newMsgs = Message.find.where().eq("sender", sender).and().eq("receiver", receiver).and().eq("seen", false).findList();
 		
@@ -75,6 +86,8 @@ public class MessageController extends Controller{
 	
 	public Result getNewMeta(Long userId) {
 		User user = User.find.byId(userId);
+		if(user == null)
+			return notFound();
 		
 		List<User> userActivityNotSeen = Message.find.select("sender").where().eq("receiver", user).and().eq("seen", false).findList()
 				.stream().map(Message::getSender).distinct().collect(Collectors.toList());
@@ -84,6 +97,8 @@ public class MessageController extends Controller{
 	
 	public Result getAllMeta(Long userId) {
 		User user = User.find.byId(userId);
+		if(user == null)
+			return notFound();
 		
 		List<Message> msgs = Message.find.select("sender").where().eq("receiver", user).findList();
 		List<Message> sender = Message.find.select("receiver").where().eq("sender", user).findList();
