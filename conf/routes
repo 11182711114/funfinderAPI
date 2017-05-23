@@ -70,3 +70,7 @@ GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
 
 #	Gets all stored Events
 GET		/event/all									controllers.EventController.getAllEvents()
+
+
+#	Get BookedEvent bt ID
+#GET 	/event/booked/:bkid							controllers.EventController.getBookedEvent(bkid:Long)

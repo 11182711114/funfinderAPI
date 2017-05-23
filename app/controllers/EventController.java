@@ -7,6 +7,7 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.enhance.agent.SysoutMessageOutput;
+import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Event;
@@ -48,9 +49,6 @@ public class EventController extends Controller{
 		JsonNode jn = request().body().asJson();
 		String date = jn.get("date").asText();
 		String time = jn.get("time").asText();
-//		String date = jn.findPath("date").asText();
-//		String time = jn.findPath("time").asText();
-		
 		try{
 			Event newEvent;
 //			if(jn.has("location")){
@@ -65,7 +63,7 @@ public class EventController extends Controller{
 
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
-
+				Logger.info("done");
 //			}
 //			else{
 //				double lat = jn.get("latitude").asDouble();
@@ -93,6 +91,11 @@ public class EventController extends Controller{
 	private List<Restaurant> fillEvent(String textsearch){
 		return RestuarantController.getRestaurantsByText(textsearch);
 	}
+	/*
+	 * used when method takes coordinates as location input,
+	 * don't implement until client has geolocation-method implementer
+	 * TODO don't forget to if-statement in createEvent() method
+	 */
 //	private List<Restaurant> fillEvent(double lat, double lng){
 //		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
 //	}
