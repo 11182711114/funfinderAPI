@@ -64,7 +64,12 @@ public class MessageController extends Controller{
 		User sender = User.find.byId(senderId);
 		
 		List<Message> newMsgs = Message.find.where().eq("sender", sender).and().eq("receiver", receiver).and().eq("seen", false).findList();
-
+		
+		newMsgs.forEach(msg -> {
+			msg.setSeen(true);
+			Ebean.update(msg);
+		});
+		
 		return ok(Json.toJson(newMsgs));
 	}
 	
