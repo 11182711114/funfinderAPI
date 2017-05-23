@@ -11,7 +11,9 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -23,6 +25,10 @@ public class Event extends Model {
 	@Column(name = "eventId")
 	private int eventId;
 
+	@ManyToOne
+	@JoinColumn(name = "user")
+	User user;
+	
 	@Constraints.Required
 	@Column(name = "date")
 	private LocalDate date;
