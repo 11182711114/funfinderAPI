@@ -59,6 +59,15 @@ public class MessageController extends Controller{
 		return ok(toReturn);
 	}
 	
+	public Result getNewMessages(Long receiverId, Long senderId) {
+		User receiver = User.find.byId(receiverId);
+		User sender = User.find.byId(senderId);
+		
+		List<Message> newMsgs = Message.find.where().eq("sender", sender).and().eq("receiver", receiver).and().eq("seen", false).findList();
+
+		return ok(Json.toJson(newMsgs));
+	}
+	
 	public Result getNewMeta(Long userId) {
 		User user = User.find.byId(userId);
 		
@@ -76,7 +85,6 @@ public class MessageController extends Controller{
 		
 		List<User> userActivity = msgs.stream().map(Message::getSender).distinct().collect(Collectors.toList());
 		userActivity.addAll(sender.stream().map(Message::getReceiver).distinct().collect(Collectors.toList()));
-		
 		
 		return ok(Json.toJson(userActivity));
 	}

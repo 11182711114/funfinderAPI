@@ -44,8 +44,13 @@ public class EventController extends Controller{
 	 * 		with restaurants based on that textsearch
 	 * else if the user gives event her nearby position the search for restaurants are
 	 *  made from the coordinates of the user.
+	 *  
+	 *  FIXME: when in testing (using POSTMAN) special characters (å,ä,ö) wasn't 
+	 *   correct after post was received and breaks the method, maybe fixed when going via heroku
+	 *  	TODO: TEST THIS
 	 */
 	public Result createEvent(){
+		JsonEncoding enc = JsonEncoding.UTF8;
 		JsonNode jn = request().body().asJson();
 		if(jn.get("location").asText().isEmpty())
 			return badRequest("fields missing");
@@ -101,7 +106,6 @@ public class EventController extends Controller{
 	//	private List<Restaurant> fillEvent(double lat, double lng){
 	//		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
 	//	}
-
 
 	public Result getEventById(Long id){
 		Event event = Event.find.byId(id);
