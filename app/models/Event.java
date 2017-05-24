@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import play.data.validation.Constraints;
 
@@ -11,7 +12,9 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -23,6 +26,11 @@ public class Event extends Model {
 	@Column(name = "eventId")
 	private int eventId;
 
+	@ManyToOne
+	@JoinColumn(name = "user")
+	@JsonManagedReference
+	User user;
+	
 	@Constraints.Required
 	@Column(name = "date")
 	private LocalDate date;
@@ -43,10 +51,11 @@ public class Event extends Model {
 	/*
 	 * If user sends the text name of the location for the event
 	 */
-	public Event(String date, String time, String location) {
+	public Event(String date, String time, String location, User user) {
 		this.date = LocalDate.parse(date);
 		this.time = LocalTime.parse(time);
 		this.location = location;
+		this.user = user;
 	}
 
 	/*

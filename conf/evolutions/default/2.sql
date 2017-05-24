@@ -1,16 +1,9 @@
 # --- !Ups
 
-#ALTER TABLE Message (
-#ADD COLUMN seen boolean DEFAULT false;
-#);
-
-
-
-
+ALTER TABLE Message
+ADD COLUMN seen boolean;
 
 # --- !Downs
 
-#ALTER TABLE Message 
-#DROP COLUMN seen;	
-
-
+ALTER TABLE Message
+DROP COLUMN seen;

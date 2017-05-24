@@ -1,5 +1,3 @@
-# Users schema
-
 # --- !Ups
 
 
@@ -25,7 +23,9 @@ CREATE TABLE Event (
 	eventId int(11) NOT NULL AUTO_INCREMENT,
 	date date NOT NULL,
 	time time NOT NULL,
+	user int(11),
 	location varchar(160),
+	FOREIGN KEY (user) REFERENCES User(id),
 	PRIMARY KEY (eventId)
 );
 
@@ -35,13 +35,11 @@ CREATE TABLE User (
     lastName varchar(45) NOT NULL,
     birthdate date NOT NULL,
     loc int(11),
-    event int(11),
     email varchar(45) NOT NULL,
     password varchar(255) NOT NULL,
     created TIMESTAMP DEFAULT '0000-00-00 00:00:00',
 	updated TIMESTAMP DEFAULT now() ON UPDATE now(),
     FOREIGN KEY (loc) REFERENCES Location(id) ON DELETE SET NULL,
-    FOREIGN KEY (event) REFERENCES Event(eventId) ON DELETE SET NULL,
     PRIMARY KEY (id),
     CONSTRAINT emailAK UNIQUE (email)
 );
@@ -107,8 +105,6 @@ CREATE TABLE Restaurant (
 	PRIMARY KEY (id),
 	FOREIGN KEY (location) REFERENCES Location(id) ON DELETE SET NULL    
 );
-
-
 
 # --- !Downs
 

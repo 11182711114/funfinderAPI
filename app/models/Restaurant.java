@@ -2,7 +2,6 @@ package models;
 
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,15 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import parser.ParsedLocation;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 @Entity
@@ -47,6 +42,7 @@ public class Restaurant extends Model{
 	@JoinTable(name="Event_Rest",
 			joinColumns=@JoinColumn(name="atRest", referencedColumnName="id"),
 			inverseJoinColumns=@JoinColumn(name="atEvent", referencedColumnName="eventId"))
+	@JsonBackReference
 	private List<Event> events;
 	
 	public Restaurant(String id, String name, double rating, String locid){

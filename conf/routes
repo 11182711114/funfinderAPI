@@ -40,10 +40,6 @@ GET		/message/:receiver/:sender	controllers.MessageController.getMessagesFromSpe
 
 GET		/message/:receiver/:sender/new	controllers.MessageController.getNewMessages(receiver: Long, sender: Long)
 
-
-
-
-
 #  ~~ RESTAURANT ~~
 
 #	Get restaurants by nearby search method
@@ -66,12 +62,11 @@ GET		/message/:receiver/:sender/new	controllers.MessageController.getNewMessages
 #	Creates new Event
 POST	/event/create/								controllers.EventController.createEvent()
 
-#	Gets specific Event from eventId presented
-GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
-
 #	Gets all stored Events
 GET		/event/all									controllers.EventController.getAllEvents()
 
+#	Gets specific Event from eventId presented
+GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
 
 #	Get BookedEvent bt ID
 #GET 	/event/booked/:bkid							controllers.EventController.getBookedEvent(bkid:Long)

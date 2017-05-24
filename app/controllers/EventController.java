@@ -6,8 +6,9 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.enhance.agent.SysoutMessageOutput;
-import com.fasterxml.jackson.core.JsonEncoding;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import models.Event;
@@ -38,6 +39,22 @@ public class EventController extends Controller{
 		return ok(result);
 	}
 
+	public Result findMatch(Long userId) {
+		String sql = 
+				"SELECT ev.id" +
+				"FROM Event as ev, Event_Rest as er, Restaurant as rest " +
+				"WHERE ev.eventId = er.atEvent AND er.atRest = rest.id AND rest.id IN (" +
+				"SELECT distinct rt.id" +
+				"FROM Restaurant as rt, Event_Rest, Event" +
+				"WHERE rt.id = Event_Rest.atRest AND Event.eventId = Event_Rest.atEvent AND Event.user = " + userId + ")";
+		
+		RawSql rawSql = RawSqlBuilder.parse(sql).create();
+		
+		Query<Event> query = Ebean.find(Event.class);
+		query.setRawSql(rawSql);
+		return ok(Json.toJson(query.findList()));
+	}
+	
 	/*
 	 * creates from user input a new event, takes two possible routes
 	 * 	if the user entered text location it saves the textlocation and fills 
@@ -54,6 +71,7 @@ public class EventController extends Controller{
 		JsonNode jn = request().body().asJson();
 		if(jn.get("location").asText().isEmpty())
 			return badRequest("fields missing");
+		User user = User.find.byId(jn.get("uid").asLong());
 		String date = jn.get("date").asText();
 		String time = jn.get("time").asText();
 		try{
@@ -62,7 +80,7 @@ public class EventController extends Controller{
 				String location = jn.get("location").asText();
 				Logger.info("Making a new event @"+ location);
 
-				newEvent = new Event(date, time, location);
+				newEvent = new Event(date, time, location, user);
 				Logger.info("Saving");
 				List<Restaurant> rests = fillEvent(location);
 				newEvent.setRestaurant(rests);

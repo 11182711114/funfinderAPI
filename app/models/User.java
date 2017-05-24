@@ -15,6 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
+import com.avaje.ebean.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
@@ -49,12 +51,12 @@ public class User extends Model{
 	private LocalDateTime updated;
 	
 	@OneToOne
-	@JoinColumn(name = "loc_id")
+	@JoinColumn(name = "loc")
 	private Location loc;
-//
-	@OneToOne
-	@JoinColumn(name = "event")
-	private Event event;
+
+	@OneToMany(mappedBy = "user")
+	@JsonBackReference
+	private List<Event> events;
 
 //	@OneToMany(mappedBy = "sender")
 //	private List<Message> messagesSent;
