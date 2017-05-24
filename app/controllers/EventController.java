@@ -11,6 +11,7 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import models.BookedEvent;
 import models.Event;
 import models.Restaurant;
 import models.User;
@@ -23,38 +24,24 @@ import play.mvc.Result;
 
 public class EventController extends Controller{
 
-	@Inject FormFactory formFactory;
 
-
-	public Result getUser() {
-		User user = User.find.byId(2L);
-		JsonNode result = Json.toJson(user);
-		return ok(result);
-	}
-
-	@Transactional
-	public Result getUserByID(Long id) {
-		User user = User.find.byId(id);
-		JsonNode result = Json.toJson(user);
-		return ok(result);
-	}
 
 	public Result findMatch(Long userId) {
 		String sql = 
-				"SELECT ev.id" +
-				"FROM Event as ev, Event_Rest as er, Restaurant as rest " +
-				"WHERE ev.eventId = er.atEvent AND er.atRest = rest.id AND rest.id IN (" +
-				"SELECT distinct rt.id" +
-				"FROM Restaurant as rt, Event_Rest, Event" +
-				"WHERE rt.id = Event_Rest.atRest AND Event.eventId = Event_Rest.atEvent AND Event.user = " + userId + ")";
-		
+				"SELECT distinct ev.eventid " +
+						"FROM Event as ev, Event_Rest as er, Restaurant as rest " +
+						"WHERE ev.eventId = er.atEvent AND er.atRest = rest.id AND rest.id IN (" +
+						"SELECT distinct rt.id " +
+						"FROM Restaurant as rt, Event_Rest, Event " +
+						"WHERE rt.id = Event_Rest.atRest AND Event.eventId = Event_Rest.atEvent AND Event.user = " + userId + ")";
+
 		RawSql rawSql = RawSqlBuilder.parse(sql).create();
-		
+
 		Query<Event> query = Ebean.find(Event.class);
 		query.setRawSql(rawSql);
 		return ok(Json.toJson(query.findList()));
 	}
-	
+
 	/*
 	 * creates from user input a new event, takes two possible routes
 	 * 	if the user entered text location it saves the textlocation and fills 
@@ -67,7 +54,6 @@ public class EventController extends Controller{
 	 *  	TODO: TEST THIS
 	 */
 	public Result createEvent(){
-		JsonEncoding enc = JsonEncoding.UTF8;
 		JsonNode jn = request().body().asJson();
 		if(jn.get("location").asText().isEmpty())
 			return badRequest("fields missing");
@@ -89,13 +75,15 @@ public class EventController extends Controller{
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 				Logger.info("done");
-				//			}
-				//			else{
-				//				double lat = jn.get("latitude").asDouble();
-				//				double lng = jn.get("longitude").asDouble();
-				//				newEvent = new Event(date, time, lat, lng);
-				//				newEvent.save();
-				//				fillEvent(lat,lng);
+			}
+			else{ //if coordinates are sent insted of textlocation
+				double lat = jn.get("latitude").asDouble();
+				double lng = jn.get("longitude").asDouble();
+				newEvent = new Event(date, time, lat, lng);
+				List<Restaurant> rests = fillEvent(lat,lng);
+				newEvent.setRestaurant(rests);
+				newEvent.save();
+				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 			}
 		}catch(NullPointerException np){
 			return badRequest("NULLPOINTER ERROR: "+np);
@@ -121,9 +109,43 @@ public class EventController extends Controller{
 	 * don't implement until client has geolocation-method implementer
 	 * TODO don't forget to if-statement in createEvent() method
 	 */
-	//	private List<Restaurant> fillEvent(double lat, double lng){
-	//		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
-	//	}
+	private List<Restaurant> fillEvent(double lat, double lng){
+		return RestuarantController.getRestaurantsNearby(lat, lng, 800);//here the radium is hardcoded
+	}
+
+	/*
+	 * created a BookedEvent instance from the information in json format
+	 *  of the event the user has choose to meet with. 
+	 *  It then delete these events (preliminary events) so no one can be double booked
+	 */
+	public Result createBookedEvent(){
+		JsonNode jn = request().body().asJson();
+		try{
+			User user1 = User.find.byId(jn.get("myUid").asLong());
+			User user2 = User.find.byId(jn.get("user").asLong());
+			String date = jn.get("date").asText();
+			String time = jn.get("time").asText();
+			Restaurant rest = Restaurant.find.byId(jn.get("id").asText());
+			BookedEvent newBooking = new BookedEvent(user1, user2, date, time, rest);
+			newBooking.save();
+			
+			//TODO remove user1's event ??!
+			
+			//remove user2s event aka this event
+			deleteEvent(jn.get("evid").asLong());
+
+		}catch(PersistenceException pe){
+			return badRequest("DML BIND ERROR: "+pe);			
+		}catch(NullPointerException np){
+			return badRequest("NULLPOINTER EXCEPTION: "+np);
+		}
+		return ok("created BookedEvent");
+	}
+
+	private void deleteEvent(Long id){
+		Event eve = Event.find.byId(id);
+		eve.delete();
+	}
 
 	public Result getEventById(Long id){
 		Event event = Event.find.byId(id);

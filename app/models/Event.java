@@ -24,7 +24,7 @@ public class Event extends Model {
 
 	@Id
 	@Column(name = "eventId")
-	private int eventId;
+	private int eventid;
 
 	@ManyToOne
 	@JoinColumn(name = "user")
@@ -77,7 +77,7 @@ public class Event extends Model {
 	}
 	
 	public int getId(){
-		return eventId;
+		return eventid;
 	}
 	public void setRestaurant(List<Restaurant> rests){
 		this.restaurants = rests;
