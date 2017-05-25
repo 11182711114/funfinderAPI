@@ -1,10 +1,8 @@
 package controllers;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
@@ -18,32 +16,14 @@ import models.Restaurant;
 import models.User;
 import models.UserBasic;
 import play.Logger;
-import play.data.FormFactory;
-import play.db.ebean.Transactional;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 public class EventController extends Controller{
 
-	@Inject FormFactory formFactory;
-
-
-	public Result getUser() {
-		User user = User.find.byId(2L);
-		JsonNode result = Json.toJson(user);
-		return ok(result);
-	}
-
-	@Transactional
-	public Result getUserByID(Long id) {
-		User user = User.find.byId(id);
-		JsonNode result = Json.toJson(user);
-		return ok(result);
-	}
-
 	public Result findMatch(Long eventId) {
-		String sql = "SELECT distinct User.id as id " + 
+		String sql = "SELECT distinct User.id id " + 
 				"FROM User, Event, Event_Rest, Restaurant " +
 				"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
 					"SELECT id " +
