@@ -76,33 +76,38 @@ public class RestuarantController extends Controller {
 		for(ParsedRestaurant pl : results){
 			try {
 				String id = pl.getId();
-				Restaurant res = Restaurant.find.byId(id);
-				
+				Restaurant res = Restaurant.find.byId(id);		
 				if(res==null){
-				String adress = pl.getLocation().getAddress();
-				double lat = pl.getLocation().getLattitude();
-				double lng = pl.getLocation().getLongitude();
-				Location locat = new Location(adress, lat, lng);
-				Ebean.save(locat);
+					String adress = pl.getLocation().getAddress();
+					double lat = pl.getLocation().getLattitude();
+					double lng = pl.getLocation().getLongitude();
+					Location locat = new Location(adress, lat, lng);
+					Ebean.save(locat);
 
-				String name = pl.getName();
-				double rating = pl.getRating();
-				
-				String locid = ""+locat.getId();
-				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
-				newRestaurant.save();
-				returnList.add(newRestaurant);
+					String name = pl.getName();
+					double rating = pl.getRating();
+
+					String locid = ""+locat.getId();
+					Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
+					newRestaurant.save();
+					returnList.add(newRestaurant);
 				}
 				else
 					returnList.add(res);
-				} catch (PersistenceException pe) { // duplicate user
+			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATION ERROR: " + pe);
 			}
 		}
 		return returnList;
 	}
 
-
+	/*
+	 * creates a list of restaurants for the first steps of creating an event
+	 */
+	public Result findEventRestaurants(String textSearch){
+		List<Restaurant> returnList = getRestaurantsByText(textSearch);
+		return ok(Json.toJson(returnList));
+	}
 
 	/**
 	 * finds restaurant by located id
