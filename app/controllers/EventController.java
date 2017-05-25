@@ -1,5 +1,6 @@
 package controllers;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class EventController extends Controller{
 		return ok(result);
 	}
 
-	public Result findMatch(Long userId) {
+	public Result findMatch(Long eventId) {
 		String sql = "SELECT distinct User.id as id " + 
 				"FROM User, Event, Event_Rest, Restaurant " +
 				"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
@@ -54,9 +55,10 @@ public class EventController extends Controller{
 		
 		Query<UserBasic> query = Ebean.find(UserBasic.class);
 		query.setRawSql(rawSql);
-		query.setParameter("userId", userId)
-			.setParameter("timeStart", "10:00:00")
-			.setParameter("timeEnd","11:00:00");
+		Event event = Event.find.byId(eventId);
+		query.setParameter("userId", event.getUser())
+			.setParameter("timeStart", event.getTime().minusMinutes(15))
+			.setParameter("timeEnd", event.getTime().plusMinutes(15));
 		List<UserBasic> rtn = query.findList();
 		List<User> users = rtn.stream().map(UserBasic::getUser).collect(Collectors.toList());
 		Logger.info(users.toString());

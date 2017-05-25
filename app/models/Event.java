@@ -86,6 +86,10 @@ public class Event extends Model {
 	public List<Restaurant> getRestaurants(){
 		return restaurants;
 	}
+	
+	public User getUser() {
+		return user;
+	}
 
 	public static Finder<Long, Event> find = new Finder<Long, Event>(Event.class);
 }
