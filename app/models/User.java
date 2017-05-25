@@ -94,6 +94,14 @@ public class User extends Model{
 		return firstname;
 	}
 	
+	public LocalDate getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(LocalDate birthdate) {
+		this.birthdate = birthdate;
+	}
+
 	public void setPassword(String newPassword) {
 		this.password = newPassword;
 	}
