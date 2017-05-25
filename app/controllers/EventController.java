@@ -2,6 +2,8 @@ package controllers;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,22 +57,18 @@ public class EventController extends Controller{
 		return ok(Json.toJson(users));
 	}
 
-	/*
-	 * creates from user input a new event, takes two possible routes
-	 * 	if the user entered text location it saves the textlocation and fills 
-	 * 		with restaurants based on that textsearch
-	 * else if the user gives event her nearby position the search for restaurants are
-	 *  made from the coordinates of the user.
-	 *  
-	 *  FIXME: when in testing (using POSTMAN) special characters (å,ä,ö) wasn't 
-	 *   correct after post was received and breaks the method, maybe fixed when going via heroku
-	 *  	TODO: TEST THIS
+	/**
+	 * Creates an event by unser supplied information: date,time,location,user and
+	 * 	a list of restaurants that the user have swiped Yes on
+	 * 
+	 * @return saved event to client (frontend request)
+	 * 
+	 * TODO : test special characters when client sends/retrieves json (åäö)
+	 * TODO : remove db-saved restaurants that are not tied to any event
+	 * TODO : add test-statements
 	 */
 	public Result createEvent(){
 		JsonNode jn = request().body().asJson();
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectReader reader = mapper.readerFor(new TypeReference<List<Restaurant>>(){});
-				
 		if(jn.get("location").asText().isEmpty())
 			return badRequest("fields missing");
 		User user = User.find.byId(jn.get("uid").asLong());
@@ -80,28 +78,40 @@ public class EventController extends Controller{
 			Event newEvent;
 			if(jn.has("location")){
 				String location = jn.get("location").asText();
-				JsonNode resArr = mapper.createArrayNode().add("restaurants");
 				Logger.info("Making a new event @"+ location);
-
+				List<Restaurant> savedRests = new ArrayList<>();
+				JsonNode swipedRests = jn.get("restaurants");
+				if(swipedRests.isArray()){
+					for(JsonNode jRest : swipedRests){
+						Restaurant newRest = Restaurant.find.byId(jRest.get("id").asText());
+						savedRests.add(newRest);
+					}
+				}
 				newEvent = new Event(date, time, location, user);
-				List<Restaurant> rests = reader.readValue(resArr);
-				newEvent.setRestaurant(rests);
-				
+				newEvent.setRestaurant(savedRests);
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
-				Logger.info("done");
+
+				Logger.info("saved&done");
 				return ok(Json.toJson(newEvent));
 			}
 			else{ //if coordinates are sent insted of textlocation
 				double lat = jn.get("latitude").asDouble();
 				double lng = jn.get("longitude").asDouble();
 				newEvent = new Event(date, time, lat, lng, user);
-				JsonNode resArr = mapper.createArrayNode().add("restaurants");
-				List<Restaurant> rests = reader.readValue(resArr);
-				newEvent.setRestaurant(rests);
+				Logger.info("now restaurants...");
+				List<Restaurant> savedRests = new ArrayList<>();
+				JsonNode swipedRests = jn.get("restaurants");
+				if(swipedRests.isArray()){
+					for(JsonNode jRest : swipedRests){
+						Restaurant newRest = Restaurant.find.byId(jRest.get("id").asText());
+						savedRests.add(newRest);
+					}
+				}
+				newEvent.setRestaurant(savedRests);
 				newEvent.save();
-				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
-				return ok(Json.toJson(rests));
+				Ebean.saveManyToManyAssociations(newEvent, "restaurants");				Logger.info("saved and done");
+				return ok(Json.toJson(savedRests));
 			}
 		}catch(NullPointerException np){
 			return badRequest("NULLPOINTER ERROR: "+np);
@@ -110,7 +120,6 @@ public class EventController extends Controller{
 		}catch(Exception exp){
 			return badRequest("OTHER ERROR: "+ exp);
 		}
-//		return ok("Something strange happend.. thats odd..");
 	}
 
 

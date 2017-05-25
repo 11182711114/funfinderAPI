@@ -57,7 +57,7 @@ public class Event extends Model {
 		this.time = LocalTime.parse(time);
 		this.location = location;
 		this.user = user;
-	}
+	} 
 
 	/*
 	 * if user sends the geo-location of their location for the event
