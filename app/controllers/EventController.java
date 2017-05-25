@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import models.BookedEvent;
 import models.Event;
+import models.Profile;
 import models.Restaurant;
 import models.User;
 import models.UserBasic;
@@ -143,17 +144,21 @@ public class EventController extends Controller{
 	/*
 	 * created a BookedEvent instance from the information in json format
 	 *  of the event the user has choose to meet with. 
-	 *  It then delete these events (preliminary events) so no one can be double booked
+	 * 
+	 * takes (user, eventId) to create method
+	 * FIXME : how does it choose restaurant from list?
+	 *
+	 * TODO : Should also create a messageconnection between the two users
+	 * TODO : Should delete the two users preliminary-events, so no-one can be doulbebooked
 	 */
 	public Result createBookedEvent(){
 		JsonNode jn = request().body().asJson();
-		Logger.info("accessing");
+		Logger.info("booking");
 		try{
-			Logger.info("test");
 			User user1 = User.find.byId(jn.get("myUid").asLong());
 			Event prelEvent = Event.find.byId(jn.get("eventId").asLong());
 
-			Logger.info("found");
+			Logger.info("found choosen event");
 			User user2 = prelEvent.getUser();
 			LocalDate date = prelEvent.getDate();
 			LocalTime time = prelEvent.getTime();
@@ -162,12 +167,19 @@ public class EventController extends Controller{
 
 			Logger.info("saving");
 			newBooking.save();
+			
+			//TODO connect messaging ...
+			//	connectMessaging()
+			
+			//TODO Send push-notice to users
+			//	sendNotice()
 
 			//TODO remove user1's event ??!
-
-
+			Event u1Ev = Ebean.find(Event.class).where().eq("user", user1).and().eq("date", date).and().eq("time", time).findUnique();
+			Ebean.delete(u1Ev);
 			//remove user2s event aka this event
-			deleteEvent(jn.get("evid").asLong());
+			Ebean.delete(jn.get("evid").asLong());
+//			deleteEvent(jn.get("evid").asLong());
 			Logger.info("prelEvent deleted");
 		}catch(PersistenceException pe){
 			return badRequest("DML BIND ERROR: "+pe);			
