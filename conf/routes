@@ -65,6 +65,9 @@ POST	/event/create/								controllers.EventController.createEvent()
 #	Gets all stored Events
 GET		/event/all									controllers.EventController.getAllEvents()
 
+#	Find match
+GET 	/event/:uid/match							controllers.EventController.findMatch(uid: Long)
+
 #	Gets specific Event from eventId presented
 GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
 

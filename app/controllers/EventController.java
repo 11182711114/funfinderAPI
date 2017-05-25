@@ -3,6 +3,7 @@ package controllers;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
@@ -17,6 +18,7 @@ import models.BookedEvent;
 import models.Event;
 import models.Restaurant;
 import models.User;
+import models.UserBasic;
 import play.Logger;
 import play.data.FormFactory;
 import play.db.ebean.Transactional;
@@ -28,20 +30,27 @@ public class EventController extends Controller{
 
 
 
-	public Result findMatch(Long userId) {
-		String sql = 
-				"SELECT distinct ev.eventid " +
-						"FROM Event as ev, Event_Rest as er, Restaurant as rest " +
-						"WHERE ev.eventId = er.atEvent AND er.atRest = rest.id AND rest.id IN (" +
-						"SELECT distinct rt.id " +
-						"FROM Restaurant as rt, Event_Rest, Event " +
-						"WHERE rt.id = Event_Rest.atRest AND Event.eventId = Event_Rest.atEvent AND Event.user = " + userId + ")";
-
-		RawSql rawSql = RawSqlBuilder.parse(sql).create();
-
-		Query<Event> query = Ebean.find(Event.class);
+	public Result findMatch(Long eventId) {
+		String sql = "SELECT distinct User.id as id " + 
+				"FROM User, Event, Event_Rest, Restaurant " +
+				"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
+					"SELECT id " +
+					"FROM Event, Event_Rest, Restaurant " +
+					"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND user = :userId) "+ 
+						"AND NOT user = :userId;";
+		
+		RawSql rawSql = RawSqlBuilder.parse(sql).tableAliasMapping("User", "user").create();
+		
+		Query<UserBasic> query = Ebean.find(UserBasic.class);
 		query.setRawSql(rawSql);
-		return ok(Json.toJson(query.findList()));
+		Event event = Event.find.byId(eventId);
+		query.setParameter("userId", event.getUser())
+			.setParameter("timeStart", event.getTime().minusMinutes(15))
+			.setParameter("timeEnd", event.getTime().plusMinutes(15));
+		List<UserBasic> rtn = query.findList();
+		List<User> users = rtn.stream().map(UserBasic::getUser).collect(Collectors.toList());
+		Logger.info(users.toString());
+		return ok(Json.toJson(users));
 	}
 
 	/*
