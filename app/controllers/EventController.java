@@ -28,8 +28,6 @@ import play.mvc.Result;
 
 public class EventController extends Controller{
 
-
-
 	public Result findMatch(Long eventId) {
 		String sql = "SELECT distinct User.id as id " + 
 				"FROM User, Event, Event_Rest, Restaurant " +
@@ -86,16 +84,17 @@ public class EventController extends Controller{
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 				Logger.info("done");
+
 			}
 			else{ //if coordinates are sent insted of textlocation
 				double lat = jn.get("latitude").asDouble();
 				double lng = jn.get("longitude").asDouble();
-				newEvent = new Event(date, time, lat, lng);
+				newEvent = new Event(date, time, lat, lng, user);
 				List<Restaurant> rests = fillEvent(lat,lng);
 				newEvent.setRestaurant(rests);
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
-			}
+}
 		}catch(NullPointerException np){
 			return badRequest("NULLPOINTER ERROR: "+np);
 		}catch(PersistenceException pe){
@@ -103,7 +102,7 @@ public class EventController extends Controller{
 		}catch(Exception exp){
 			return badRequest("OTHER ERROR: "+ exp);
 		}
-		return ok("SUCCESS: Event created");
+		return ok("SUCCESS: Event Created!");
 	}
 
 

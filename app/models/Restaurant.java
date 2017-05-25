@@ -72,6 +72,10 @@ public class Restaurant extends Model{
 	public double getRating(){
 		return rating;
 	}
+	
+	public String getAdress(){
+		return location.getAdress();
+	}
 
 	public List<Event> getEvents(){
 		return events;
