@@ -76,6 +76,10 @@ public class Event extends Model {
 		return time;
 	}
 	
+	public User getUser(){
+		return user;
+	}
+	
 	public int getId(){
 		return eventid;
 	}

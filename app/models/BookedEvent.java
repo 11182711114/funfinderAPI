@@ -46,6 +46,14 @@ public class BookedEvent extends Model{
 
 
 
+	public BookedEvent(User us1, User us2, String date, String time, Restaurant rest){
+		this.user1 = us1;
+		this.user2 = us2;
+		this.date = LocalDate.parse(date);
+		this.time = LocalTime.parse(time);
+		this.restaurant = rest;
+	}
+	
 	public BookedEvent(User us1, User us2, LocalDate date, LocalTime time, Restaurant rest){
 		this.user1 = us1;
 		this.user2 = us2;

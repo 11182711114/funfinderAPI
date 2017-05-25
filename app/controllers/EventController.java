@@ -1,5 +1,7 @@
 package controllers;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -65,7 +67,7 @@ public class EventController extends Controller{
 			if(jn.has("location")){
 				String location = jn.get("location").asText();
 				Logger.info("Making a new event @"+ location);
-
+				
 				newEvent = new Event(date, time, location, user);
 				Logger.info("Saving");
 				List<Restaurant> rests = fillEvent(location);
@@ -120,20 +122,28 @@ public class EventController extends Controller{
 	 */
 	public Result createBookedEvent(){
 		JsonNode jn = request().body().asJson();
+		Logger.info("accessing");
 		try{
+			Logger.info("test");
 			User user1 = User.find.byId(jn.get("myUid").asLong());
-			User user2 = User.find.byId(jn.get("user").asLong());
-			String date = jn.get("date").asText();
-			String time = jn.get("time").asText();
+			Event prelEvent = Event.find.byId(jn.get("eventId").asLong());
+			
+			Logger.info("found");
+			User user2 = prelEvent.getUser();
+			LocalDate date = prelEvent.getDate();
+			LocalTime time = prelEvent.getTime();
 			Restaurant rest = Restaurant.find.byId(jn.get("id").asText());
 			BookedEvent newBooking = new BookedEvent(user1, user2, date, time, rest);
+			
+			Logger.info("saving");
 			newBooking.save();
 			
 			//TODO remove user1's event ??!
 			
+			
 			//remove user2s event aka this event
 			deleteEvent(jn.get("evid").asLong());
-
+			Logger.info("prelEvent deleted");
 		}catch(PersistenceException pe){
 			return badRequest("DML BIND ERROR: "+pe);			
 		}catch(NullPointerException np){
