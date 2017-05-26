@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +51,10 @@ public class ResultParser{
 			request.append(typeSearch);
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
+			
+			Logger.info(""+Charset.defaultCharset());
+//			Logger.info(new String(location.getBytes("windows-1252"), "UTF-8"));
+			
 			request.append(location);
 			//+"+Stockholm");//TODO use this to search in sthlm vicinity
 			request.append("&key=" + KEY);
