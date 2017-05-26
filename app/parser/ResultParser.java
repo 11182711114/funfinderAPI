@@ -45,20 +45,25 @@ public class ResultParser{
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
 		location = location.replaceAll(" ", "+");
+		location.replace('õ', 'ä');
+		location.replace('Õ', 'å');
+		location.replace('÷', 'ö');
 		try{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
-			request.append(location);
+			//FIXME : POSSIBLE FIX OF ENCODING ,, it didn't
+			request.append(URLEncoder.encode(location, "UTF-8"));
 			//+"+Stockholm");//TODO use this to search in sthlm vicinity
 			request.append("&key=" + KEY);
 
 //			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 			Logger.info("connected to Google API");
 			URL url = new URL(request.toString());
+//			conn.setRequestProperty("accepted-charset", "UTF-8");
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));//, "UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -100,7 +105,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));//,"UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -138,7 +143,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));//,"UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);

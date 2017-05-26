@@ -153,10 +153,11 @@ public class EventController extends Controller{
 	 */
 	public Result createBookedEvent(){
 		JsonNode jn = request().body().asJson();
-		Logger.info("booking");
+		Logger.info("booking..");
 		try{
 			User user1 = User.find.byId(jn.get("myUid").asLong());
 			Event prelEvent = Event.find.byId(jn.get("eventId").asLong());
+//			findMatch(eventId);
 
 			Logger.info("found choosen event");
 			User user2 = prelEvent.getUser();
@@ -167,19 +168,19 @@ public class EventController extends Controller{
 
 			Logger.info("saving");
 			newBooking.save();
-			
+
 			//TODO connect messaging ...
 			//	connectMessaging()
-			
-			//TODO Send push-notice to users
-			//	sendNotice()
 
-			//TODO remove user1's event ??!
+			//TODO Send push-notice to users of their booked event
+			//	sendBookedNotice()
+
+			//TODO TEST THIS: remove user1's event ??!
 			Event u1Ev = Ebean.find(Event.class).where().eq("user", user1).and().eq("date", date).and().eq("time", time).findUnique();
 			Ebean.delete(u1Ev);
 			//remove user2s event aka this event
 			Ebean.delete(jn.get("evid").asLong());
-//			deleteEvent(jn.get("evid").asLong());
+			//deleteEvent(jn.get("evid").asLong());
 			Logger.info("prelEvent deleted");
 		}catch(PersistenceException pe){
 			return badRequest("DML BIND ERROR: "+pe);			

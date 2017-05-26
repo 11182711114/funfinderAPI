@@ -43,7 +43,7 @@ GET		/message/:receiver/:sender/new	controllers.MessageController.getNewMessages
 #  ~~ RESTAURANT ~~
 
 #	Finds restaurants for creating event
-GET			/restaurants/find/:location						controllers.RestuarantController.findEventRestaurants(location:String)
+GET		/restaurants/find/location=:location						controllers.RestuarantController.findEventRestaurants(location:String)
 
 #	Get restaurants by nearby search method
 #GET		/restaurants/nearbysearch/location=:lat,:lng&radie=:rdi		controllers.RestuarantController.getRestaurantsNearby(lat:Double, lng:Double, rdi:Int)
