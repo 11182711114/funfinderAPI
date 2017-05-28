@@ -70,7 +70,7 @@ public class EventController extends Controller{
 	 */
 	public Result createEvent(){
 		JsonNode jn = request().body().asJson();
-		if(jn.get("location").asText().isEmpty())
+		if(jn.get("uid").asText().isEmpty()) //TODO add more tests, empty fields or missing fields
 			return badRequest("fields missing");
 		User user = User.find.byId(jn.get("uid").asLong());
 		String date = jn.get("date").asText();
@@ -157,7 +157,7 @@ public class EventController extends Controller{
 		try{
 			User user1 = User.find.byId(jn.get("myUid").asLong());
 			Event prelEvent = Event.find.byId(jn.get("eventId").asLong());
-//			findMatch(eventId);
+			//			findMatch(eventId);
 
 			Logger.info("found choosen event");
 			User user2 = prelEvent.getUser();

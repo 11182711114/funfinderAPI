@@ -45,9 +45,10 @@ public class ResultParser{
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
 		location = location.replaceAll(" ", "+");
-		location.replace('õ', 'ä');
-		location.replace('Õ', 'å');
-		location.replace('÷', 'ö');
+//		location.replace('õ', 'ä');
+//		location.replace('Õ', 'å');
+//		location.replace('÷', 'ö');
+		Logger.info(""+location);
 		try{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
@@ -63,7 +64,7 @@ public class ResultParser{
 			URL url = new URL(request.toString());
 //			conn.setRequestProperty("accepted-charset", "UTF-8");
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));//, "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -105,7 +106,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));//,"UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -143,7 +144,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));//,"UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
