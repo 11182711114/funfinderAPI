@@ -71,7 +71,7 @@ public class ResultParser{
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
-				Logger.debug("Reading line: " + line);
+				Logger.trace("Reading line: " + line);
 			}
 		}catch(MalformedURLException e){
 			System.out.println("URL ERROR [search] ");
