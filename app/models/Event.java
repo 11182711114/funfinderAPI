@@ -52,8 +52,9 @@ public class Event extends Model {
 	/*
 	 * If user sends the text name of the location for the event
 	 */
-	public Event(String date, String time, String location, User user) {
-		this.date = LocalDate.parse(date);
+	public Event(String time, String location, User user) {
+//		this.date = LocalDate.parse(date);
+		this.date = LocalDate.now();
 		this.time = LocalTime.parse(time);
 		this.location = location;
 		this.user = user;
@@ -63,8 +64,9 @@ public class Event extends Model {
 	 * if user sends the geo-location of their location for the event
 	 * 	could also be made to take the searchradius for the event
 	 */
-	public Event(String date, String time, double lat, double lng, User user) {
-		this.date = LocalDate.parse(date);
+	public Event(String time, double lat, double lng, User user) {
+//		this.date = LocalDate.parse(date);
+		this.date = LocalDate.now();
 		this.time = LocalTime.parse(time);
 		this.user = user;
 	}

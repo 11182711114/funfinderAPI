@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import models.BookedEvent;
 import models.Event;
+import models.Message;
 import models.Restaurant;
 import models.User;
 import models.UserBasic;
@@ -61,7 +62,7 @@ public class EventController extends Controller{
 		if(jn.get("uid").asText().isEmpty()) //TODO add more tests, empty fields or missing fields
 			return badRequest("fields missing");
 		User user = User.find.byId(jn.get("uid").asLong());
-		String date = jn.get("date").asText();
+//		String date = jn.get("date").asText();
 		String time = jn.get("time").asText();
 		try{
 			Event newEvent;
@@ -71,7 +72,6 @@ public class EventController extends Controller{
 				List<Restaurant> savedRests = new ArrayList<>();
 
 				JsonNode swipedRests = jn.get("restaurants");
-				Logger.info("ARRAY SIZE: "+swipedRests.size());
 				if(swipedRests.isArray()){
 					for(JsonNode jRest : swipedRests){
 						String searchMe = jRest.asText();
@@ -79,7 +79,8 @@ public class EventController extends Controller{
 						savedRests.add(newRest);
 					}
 				}
-				newEvent = new Event(date, time, location, user);
+//				newEvent = new Event(date, time, location, user);
+				newEvent = new Event(time, location, user);
 				newEvent.setRestaurant(savedRests);
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
@@ -91,7 +92,7 @@ public class EventController extends Controller{
 			else{ //if coordinates are sent insted of textlocation
 				double lat = jn.get("latitude").asDouble();
 				double lng = jn.get("longitude").asDouble();
-				newEvent = new Event(date, time, lat, lng, user);
+				newEvent = new Event(time, lat, lng, user);
 				Logger.info("now restaurants...");
 				List<Restaurant> savedRests = new ArrayList<>();
 				JsonNode swipedRests = jn.get("restaurants");
@@ -156,6 +157,8 @@ public class EventController extends Controller{
 			User user2 = prelEvent.getUser();
 			LocalDate date = prelEvent.getDate();
 			LocalTime time = prelEvent.getTime();
+			
+			//TODO Fetch random restaurant in 
 			Restaurant rest = Restaurant.find.byId(jn.get("id").asText());
 			BookedEvent newBooking = new BookedEvent(user1, user2, date, time, rest);
 
@@ -163,7 +166,7 @@ public class EventController extends Controller{
 			newBooking.save();
 
 			//TODO connect messaging ...
-			//	connectMessaging()
+			Message mess = new Message(user1, user2, "YOU HAVE BEEN CONNECTED");
 
 			//TODO Send push-notice to users of their booked event
 			//	sendBookedNotice()
