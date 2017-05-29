@@ -26,6 +26,7 @@ public class ResultParser{
 	private static final String JSON_OUT = "/json";
 	private static final String NEXT_PAGE_TOKEN = "next_page_token";
 	private static final String KEY = "AIzaSyCEJku8qbNsDR7R1yGx5KGDr4g8ROw5LtU"; //TODO TA BORT KEY INNAN PUSH?
+	private static final String ALT_KEY = "AIzaSyDvI-9GCJ3PZrVPcj_FYCVSz4LzqPWvb1I";
 	private final static ArrayList<String> UNWANTED_TYPES = new ArrayList<String>(){{
 		add("book_store"); 
 		add("store");
@@ -48,19 +49,21 @@ public class ResultParser{
 //		location.replace('õ', 'ä');
 //		location.replace('Õ', 'å');
 //		location.replace('÷', 'ö');
-		Logger.info(""+location);
+		Logger.info("Searching for restaurants in location: "+location);
 		try{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
 			//FIXME : POSSIBLE FIX OF ENCODING ,, it didn't
-			request.append(URLEncoder.encode(location, "UTF-8"));
+//			request.append(URLEncoder.encode(location, "UTF-8"));
+			request.append(location);
 			//+"+Stockholm");//TODO use this to search in sthlm vicinity
-			request.append("&key=" + KEY);
+			request.append("&key=" + ALT_KEY);
 
 //			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 			Logger.info("connected to Google API");
+			Logger.info("Searching using URL: " + request);
 			URL url = new URL(request.toString());
 //			conn.setRequestProperty("accepted-charset", "UTF-8");
 			conn = (HttpURLConnection) url.openConnection();
@@ -68,6 +71,7 @@ public class ResultParser{
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
+				Logger.trace("Reading line: " + line);
 			}
 		}catch(MalformedURLException e){
 			System.out.println("URL ERROR [search] ");
@@ -167,7 +171,6 @@ public class ResultParser{
 	 * returns a arraylist of Restaurants
 	 */
 	private static ArrayList<ParsedRestaurant> parseResults(StringBuilder jsonResults){
-
 		boolean validObject = true;
 		ArrayList<ParsedRestaurant> resultsList = null;
 		try{ 

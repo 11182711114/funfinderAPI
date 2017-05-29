@@ -7,12 +7,12 @@ import com.avaje.ebean.annotation.Sql;
 
 @Entity
 @Sql
-public class UserBasic {
+public class EventBasic {
 
 	@OneToOne
-	User user;
+	Event event;
 	
-	public User getUser() {
-		return user;
+	public Event getEvent() {
+		return event;
 	}
 }
