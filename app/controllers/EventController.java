@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +11,9 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import models.Event;
 import models.Restaurant;
@@ -22,7 +26,7 @@ import play.mvc.Result;
 
 public class EventController extends Controller{
 
-	public Result findMatch(Long eventId) {
+	public Result findMatch(Long eventId, String input) {
 		String sql = "SELECT distinct User.id id " + 
 				"FROM User, Event, Event_Rest, Restaurant " +
 				"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
@@ -34,13 +38,19 @@ public class EventController extends Controller{
 		RawSql rawSql = RawSqlBuilder.parse(sql).tableAliasMapping("User", "user").create();
 		
 		Query<UserBasic> query = Ebean.find(UserBasic.class);
+		
+		try {
+			List<Restaurant> inputRestaurants = new ObjectMapper().readValue(input, new TypeReference<List<Restaurant>>(){});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		query.setRawSql(rawSql);
 		Event event = Event.find.byId(eventId);
 		query.setParameter("userId", event.getUser())
 			.setParameter("timeStart", event.getTime().minusMinutes(15))
 			.setParameter("timeEnd", event.getTime().plusMinutes(15));
-		List<UserBasic> rtn = query.findList();
-		List<User> users = rtn.stream().map(UserBasic::getUser).collect(Collectors.toList());
+		List<User> users = query.findList().stream().map(UserBasic::getUser).collect(Collectors.toList());
 		Logger.info(users.toString());
 		return ok(Json.toJson(users));
 	}
