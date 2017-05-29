@@ -1,6 +1,7 @@
 package controllers;
 
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import parser.*;
 
 public class RestuarantController extends Controller {
 
-
+	
 	/**
 	 * Gets restaurant by location, saves in db
 	 * @param userLat - user lattitude
@@ -70,13 +71,14 @@ public class RestuarantController extends Controller {
 	 * @return void
 	 */
 	public static List<Restaurant> getRestaurantsByText(String textSearch){
+		Logger.info("IN RESTCONTROLLER: "+textSearch);
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
 		List<Restaurant> returnList = new ArrayList<Restaurant>();
 		for(ParsedRestaurant pl : results){
 			try {
 				String id = pl.getId();
-				Restaurant res = Restaurant.find.byId(id);		
+				Restaurant res = Restaurant.find.byId(id);
 				if(res==null){
 					String adress = pl.getLocation().getAddress();
 					double lat = pl.getLocation().getLattitude();
@@ -104,7 +106,7 @@ public class RestuarantController extends Controller {
 	/*
 	 * creates a list of restaurants for the first steps of creating an event
 	 */
-	public Result findEventRestaurants(String textSearch){
+	public Result findEventRestaurants(String textSearch){		
 		List<Restaurant> returnList = getRestaurantsByText(textSearch);
 		return ok(Json.toJson(returnList));
 	}

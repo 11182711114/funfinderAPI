@@ -3,32 +3,23 @@ package controllers;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import models.BookedEvent;
 import models.Event;
-import models.Profile;
 import models.Restaurant;
 import models.User;
 import models.UserBasic;
 import play.Logger;
-import play.data.FormFactory;
-import play.db.ebean.Transactional;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -36,41 +27,38 @@ import play.mvc.Result;
 public class EventController extends Controller{
 
 	public Result findMatch(Long eventId) {
-		String sql = "SELECT distinct User.id as id " + 
+		String sql = "SELECT distinct User.id id " + 
 				"FROM User, Event, Event_Rest, Restaurant " +
 				"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
-				"SELECT id " +
-				"FROM Event, Event_Rest, Restaurant " +
-				"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND user = :userId) "+ 
-				"AND NOT user = :userId;";
-
+					"SELECT id " +
+					"FROM Event, Event_Rest, Restaurant " +
+					"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND user = :userId) "+ 
+						"AND NOT user = :userId;";
+		
 		RawSql rawSql = RawSqlBuilder.parse(sql).tableAliasMapping("User", "user").create();
-
+		
 		Query<UserBasic> query = Ebean.find(UserBasic.class);
 		query.setRawSql(rawSql);
 		Event event = Event.find.byId(eventId);
 		query.setParameter("userId", event.getUser())
-		.setParameter("timeStart", event.getTime().minusMinutes(15))
-		.setParameter("timeEnd", event.getTime().plusMinutes(15));
+			.setParameter("timeStart", event.getTime().minusMinutes(15))
+			.setParameter("timeEnd", event.getTime().plusMinutes(15));
 		List<UserBasic> rtn = query.findList();
 		List<User> users = rtn.stream().map(UserBasic::getUser).collect(Collectors.toList());
 		Logger.info(users.toString());
 		return ok(Json.toJson(users));
 	}
-
-	/**
-	 * Creates an event by unser supplied information: date,time,location,user and
-	 * 	a list of restaurants that the user have swiped Yes on
-	 * 
-	 * @return saved event to client (frontend request)
-	 * 
-	 * TODO : test special characters when client sends/retrieves json (åäö)
-	 * TODO : remove db-saved restaurants that are not tied to any event
-	 * TODO : add test-statements
+	
+	/*
+	 * creates from user input a new event, takes two possible routes
+	 * 	if the user entered text location it saves the textlocation and fills 
+	 * 		with restaurants based on that textsearch
+	 * else if the user gives event her nearby position the search for restaurants are
+	 *  made from the coordinates of the user.
 	 */
 	public Result createEvent(){
 		JsonNode jn = request().body().asJson();
-		if(jn.get("location").asText().isEmpty())
+		if(jn.get("uid").asText().isEmpty()) //TODO add more tests, empty fields or missing fields
 			return badRequest("fields missing");
 		User user = User.find.byId(jn.get("uid").asLong());
 		String date = jn.get("date").asText();
@@ -81,10 +69,13 @@ public class EventController extends Controller{
 				String location = jn.get("location").asText();
 				Logger.info("Making a new event @"+ location);
 				List<Restaurant> savedRests = new ArrayList<>();
+
 				JsonNode swipedRests = jn.get("restaurants");
+				Logger.info("ARRAY SIZE: "+swipedRests.size());
 				if(swipedRests.isArray()){
 					for(JsonNode jRest : swipedRests){
-						Restaurant newRest = Restaurant.find.byId(jRest.get("id").asText());
+						String searchMe = jRest.asText();
+						Restaurant newRest = Restaurant.find.byId(searchMe);
 						savedRests.add(newRest);
 					}
 				}
@@ -94,7 +85,8 @@ public class EventController extends Controller{
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 
 				Logger.info("saved&done");
-				return ok(Json.toJson(newEvent));
+//				return ok(Json.toJson(newEvent)); if event is to be returned
+				return ok(Json.toJson("EVENT CREATED"));
 			}
 			else{ //if coordinates are sent insted of textlocation
 				double lat = jn.get("latitude").asDouble();
@@ -112,7 +104,8 @@ public class EventController extends Controller{
 				newEvent.setRestaurant(savedRests);
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");				Logger.info("saved and done");
-				return ok(Json.toJson(savedRests));
+//				return ok(Json.toJson(savedRests));
+				return ok(Json.toJson("EVENT CREATED"));
 			}
 		}catch(NullPointerException np){
 			return badRequest("NULLPOINTER ERROR: "+np);
@@ -153,10 +146,11 @@ public class EventController extends Controller{
 	 */
 	public Result createBookedEvent(){
 		JsonNode jn = request().body().asJson();
-		Logger.info("booking");
+		Logger.info("booking..");
 		try{
 			User user1 = User.find.byId(jn.get("myUid").asLong());
 			Event prelEvent = Event.find.byId(jn.get("eventId").asLong());
+			//			findMatch(eventId);
 
 			Logger.info("found choosen event");
 			User user2 = prelEvent.getUser();
@@ -167,19 +161,19 @@ public class EventController extends Controller{
 
 			Logger.info("saving");
 			newBooking.save();
-			
+
 			//TODO connect messaging ...
 			//	connectMessaging()
-			
-			//TODO Send push-notice to users
-			//	sendNotice()
 
-			//TODO remove user1's event ??!
+			//TODO Send push-notice to users of their booked event
+			//	sendBookedNotice()
+
+			//TODO TEST THIS: remove user1's event ??!
 			Event u1Ev = Ebean.find(Event.class).where().eq("user", user1).and().eq("date", date).and().eq("time", time).findUnique();
 			Ebean.delete(u1Ev);
 			//remove user2s event aka this event
 			Ebean.delete(jn.get("evid").asLong());
-//			deleteEvent(jn.get("evid").asLong());
+			//deleteEvent(jn.get("evid").asLong());
 			Logger.info("prelEvent deleted");
 		}catch(PersistenceException pe){
 			return badRequest("DML BIND ERROR: "+pe);			

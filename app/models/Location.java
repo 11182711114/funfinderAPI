@@ -38,6 +38,8 @@ public class Location extends Model{
 	}
 
 	public String getAdress() {
+		if(adress==null)
+			adress="not available";
 		return adress;
 	}
 

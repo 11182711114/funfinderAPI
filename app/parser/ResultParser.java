@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -46,22 +45,24 @@ public class ResultParser{
 		HttpURLConnection conn = null;
 		StringBuilder jsonResults = new StringBuilder();
 		location = location.replaceAll(" ", "+");
+//		location.replace('õ', 'ä');
+//		location.replace('Õ', 'å');
+//		location.replace('÷', 'ö');
+		Logger.info(""+location);
 		try{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
-			
-			Logger.info(""+Charset.defaultCharset());
-//			Logger.info(new String(location.getBytes("windows-1252"), "UTF-8"));
-			
-			request.append(location);
+			//FIXME : POSSIBLE FIX OF ENCODING ,, it didn't
+			request.append(URLEncoder.encode(location, "UTF-8"));
 			//+"+Stockholm");//TODO use this to search in sthlm vicinity
 			request.append("&key=" + KEY);
 
 //			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 			Logger.info("connected to Google API");
 			URL url = new URL(request.toString());
+//			conn.setRequestProperty("accepted-charset", "UTF-8");
 			conn = (HttpURLConnection) url.openConnection();
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			String line = "";
@@ -105,7 +106,7 @@ public class ResultParser{
 
 			URL url = new URL(request.toString());
 			conn = (HttpURLConnection) url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
@@ -166,7 +167,6 @@ public class ResultParser{
 	 * returns a arraylist of Restaurants
 	 */
 	private static ArrayList<ParsedRestaurant> parseResults(StringBuilder jsonResults){
-
 		boolean validObject = true;
 		ArrayList<ParsedRestaurant> resultsList = null;
 		try{ 
