@@ -29,15 +29,15 @@ import play.mvc.Result;
 public class EventController extends Controller{
 
 	public Result findMatch(Long eventId) {
-		String sql = "SELECT distinct eventId as id " + 
-				"FROM User, Event, Event_Rest, Restaurant " +
-				"WHERE User.id = Event.user AND Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND date = :date AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
-					"SELECT id " +
-					"FROM Event, Event_Rest, Restaurant " +
-					"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND user = :userId) "+ 
-						"AND NOT user = :userId;";
-		
-		RawSql rawSql = RawSqlBuilder.parse(sql).tableAliasMapping("User", "user").create();
+		String sql = "SELECT distinct EventId event " +
+				"FROM User INNER JOIN Event on Event.user = User.id INNER JOIN Event_Rest ON Event.eventId = Event_Rest.atEvent INNER JOIN Restaurant ON Restaurant.id = Event_Rest.atRest " +
+				"WHERE date = :date AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( " +
+				"	SELECT id " +
+				"	FROM Event ev INNER JOIN Event_Rest er ON ev.eventId = er.atEvent INNER JOIN Restaurant r ON er.atRest = r.id " +
+				"   WHERE user = :userId) " +
+				"AND NOT user = :userId;";
+				
+		RawSql rawSql = RawSqlBuilder.parse(sql).tableAliasMapping("Event", "event").create();
 		
 		Query<EventBasic> query = Ebean.find(EventBasic.class);
 		query.setRawSql(rawSql);
@@ -49,12 +49,12 @@ public class EventController extends Controller{
 			.setParameter("date", event.getDate())
 			.setParameter("timeStart", event.getTime().minusMinutes(15))
 			.setParameter("timeEnd", event.getTime().plusMinutes(15));
+		Logger.trace("Executing sql:\n" + query.toString());
 		List<EventBasic> events = query.findList();
 		List<Event> users = events.stream().map(EventBasic::getEvent).collect(Collectors.toList());
 		Logger.info(users.toString());
 		
 		JsonNode result = Json.toJson(users);
-		
 		
 		return ok(result);
 	}
