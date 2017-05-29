@@ -42,11 +42,14 @@ GET		/message/:receiver/:sender/new	controllers.MessageController.getNewMessages
 
 #  ~~ RESTAURANT ~~
 
+#	Finds restaurants for creating event
+GET		/restaurants/find/location=:location						controllers.RestuarantController.findEventRestaurants(location:String)
+
 #	Get restaurants by nearby search method
 #GET		/restaurants/nearbysearch/location=:lat,:lng&radie=:rdi		controllers.RestuarantController.getRestaurantsNearby(lat:Double, lng:Double, rdi:Int)
 
 #	Get restaurants by searching on location name
-#GET		/restaurants/textsearch/query=:location			controllers.RestuarantController.getRestaurantsByText(location:String)
+#GET		/restaurants/textsearch/query=:location				controllers.RestuarantController.getRestaurantsByText(location:String)
 
 #	fetches specific restaurant through search on id
 #GET		/restaurants/fetch/byid=:id						controllers.RestuarantController.getRestaurantById(id:String)
@@ -70,6 +73,12 @@ GET 	/event/:uid/match							controllers.EventController.findMatch(uid: Long)
 
 #	Gets specific Event from eventId presented
 GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
+
+#	Gets matches for this user id
+GET 	/event/match/id=:uid							controllers.EventController.findMatch(uid:Long)
+
+#	Created a booked event from current user and choosen event id
+POST	/event/booked/create/						controllers.EventController.createBookedEvent()					
 
 #	Get BookedEvent bt ID
 #GET 	/event/booked/:bkid							controllers.EventController.getBookedEvent(bkid:Long)

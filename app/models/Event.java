@@ -24,13 +24,13 @@ public class Event extends Model {
 
 	@Id
 	@Column(name = "eventId")
-	private int eventId;
+	private int eventid;
 
 	@ManyToOne
 	@JoinColumn(name = "user")
 	@JsonManagedReference
 	User user;
-	
+
 	@Constraints.Required
 	@Column(name = "date")
 	private LocalDate date;
@@ -42,10 +42,11 @@ public class Event extends Model {
 	@ManyToMany(mappedBy ="events")
 	private List<Restaurant> restaurants;
 
-	
+
 	//FIXME CHANGE AND CONNECT TO LOCATION TABLE
 	@Column(name = "location")
 	private String location;
+	
 	
 
 	/*
@@ -56,18 +57,19 @@ public class Event extends Model {
 		this.time = LocalTime.parse(time);
 		this.location = location;
 		this.user = user;
-	}
+	} 
 
 	/*
 	 * if user sends the geo-location of their location for the event
 	 * 	could also be made to take the searchradius for the event
 	 */
-	public Event(String date, String time, double lat, double lng) {
+	public Event(String date, String time, double lat, double lng, User user) {
 		this.date = LocalDate.parse(date);
 		this.time = LocalTime.parse(time);
+		this.user = user;
 	}
-	
-	
+
+
 	public LocalDate getDate(){
 		return date;
 	}
@@ -75,21 +77,23 @@ public class Event extends Model {
 	public LocalTime getTime(){
 		return time;
 	}
-	
-	public int getId(){
-		return eventId;
+
+	public User getUser(){
+		return user;
 	}
+
+	public int getId(){
+		return eventid;
+	}
+	
 	public void setRestaurant(List<Restaurant> rests){
 		this.restaurants = rests;
 	}
-	
+
 	public List<Restaurant> getRestaurants(){
 		return restaurants;
 	}
-	
-	public User getUser() {
-		return user;
-	}
+
 
 	public static Finder<Long, Event> find = new Finder<Long, Event>(Event.class);
 }

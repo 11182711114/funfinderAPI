@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import com.avaje.ebean.Model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import play.Logger;
+
 
 @Entity
 @Table(name = "Restaurant")
@@ -71,6 +73,12 @@ public class Restaurant extends Model{
 
 	public double getRating(){
 		return rating;
+	}
+	
+	public String getAdress(){
+		if(location==null)
+			return "not available";
+		return location.getAdress();	
 	}
 
 	public List<Event> getEvents(){

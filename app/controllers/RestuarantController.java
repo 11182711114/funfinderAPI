@@ -1,6 +1,7 @@
 package controllers;
 
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import parser.*;
 
 public class RestuarantController extends Controller {
 
-
+	
 	/**
 	 * Gets restaurant by location, saves in db
 	 * @param userLat - user lattitude
@@ -70,6 +71,7 @@ public class RestuarantController extends Controller {
 	 * @return void
 	 */
 	public static List<Restaurant> getRestaurantsByText(String textSearch){
+		Logger.info("IN RESTCONTROLLER: "+textSearch);
 		ResultParser respesp = new ResultParser();
 		List<parser.ParsedRestaurant> results = respesp.searchText(textSearch);
 		List<Restaurant> returnList = new ArrayList<Restaurant>();
@@ -77,32 +79,37 @@ public class RestuarantController extends Controller {
 			try {
 				String id = pl.getId();
 				Restaurant res = Restaurant.find.byId(id);
-				
 				if(res==null){
-				String adress = pl.getLocation().getAddress();
-				double lat = pl.getLocation().getLattitude();
-				double lng = pl.getLocation().getLongitude();
-				Location locat = new Location(adress, lat, lng);
-				Ebean.save(locat);
+					String adress = pl.getLocation().getAddress();
+					double lat = pl.getLocation().getLattitude();
+					double lng = pl.getLocation().getLongitude();
+					Location locat = new Location(adress, lat, lng);
+					Ebean.save(locat);
 
-				String name = pl.getName();
-				double rating = pl.getRating();
-				
-				String locid = ""+locat.getId();
-				Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
-				newRestaurant.save();
-				returnList.add(newRestaurant);
+					String name = pl.getName();
+					double rating = pl.getRating();
+
+					String locid = ""+locat.getId();
+					Restaurant newRestaurant = new Restaurant(id, name, rating, locid);
+					newRestaurant.save();
+					returnList.add(newRestaurant);
 				}
 				else
 					returnList.add(res);
-				} catch (PersistenceException pe) { // duplicate user
+			} catch (PersistenceException pe) { // duplicate user
 				System.out.println("DUPLICATION ERROR: " + pe);
 			}
 		}
 		return returnList;
 	}
 
-
+	/*
+	 * creates a list of restaurants for the first steps of creating an event
+	 */
+	public Result findEventRestaurants(String textSearch){		
+		List<Restaurant> returnList = getRestaurantsByText(textSearch);
+		return ok(Json.toJson(returnList));
+	}
 
 	/**
 	 * finds restaurant by located id
