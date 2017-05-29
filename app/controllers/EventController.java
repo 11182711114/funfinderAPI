@@ -3,6 +3,7 @@ package controllers;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,8 @@ import models.BookedEvent;
 import models.Event;
 import models.Restaurant;
 import models.User;
-import models.UserBasic;
+import models.EventBasic;
+import parser.ResultParser;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -27,9 +29,9 @@ import play.mvc.Result;
 public class EventController extends Controller{
 
 	public Result findMatch(Long eventId) {
-		String sql = "SELECT distinct User.id id " + 
+		String sql = "SELECT distinct eventId as id " + 
 				"FROM User, Event, Event_Rest, Restaurant " +
-				"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
+				"WHERE User.id = Event.user AND Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND date = :date AND time BETWEEN :timeStart AND :timeEnd AND Restaurant.id IN ( "+
 					"SELECT id " +
 					"FROM Event, Event_Rest, Restaurant " +
 					"WHERE Event.eventId = Event_Rest.atEvent AND Event_Rest.atRest = Restaurant.id AND user = :userId) "+ 
@@ -37,17 +39,49 @@ public class EventController extends Controller{
 		
 		RawSql rawSql = RawSqlBuilder.parse(sql).tableAliasMapping("User", "user").create();
 		
-		Query<UserBasic> query = Ebean.find(UserBasic.class);
+		Query<EventBasic> query = Ebean.find(EventBasic.class);
 		query.setRawSql(rawSql);
 		Event event = Event.find.byId(eventId);
-		query.setParameter("userId", event.getUser())
+		if (event == null)
+			return badRequest("no such event");
+		
+		query.setParameter("userId", event.getUser().getId())
+			.setParameter("date", event.getDate())
 			.setParameter("timeStart", event.getTime().minusMinutes(15))
 			.setParameter("timeEnd", event.getTime().plusMinutes(15));
-		List<UserBasic> rtn = query.findList();
-		List<User> users = rtn.stream().map(UserBasic::getUser).collect(Collectors.toList());
+		List<EventBasic> events = query.findList();
+		List<Event> users = events.stream().map(EventBasic::getEvent).collect(Collectors.toList());
 		Logger.info(users.toString());
-		return ok(Json.toJson(users));
+		
+		JsonNode result = Json.toJson(users);
+		
+		
+		return ok(result);
 	}
+	
+	public Result createEventWithRestaurants() {
+		JsonNode jn = request().body().asJson();
+		User user = User.find.byId(jn.get("uid").asLong());
+		if (user == null)
+			return badRequest("no such user");
+		String date = jn.get("date").asText();
+		String time = jn.get("time").asText();
+		String location = jn.get("location").asText();
+		
+		
+		JsonNode restaurants = jn.get("restaurants");
+		List<String> RestaurantsAsStrings = new ArrayList<>();
+		restaurants.forEach(rst -> RestaurantsAsStrings.add(rst.get("id").asText()));
+		List<Restaurant> rests = Restaurant.find.where().in("id", RestaurantsAsStrings).findList();
+
+		Event newEvent = new Event(date, time, location, user, rests);
+		
+		newEvent.save();
+		Ebean.saveManyToManyAssociations(newEvent, "restaurants");
+		
+		return ok(Json.toJson(newEvent));
+	}
+	
 	
 	/*
 	 * creates from user input a new event, takes two possible routes
@@ -103,7 +137,8 @@ public class EventController extends Controller{
 				}
 				newEvent.setRestaurant(savedRests);
 				newEvent.save();
-				Ebean.saveManyToManyAssociations(newEvent, "restaurants");				Logger.info("saved and done");
+				Ebean.saveManyToManyAssociations(newEvent, "restaurants");				
+				Logger.info("saved and done");
 //				return ok(Json.toJson(savedRests));
 				return ok(Json.toJson("EVENT CREATED"));
 			}

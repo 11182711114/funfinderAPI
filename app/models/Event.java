@@ -58,6 +58,14 @@ public class Event extends Model {
 		this.location = location;
 		this.user = user;
 	} 
+	
+	public Event(String date, String time, String location, User user, List<Restaurant> rests) {
+		this.date = LocalDate.parse(date);
+		this.time = LocalTime.parse(time);
+		this.location = location;
+		this.user = user;
+		this.restaurants = rests;
+	} 
 
 	/*
 	 * if user sends the geo-location of their location for the event
