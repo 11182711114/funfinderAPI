@@ -55,7 +55,8 @@ public class ResultParser{
 			request.append(JSON_OUT);
 			request.append("?query=restaurants+in+");
 			//FIXME : POSSIBLE FIX OF ENCODING ,, it didn't
-			request.append(URLEncoder.encode(location, "UTF-8"));
+//			request.append(URLEncoder.encode(location, "UTF-8"));
+			request.append(location);
 			//+"+Stockholm");//TODO use this to search in sthlm vicinity
 			request.append("&key=" + KEY);
 
