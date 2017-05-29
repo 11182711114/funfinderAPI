@@ -66,7 +66,7 @@ GET		/restaurants/find/location=:location						controllers.RestuarantController.
 POST	/event/create								controllers.EventController.createEventWithRestaurants()
 
 #	find match
-GET		/event/match/:uid							controllers.EventController.findMatch(uid: Long)
+GET		/event/match/:eid							controllers.EventController.findMatch(eid: Long)
 
 #	Creates new Event
 #POST	/event/create/								controllers.EventController.createEvent()
@@ -81,10 +81,10 @@ GET 	/event/:uid/match							controllers.EventController.findMatch(uid: Long)
 GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
 
 #	Gets matches for this user id
-GET 	/event/match/id=:uid						controllers.EventController.findMatch(uid:Long)
+#GET 	/event/match/id=:uid						controllers.EventController.findMatch(uid:Long)
 
 #	Created a booked event from current user and choosen event id
-POST	/event/booked/create/						controllers.EventController.createBookedEvent()					
+POST	/event/booked/create						controllers.EventController.createBookedEvent()					
 
 #	Get BookedEvent bt ID
 #GET 	/event/booked/:bkid							controllers.EventController.getBookedEvent(bkid:Long)
