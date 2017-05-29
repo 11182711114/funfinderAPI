@@ -48,7 +48,7 @@ public class ResultParser{
 //		location.replace('õ', 'ä');
 //		location.replace('Õ', 'å');
 //		location.replace('÷', 'ö');
-		Logger.info(""+location);
+		Logger.info("Searching for restaurants in location: "+location);
 		try{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
@@ -62,6 +62,7 @@ public class ResultParser{
 
 //			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 			Logger.info("connected to Google API");
+			Logger.info("Searching using URL: " + request);
 			URL url = new URL(request.toString());
 //			conn.setRequestProperty("accepted-charset", "UTF-8");
 			conn = (HttpURLConnection) url.openConnection();
@@ -69,6 +70,7 @@ public class ResultParser{
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				jsonResults.append(line);
+				Logger.debug("Reading line: " + line);
 			}
 		}catch(MalformedURLException e){
 			System.out.println("URL ERROR [search] ");
