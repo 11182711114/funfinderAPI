@@ -85,7 +85,8 @@ public class EventController extends Controller{
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");
 
 				Logger.info("saved&done");
-				return ok(Json.toJson(newEvent));
+//				return ok(Json.toJson(newEvent)); if event is to be returned
+				return ok(Json.toJson("EVENT CREATED"));
 			}
 			else{ //if coordinates are sent insted of textlocation
 				double lat = jn.get("latitude").asDouble();
@@ -103,7 +104,8 @@ public class EventController extends Controller{
 				newEvent.setRestaurant(savedRests);
 				newEvent.save();
 				Ebean.saveManyToManyAssociations(newEvent, "restaurants");				Logger.info("saved and done");
-				return ok(Json.toJson(savedRests));
+//				return ok(Json.toJson(savedRests));
+				return ok(Json.toJson("EVENT CREATED"));
 			}
 		}catch(NullPointerException np){
 			return badRequest("NULLPOINTER ERROR: "+np);
