@@ -167,7 +167,6 @@ public class ResultParser{
 	 * returns a arraylist of Restaurants
 	 */
 	private static ArrayList<ParsedRestaurant> parseResults(StringBuilder jsonResults){
-
 		boolean validObject = true;
 		ArrayList<ParsedRestaurant> resultsList = null;
 		try{ 

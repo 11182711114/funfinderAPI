@@ -1,5 +1,8 @@
 package controllers;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +14,7 @@ import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import models.BookedEvent;
 import models.Event;
 import models.Restaurant;
 import models.User;
@@ -65,10 +69,13 @@ public class EventController extends Controller{
 				String location = jn.get("location").asText();
 				Logger.info("Making a new event @"+ location);
 				List<Restaurant> savedRests = new ArrayList<>();
+
 				JsonNode swipedRests = jn.get("restaurants");
+				Logger.info("ARRAY SIZE: "+swipedRests.size());
 				if(swipedRests.isArray()){
 					for(JsonNode jRest : swipedRests){
-						Restaurant newRest = Restaurant.find.byId(jRest.get("id").asText());
+						String searchMe = jRest.asText();
+						Restaurant newRest = Restaurant.find.byId(searchMe);
 						savedRests.add(newRest);
 					}
 				}
