@@ -79,8 +79,8 @@ public class EventController extends Controller {
 	
 	public Result createEventWithRestaurants() {
 		Logger.debug("creating new event with restaurants");
+		Logger.debug("input:\n" + request().body().asText());
 		JsonNode jn = request().body().asJson();
-		Logger.debug("input:\n" + jn.toString());
 		User user = User.find.byId(jn.get("uid").asLong());
 		if (user == null)
 			return badRequest("no such user");
