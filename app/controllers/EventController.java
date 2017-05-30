@@ -13,6 +13,7 @@ import com.avaje.ebean.RawSqlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import akka.event.Logging;
 import javassist.bytecode.Descriptor.Iterator;
 import models.BookedEvent;
 import models.Event;
@@ -106,8 +107,10 @@ public class EventController extends Controller {
 			
 			return ok(Json.toJson(newEvent));
 		} catch (NullPointerException e) {
-			Logger.debug("header is: " + request().headers());
-			Logger.debug("body is: "+ request().body());
+			String body = new String(request().body().asRaw().asBytes(), "UTF-8");
+			
+			Logger.debug("header: " + request().getHeader("Content-type"));
+			Logger.debug("body is: "+ body);
 			return badRequest("null");
 		}
 	}
@@ -201,6 +204,7 @@ public class EventController extends Controller {
 	
 	// v2
 	public Result createBookedEvent(){
+		Logger.debug("header: " + request().getHeader("Content-type"));
 		JsonNode jn = request().body().asJson();
 		Logger.info("Booking..");
 		try{
