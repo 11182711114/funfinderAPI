@@ -13,6 +13,7 @@ import com.avaje.ebean.RawSqlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import javassist.bytecode.Descriptor.Iterator;
 import models.BookedEvent;
 import models.Event;
 import models.Message;
@@ -46,16 +47,31 @@ public class EventController extends Controller {
 			.setParameter("date", event.getDate())
 			.setParameter("timeStart", event.getTime().minusMinutes(15))
 			.setParameter("timeEnd", event.getTime().plusMinutes(15));
-		Logger.trace("Executing sql:\n" + query.toString());
+		Logger.trace("Executing sql:\n" + query.getRawSql().getSql().toString());
 		List<Event> events = query.findList();
-//		List<Event> users = events.stream().map(EventBasic::getEvent).collect(Collectors.toList());
+		
 		Logger.info(events.toString());
 		
 		JsonNode result = Json.toJson(events);
+
+		List<Integer> seen = new ArrayList<>();
+	
+		events.forEach(e -> {
+			if (event.seen(e)) 
+				seen.add(e.getId());
+			else 
+				event.setSeen(e);
+		});
+		event.save();
 		
 		result.forEach(evnt -> {
-			if (evnt instanceof ObjectNode)
+			if (evnt instanceof ObjectNode) {
 				((ObjectNode) evnt).remove("restaurants");
+				if (seen.contains(evnt.get("id").asInt()))
+					((ObjectNode) evnt).put("seen", "true");
+				else 
+					((ObjectNode) evnt).put("seen", "false");
+			}
 		});
 		
 		return ok(result);
