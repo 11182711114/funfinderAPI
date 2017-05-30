@@ -78,16 +78,23 @@ public class EventController extends Controller {
 	}
 	
 	public Result createEventWithRestaurants() {
+		Logger.debug("creating new event with restaurants");
 		JsonNode jn = request().body().asJson();
+		Logger.debug("input:\n" + jn.toString());
 		User user = User.find.byId(jn.get("uid").asLong());
 		if (user == null)
 			return badRequest("no such user");
+		Logger.debug("user: " + user.getFirstname() + " " + user.getId());
 		String date = jn.get("date").asText();
+		Logger.debug("date: " + date);
 		String time = jn.get("time").asText();
+		Logger.debug("time: " + time);
 		String location = jn.get("location").asText();
+		Logger.debug("location: " + location);
 		
 		
 		JsonNode restaurants = jn.get("restaurants");
+		restaurants.forEach(p -> Logger.debug("rest: " + p.toString()));
 		List<String> RestaurantsAsStrings = new ArrayList<>();
 		restaurants.forEach(rst -> RestaurantsAsStrings.add(rst.get("id").asText()));
 		List<Restaurant> rests = Restaurant.find.where().in("id", RestaurantsAsStrings).findList();
