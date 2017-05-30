@@ -291,12 +291,11 @@ public class EventController extends Controller {
 		User user = User.find.byId(userId);
 		if (user == null)
 			return badRequest("no such user");
-//		List<BookedEvent> bookedEvents = BookedEvent.find.where().eq("user1", user).or().eq("user2", user).findList();
-//		if (bookedEvents.isEmpty())
-//			return notFound("no booked events for this user");
 		
 		BookedEvent be = user.getBookedEvent();
-				
+		if(be == null)
+			return badRequest("no such event");
+		
 		return ok(Json.toJson(be));
 	}
 	
