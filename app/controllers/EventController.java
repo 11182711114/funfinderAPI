@@ -294,7 +294,7 @@ public class EventController extends Controller {
 		
 		BookedEvent be = user.getBookedEvent();
 		if(be == null)
-			return badRequest("no such event");
+			return badRequest("no events");
 		
 		return ok(Json.toJson(be));
 	}
