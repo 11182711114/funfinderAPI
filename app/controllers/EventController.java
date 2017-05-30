@@ -106,7 +106,8 @@ public class EventController extends Controller {
 			
 			return ok(Json.toJson(newEvent));
 		} catch (NullPointerException e) {
-			return badRequest("null body");
+			Logger.debug("body is: "+ request().body());
+			return badRequest("null");
 		}
 	}
 	
