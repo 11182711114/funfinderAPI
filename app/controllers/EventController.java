@@ -80,6 +80,8 @@ public class EventController extends Controller {
 	public Result createEventWithRestaurants() {
 		Logger.debug("creating new event with restaurants");
 		Logger.debug("input:\n" + request().body().asText());
+		if (request().body().asText() == null)
+			return badRequest("input data:\n" + request().body().asText());
 		JsonNode jn = request().body().asJson();
 		User user = User.find.byId(jn.get("uid").asLong());
 		if (user == null)
