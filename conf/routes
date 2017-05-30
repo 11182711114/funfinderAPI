@@ -91,3 +91,6 @@ POST	/event/booked/create						controllers.EventController.createBookedEvent()
 
 #	Get BookedEvents for a specific user
 GET		/event/booked/:uid							controllers.EventController.getBookedEvents(uid: Long)
+
+# Delete specific booked event
+DELETE	/event/booked/:bkid/delete					controllers.EventController.deleteBookedEvent(bkid: Long)

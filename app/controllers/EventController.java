@@ -300,6 +300,12 @@ public class EventController extends Controller {
 		return ok(Json.toJson(be));
 	}
 	
+	public Result deleteBookedEvent(Long bookedEventId) {
+		BookedEvent bk = BookedEvent.find.byId(bookedEventId);
+		if (bk == null)
+			return notFound("no such booked event");
+		return ok(""+bk.delete());
+	}
 	
 	private void deleteEvent(Long id){
 		Event eve = Event.find.byId(id);
