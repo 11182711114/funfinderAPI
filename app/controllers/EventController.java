@@ -79,36 +79,35 @@ public class EventController extends Controller {
 	
 	public Result createEventWithRestaurants() {
 		Logger.debug("creating new event with restaurants");
-		Logger.debug("input:\n" + request().body().asJson().asText());
-		if (request().body().asJson().asText() == null) {
-			Logger.info("null input detected!");
-			return badRequest("input data:\n" + request().body().asJson().asText());
-		}
-		JsonNode jn = request().body().asJson();
-		User user = User.find.byId(jn.get("uid").asLong());
-		if (user == null)
-			return badRequest("no such user");
-		Logger.debug("user: " + user.getFirstname() + " " + user.getId());
-		String date = jn.get("date").asText();
-		Logger.debug("date: " + date);
-		String time = jn.get("time").asText();
-		Logger.debug("time: " + time);
-		String location = jn.get("location").asText();
-		Logger.debug("location: " + location);
-		
-		
-		JsonNode restaurants = jn.get("restaurants");
-		restaurants.forEach(p -> Logger.debug("rest: " + p.toString()));
-		List<String> RestaurantsAsStrings = new ArrayList<>();
-		restaurants.forEach(rst -> RestaurantsAsStrings.add(rst.get("id").asText()));
-		List<Restaurant> rests = Restaurant.find.where().in("id", RestaurantsAsStrings).findList();
+		try {
+			JsonNode jn = request().body().asJson();
+			User user = User.find.byId(jn.get("uid").asLong());
+			if (user == null)
+				return badRequest("no such user");
+			Logger.debug("user: " + user.getFirstname() + " " + user.getId());
+			String date = jn.get("date").asText();
+			Logger.debug("date: " + date);
+			String time = jn.get("time").asText();
+			Logger.debug("time: " + time);
+			String location = jn.get("location").asText();
+			Logger.debug("location: " + location);
+			
+			
+			JsonNode restaurants = jn.get("restaurants");
+			restaurants.forEach(p -> Logger.debug("rest: " + p.toString()));
+			List<String> RestaurantsAsStrings = new ArrayList<>();
+			restaurants.forEach(rst -> RestaurantsAsStrings.add(rst.get("id").asText()));
+			List<Restaurant> rests = Restaurant.find.where().in("id", RestaurantsAsStrings).findList();
 
-		Event newEvent = new Event(date, time, location, user, rests);
-		
-		newEvent.save();
-		Ebean.saveManyToManyAssociations(newEvent, "restaurants");
-		
-		return ok(Json.toJson(newEvent));
+			Event newEvent = new Event(date, time, location, user, rests);
+			
+			newEvent.save();
+			Ebean.saveManyToManyAssociations(newEvent, "restaurants");
+			
+			return ok(Json.toJson(newEvent));
+		} catch (NullPointerException e) {
+			return badRequest("null body");
+		}
 	}
 	
 	
@@ -288,6 +287,20 @@ public class EventController extends Controller {
 //		return ok("created BookedEvent");
 //	}
 
+	public Result getBookedEvents(Long userId) {
+		User user = User.find.byId(userId);
+		if (user == null)
+			return badRequest("no such user");
+//		List<BookedEvent> bookedEvents = BookedEvent.find.where().eq("user1", user).or().eq("user2", user).findList();
+//		if (bookedEvents.isEmpty())
+//			return notFound("no booked events for this user");
+		
+		BookedEvent be = user.getBookedEvent();
+				
+		return ok(Json.toJson(be));
+	}
+	
+	
 	private void deleteEvent(Long id){
 		Event eve = Event.find.byId(id);
 		eve.delete();
