@@ -117,6 +117,8 @@ public class UserController extends Controller {
 		String hobbies = jn.get("hobbies").asText();
 		String job = jn.get("job").asText();
 		
+		Logger.debug("Updating user profile: " + uid + " with values: " + " " + bio +" "+ hobbies +" "+ job);
+		
 		User user = User.find.byId(uid);
 		if (user == null)
 			return notFound("user not found");
