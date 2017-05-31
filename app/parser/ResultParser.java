@@ -59,7 +59,7 @@ public class ResultParser{
 //			request.append(URLEncoder.encode(location, "UTF-8"));
 			request.append(location);
 			//+"+Stockholm");//TODO use this to search in sthlm vicinity
-			request.append("&key=" + ALT_KEY);
+			request.append("&key=" + KEY);
 
 //			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 			Logger.info("connected to Google API");
