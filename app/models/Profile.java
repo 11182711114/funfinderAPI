@@ -40,10 +40,11 @@ public class Profile {
 	public Profile() {
 	}
 
-	public Profile(User user, String bio, String hobbies) {
+	public Profile(User user, String bio, String hobbies, String job) {
 		this.user = user;
 		this.bio = bio;
 		this.hobbies = hobbies;
+		this.job = job;
 	}
 
 	public void setUser(User user) {
@@ -80,7 +81,7 @@ public class Profile {
 	}
 
 	public Profile copy() {
-		return new Profile(user,bio,hobbies);
+		return new Profile(user,bio,hobbies,job);
 	}
 
 }
