@@ -27,6 +27,7 @@ public class Profile {
 	@JsonInclude
 	private String hobbies;
 	
+	@JsonInclude
 	private String job;
 
 	public Profile(String uid, String bio, String hobbies) {
@@ -75,7 +76,7 @@ public class Profile {
 
 	@Override
 	public String toString() {
-		return user.getId() + " " + bio + " " + hobbies;
+		return user.getId() + " " + bio + " " + hobbies + " " + job;
 	}
 
 	public Profile copy() {
