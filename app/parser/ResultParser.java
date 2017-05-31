@@ -27,6 +27,7 @@ public class ResultParser{
 	private static final String NEXT_PAGE_TOKEN = "next_page_token";
 	private static final String KEY = "AIzaSyCEJku8qbNsDR7R1yGx5KGDr4g8ROw5LtU"; //TODO TA BORT KEY INNAN PUSH?
 	private static final String ALT_KEY = "AIzaSyDvI-9GCJ3PZrVPcj_FYCVSz4LzqPWvb1I";
+	private static final String ALT_ALT_KEY = "AIzaSyDZcTjBJj15sZk4f4pTxqyywGng0POxbHM";
 	private final static ArrayList<String> UNWANTED_TYPES = new ArrayList<String>(){{
 		add("book_store"); 
 		add("store");
@@ -104,7 +105,7 @@ public class ResultParser{
 			request.append("?location=" + String.valueOf(lat)+",%20"+String.valueOf(lang));
 			request.append("&radius=" + String.valueOf(radius));
 			request.append("&keyword=restaurants");
-			request.append("&key=" + KEY);
+			request.append("&key=" + ALT_ALT_KEY);
 
 			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 
