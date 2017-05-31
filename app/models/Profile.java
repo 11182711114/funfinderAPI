@@ -47,24 +47,28 @@ public class Profile {
 		this.job = job;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getBio() {
+		return bio;
 	}
 
 	public void setBio(String bio) {
 		this.bio = bio;
 	}
 
-	public void setHobbies(String hobbies) {
-		this.hobbies = hobbies;
-	}
-	
-	public String getBio() {
-		return bio;
-	}
-	
 	public String getHobbies() {
 		return hobbies;
+	}
+
+	public void setHobbies(String hobbies) {
+		this.hobbies = hobbies;
 	}
 
 	public String getJob() {
