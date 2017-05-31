@@ -183,6 +183,8 @@ public class UserController extends Controller {
 		if (prof == null)
 			return notFound("No profile found");		
 		
+		Logger.debug("profile: " + user.getId() +"\n"+ prof.getBio() +"\n"+ prof.getHobbies() +"\n"+ prof.getJob());
+		
 		String json = "{\"uid\":" + user.getId() + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\",\"job\":\"" + prof.getJob() + "\"}";
 		JsonNode jn = Json.parse(json);
 		return ok(jn);
