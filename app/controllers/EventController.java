@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import akka.event.Logging;
+import akka.stream.impl.fusing.Log;
 import javassist.bytecode.Descriptor.Iterator;
 import models.BookedEvent;
 import models.Event;
@@ -244,8 +245,10 @@ public class EventController extends Controller {
 			
 			Logger.info("Events deleted");
 		}catch(PersistenceException pe){
+			Logger.debug("DML BIND ERROR: "+pe);
 			return badRequest("DML BIND ERROR: "+pe);			
 		}catch(NullPointerException np){
+			Logger.debug("NULLPOINTER EXCEPTION: "+np);
 			return badRequest("NULLPOINTER EXCEPTION: "+np);
 		}
 		return ok("created BookedEvent");
