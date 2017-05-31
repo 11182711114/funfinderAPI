@@ -13,9 +13,6 @@ import com.avaje.ebean.RawSqlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import akka.event.Logging;
-import akka.stream.impl.fusing.Log;
-import javassist.bytecode.Descriptor.Iterator;
 import models.BookedEvent;
 import models.Event;
 import models.Message;

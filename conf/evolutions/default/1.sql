@@ -73,6 +73,7 @@ CREATE TABLE Profile (
 	user int NOT NULL,
 	bio varchar(1000),
 	hobbies varchar(1000),
+	job varchar(50) DEFAULT 'plebian',
 	FOREIGN KEY (user) REFERENCES User(id) ON DELETE cascade,
 	PRIMARY KEY (user)
 );
@@ -83,6 +84,7 @@ CREATE TABLE Message (
 	`sender` int(11) NOT NULL,
 	`receiver` int(11) NOT NULL,
 	sent TIMESTAMP DEFAULT now(),
+	seen boolean DEFAULT false,
 	FOREIGN KEY (`sender`) REFERENCES User(id) ON DELETE cascade,
 	FOREIGN KEY (`receiver`) REFERENCES User(id) ON DELETE cascade,
 	PRIMARY KEY (id)
@@ -106,7 +108,17 @@ CREATE TABLE Restaurant (
 	FOREIGN KEY (location) REFERENCES Location(id) ON DELETE SET NULL    
 );
 
+CREATE TABLE user_match_seen (
+	event int NOT NULL,
+	event_seen int NOT NULL,
+	FOREIGN KEY (event) REFERENCES Event(eventId) ON DELETE cascade,
+	FOREIGN KEY (event_seen) REFERENCES Event(eventId) ON DELETE cascade,
+	PRIMARY KEY (event, event_seen)
+);
+
 # --- !Downs
+
+DROP TABLE user_match_seen;
 
 DROP TABLE Profile;
 

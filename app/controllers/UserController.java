@@ -7,11 +7,14 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.media.jfxmedia.logging.Logger;
+
 import models.Profile;
 import models.User;
 import play.data.FormFactory;
 import play.libs.Json;
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 public class UserController extends Controller {
 	
