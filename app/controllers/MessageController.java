@@ -6,12 +6,14 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.org.apache.xpath.internal.operations.And;
 
 import models.Message;
 import models.User;
 import play.libs.Json;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -65,6 +67,19 @@ public class MessageController extends Controller{
 		});
 		
 		return ok(toReturn);
+	}
+	
+	public Result getLastMessage(Long receiver, Long sender) {
+		User rec = User.find.byId(receiver);
+		User send = User.find.byId(sender);
+		
+		Logger.debug("Trying to find latest message");
+		Message msg = Message.find.setMaxRows(1).where().eq("sender", send).and().eq("receiver", rec).orderBy("sent desc").findUnique();
+		Logger.debug("Getting last msg: " + msg.getId() +" "+ msg.getMessage());
+		Message recMsg = Message.find.setMaxRows(1).where().eq("sender", rec).and().eq("receiver", send).orderBy("sent desc").findUnique();
+		Logger.debug("Getting last recMsg: " + recMsg.getId() +" "+ recMsg.getMessage());
+		
+		return ok(Json.toJson(recMsg.getSent().isAfter(msg.getSent()) ? recMsg : msg));
 	}
 	
 	public Result getNewMessages(Long receiverId, Long senderId) {

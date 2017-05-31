@@ -40,6 +40,8 @@ GET		/message/:receiver/:sender	controllers.MessageController.getMessagesFromSpe
 
 GET		/message/:receiver/:sender/new	controllers.MessageController.getNewMessages(receiver: Long, sender: Long)
 
+GET 	/message/:receiver/:sender/last		controllers.MessageController.getLastMessage(receiver: Long, sender: Long)
+
 #  ~~ RESTAURANT ~~
 
 #	Finds restaurants for creating event

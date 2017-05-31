@@ -1,5 +1,7 @@
 package models;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -27,6 +29,8 @@ public class Message {
 	
 	private boolean seen;
 
+	private LocalDateTime sent;
+	
 	public Message(User sender, User receiver, String message) {
 		this.sender = sender;
 		this.receiver = receiver;
@@ -59,6 +63,14 @@ public class Message {
 
 	public void setSeen(boolean seen) {
 		this.seen = seen;
+	}
+
+	public LocalDateTime getSent() {
+		return sent;
+	}
+
+	public void setSent(LocalDateTime sent) {
+		this.sent = sent;
 	}
 
 	public static Finder<Long, Message> find = new Finder<Long,Message>(Message.class);
