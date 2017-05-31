@@ -1,5 +1,6 @@
 	package controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -7,6 +8,8 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import models.FacebookLoginInfo;
 import models.Profile;
 import models.User;
 import play.Logger;
@@ -58,6 +61,28 @@ public class UserController extends Controller {
 
 		Logger.debug("User found: " + user.getId());
 		return ok("K"+ ","+ user.getId());
+	}
+	
+	public Result authenticateFacebookUser(String accessToken) {
+		JsonNode rq = request().body().asJson();
+		String name = rq.get("name").asText();
+		String[] names = name.split(" ");
+		String firstname = names[0];
+		String lastname = names[1];
+			
+		FacebookLoginInfo info = FacebookLoginInfo.find.byId(accessToken);
+		
+		if (info == null)
+			info = new FacebookLoginInfo(accessToken);
+
+		User user = info.getUser();
+		if (user == null)
+			user = new User(firstname, lastname, LocalDate.now().toString(), firstname+lastname, "asdasdasdada");
+		info.setUser(user);
+		user.save();
+		Ebean.save(info);
+		
+		return ok("K" + "," + user.getId());
 	}
 	
 	public Result updateUserInformation(Long userId) {
