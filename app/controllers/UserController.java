@@ -159,7 +159,7 @@ public class UserController extends Controller {
 			toUpdate.setBio(bio);
 		if (hobbies != null && hobbies != "")
 			toUpdate.setHobbies(hobbies);
-		if(job != null && job != "")
+		if (job != null && job != "")
 			toUpdate.setJob(job);
 		
 		if (newProfile)
