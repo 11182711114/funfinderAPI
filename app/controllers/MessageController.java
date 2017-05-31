@@ -72,14 +72,28 @@ public class MessageController extends Controller{
 	public Result getLastMessage(Long receiver, Long sender) {
 		User rec = User.find.byId(receiver);
 		User send = User.find.byId(sender);
-		
+
 		Logger.debug("Trying to find latest message");
-		Message msg = Message.find.setMaxRows(1).where().eq("sender", send).and().eq("receiver", rec).orderBy("sent desc").findUnique();
-		Logger.debug("Getting last msg: " + msg.getId() +" "+ msg.getMessage());
-		Message recMsg = Message.find.setMaxRows(1).where().eq("sender", rec).and().eq("receiver", send).orderBy("sent desc").findUnique();
-		Logger.debug("Getting last recMsg: " + recMsg.getId() +" "+ recMsg.getMessage());
+		Message msg = null;
+		Message recMsg = null;
+		try {
+			msg = Message.find.setMaxRows(1).where().eq("sender", send).and().eq("receiver", rec).orderBy("sent desc").findUnique();
+			Logger.debug("Getting last msg: " + msg.getId() +" "+ msg.getMessage());
+		} catch (NullPointerException npe) {}
 		
-		return ok(Json.toJson(recMsg.getSent().isAfter(msg.getSent()) ? recMsg : msg));
+		try {
+			recMsg = Message.find.setMaxRows(1).where().eq("sender", rec).and().eq("receiver", send).orderBy("sent desc").findUnique();
+			Logger.debug("Getting last recMsg: " + recMsg.getId() +" "+ recMsg.getMessage());
+		} catch (NullPointerException npe) {}
+		
+		if (msg == null && recMsg == null)
+			return notFound("no msgs");
+		else if (msg == null && recMsg != null)
+			return ok(Json.toJson(recMsg));
+		else if (recMsg == null && msg != null)
+			return ok(Json.toJson(msg));		
+		
+		return ok(Json.toJson(msg.getSent().isAfter(recMsg.getSent()) ? msg : recMsg));
 	}
 	
 	public Result getNewMessages(Long receiverId, Long senderId) {
