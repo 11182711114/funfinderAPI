@@ -1,7 +1,5 @@
 package controllers;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +13,8 @@ import com.avaje.ebean.RawSqlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import akka.event.Logging;
+import javassist.bytecode.Descriptor.Iterator;
 import models.BookedEvent;
 import models.Event;
 import models.Message;
@@ -48,42 +48,71 @@ public class EventController extends Controller {
 			.setParameter("date", event.getDate())
 			.setParameter("timeStart", event.getTime().minusMinutes(15))
 			.setParameter("timeEnd", event.getTime().plusMinutes(15));
-		Logger.trace("Executing sql:\n" + query.toString());
+		Logger.trace("Executing sql:\n" + query.getRawSql().getSql().toString());
 		List<Event> events = query.findList();
-//		List<Event> users = events.stream().map(EventBasic::getEvent).collect(Collectors.toList());
+		
 		Logger.info(events.toString());
 		
 		JsonNode result = Json.toJson(events);
+
+		List<Integer> seen = new ArrayList<>();
+	
+		events.forEach(e -> {
+			if (event.seen(e)) 
+				seen.add(e.getId());
+			else 
+				event.setSeen(e);
+		});
+		event.save();
 		
 		result.forEach(evnt -> {
-			if (evnt instanceof ObjectNode)
+			if (evnt instanceof ObjectNode) {
 				((ObjectNode) evnt).remove("restaurants");
+				if (seen.contains(evnt.get("id").asInt()))
+					((ObjectNode) evnt).put("seen", "true");
+				else 
+					((ObjectNode) evnt).put("seen", "false");
+			}
 		});
 		
 		return ok(result);
 	}
 	
 	public Result createEventWithRestaurants() {
-		JsonNode jn = request().body().asJson();
-		User user = User.find.byId(jn.get("uid").asLong());
-		if (user == null)
-			return badRequest("no such user");
-		String date = jn.get("date").asText();
-		String time = jn.get("time").asText();
-		String location = jn.get("location").asText();
-		
-		
-		JsonNode restaurants = jn.get("restaurants");
-		List<String> RestaurantsAsStrings = new ArrayList<>();
-		restaurants.forEach(rst -> RestaurantsAsStrings.add(rst.get("id").asText()));
-		List<Restaurant> rests = Restaurant.find.where().in("id", RestaurantsAsStrings).findList();
+		Logger.debug("creating new event with restaurants");
+		try {
+			JsonNode jn = request().body().asJson();
+			User user = User.find.byId(jn.get("uid").asLong());
+			if (user == null)
+				return badRequest("no such user");
+			Logger.debug("user: " + user.getFirstname() + " " + user.getId());
+			String date = jn.get("date").asText();
+			Logger.debug("date: " + date);
+			String time = jn.get("time").asText();
+			Logger.debug("time: " + time);
+			String location = jn.get("location").asText();
+			Logger.debug("location: " + location);
+			
+			
+			JsonNode restaurants = jn.get("restaurants");
+			restaurants.forEach(p -> Logger.debug("rest: " + p.toString()));
+			List<String> RestaurantsAsStrings = new ArrayList<>();
+			restaurants.forEach(rst -> RestaurantsAsStrings.add(rst.get("id").asText()));
+			List<Restaurant> rests = Restaurant.find.where().in("id", RestaurantsAsStrings).findList();
 
-		Event newEvent = new Event(date, time, location, user, rests);
-		
-		newEvent.save();
-		Ebean.saveManyToManyAssociations(newEvent, "restaurants");
-		
-		return ok(Json.toJson(newEvent));
+			Event newEvent = new Event(date, time, location, user, rests);
+			
+			newEvent.save();
+			Ebean.saveManyToManyAssociations(newEvent, "restaurants");
+			
+			return ok(Json.toJson(newEvent));
+		} catch (NullPointerException e) {
+			Logger.debug("header: " + request().getHeader("Content-type"));
+			Logger.debug("body is: "+ request().body().asRaw().toString());
+			Logger.debug("body is: "+ request().body().toString());
+			Logger.debug("body is: "+ request().body());
+			return badRequest("null");
+		}
 	}
 	
 	
@@ -175,6 +204,7 @@ public class EventController extends Controller {
 	
 	// v2
 	public Result createBookedEvent(){
+		Logger.debug("header: " + request().getHeader("Content-type"));
 		JsonNode jn = request().body().asJson();
 		Logger.info("Booking..");
 		try{
@@ -263,6 +293,25 @@ public class EventController extends Controller {
 //		return ok("created BookedEvent");
 //	}
 
+	public Result getBookedEvents(Long userId) {
+		User user = User.find.byId(userId);
+		if (user == null)
+			return badRequest("no such user");
+		
+		BookedEvent be = user.getBookedEvent();
+		if(be == null)
+			return badRequest("no events");
+		
+		return ok(Json.toJson(be));
+	}
+	
+	public Result deleteBookedEvent(Long bookedEventId) {
+		BookedEvent bk = BookedEvent.find.byId(bookedEventId);
+		if (bk == null)
+			return notFound("no such booked event");
+		return ok(""+bk.delete());
+	}
+	
 	private void deleteEvent(Long id){
 		Event eve = Event.find.byId(id);
 		eve.delete();

@@ -8,13 +8,17 @@ import play.data.validation.Constraints;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -42,6 +46,19 @@ public class Event extends Model {
 	@ManyToMany(mappedBy ="events")
 	private List<Restaurant> restaurants;
 
+	@ManyToMany
+	@JoinTable(name="user_match_seen",
+	joinColumns=@JoinColumn(name="event", referencedColumnName="eventId"),
+	inverseJoinColumns=@JoinColumn(name="event_seen", referencedColumnName="eventId"))
+	Set<Event> seen;
+	
+	public boolean seen(Event evt) {
+		return seen.contains(evt);
+	}
+	
+	public void setSeen(Event evt){
+		seen.add(evt);
+	}
 
 	//FIXME CHANGE AND CONNECT TO LOCATION TABLE
 	@Column(name = "location")

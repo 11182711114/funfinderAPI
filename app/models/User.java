@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import com.avaje.ebean.Model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
@@ -56,6 +57,14 @@ public class User extends Model{
 	@OneToMany(mappedBy = "user")
 	@JsonBackReference
 	private List<Event> events;
+	
+	@OneToOne(mappedBy = "user1")
+	@JsonBackReference
+	private BookedEvent bookedEvent1;
+	
+	@OneToOne(mappedBy = "user2")
+	@JsonBackReference
+	private BookedEvent bookedEvent2;
 
 //	@OneToMany(mappedBy = "sender")
 //	private List<Message> messagesSent;
@@ -79,6 +88,11 @@ public class User extends Model{
 	
 	public String getEmail() {
 		return email;
+	}
+	
+	@JsonIgnore
+	public BookedEvent getBookedEvent() {
+		return bookedEvent1 != null ?  bookedEvent1 : bookedEvent2;
 	}
 	
 	public LocalDateTime getCreated() {

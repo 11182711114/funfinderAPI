@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import javax.persistence.*;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * Created the final stage of event, the BookedEvent,
@@ -26,10 +28,12 @@ public class BookedEvent extends Model{
 
 	@OneToOne
 	@JoinColumn(name= "user1", referencedColumnName="id")
+	@JsonManagedReference
 	private User user1;
 
 	@OneToOne
 	@JoinColumn(name= "user2", referencedColumnName="id")
+	@JsonManagedReference
 	private User user2;
 
 	@OneToOne
@@ -43,8 +47,6 @@ public class BookedEvent extends Model{
 
 	@Column(name="time")
 	private LocalTime time;
-
-
 
 	public BookedEvent(User us1, User us2, String date, String time, Restaurant rest){
 		this.user1 = us1;
