@@ -78,7 +78,7 @@ GET 	/event/:uid/match							controllers.EventController.findMatch(uid: Long)
 GET		/event/:evid								controllers.EventController.getEventById(evid:Long)
 
 #	Get event for specific user
-GET		/event/:uid/all								controllers.EventController.getEventByUser(uid: Long)
+GET		/event/user/:uid/							controllers.EventController.getEventByUser(uid: Long)
 
 #	Created a booked event from current user and choosen event id
 POST	/event/booked/create						controllers.EventController.createBookedEvent()					
