@@ -48,7 +48,7 @@ public class UserController extends Controller {
 		String email = data.get("email").textValue();
 		String password = data.get("password").textValue();
 		
-		User user = Ebean.find(User.class).where().eq("email", email).and().eq("password", password).findUnique();
+		User user = Ebean.find(User.class).select("id").where().eq("email", email).and().eq("password", password).findUnique();
 		if (user == null)
 			return notFound("user not found");
 		
