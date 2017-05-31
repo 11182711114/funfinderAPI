@@ -156,7 +156,7 @@ public class UserController extends Controller {
 		if (prof == null)
 			return notFound("No profile found");		
 		
-		String json = "{\"uid\":" + user.getId() + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\"}";
+		String json = "{\"uid\":" + user.getId() + ",\"bio\":\"" + prof.getBio() + "\",\"hobbies\":\"" + prof.getHobbies() + "\",\"job\":\"" + prof.getJob() + "\"}";
 		JsonNode jn = Json.parse(json);
 		return ok(jn);
 	}
