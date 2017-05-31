@@ -7,10 +7,9 @@ import javax.persistence.PersistenceException;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.media.jfxmedia.logging.Logger;
-
 import models.Profile;
 import models.User;
+import play.Logger;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -44,17 +43,20 @@ public class UserController extends Controller {
 	}
 	
 	public Result authenticateUser() {
+		Logger.debug("Logging in user");
 		JsonNode data = request().body().asJson();
 		if(!data.has("email") || !data.has("password")) 
 			return badRequest("fields missing");
 			
 		String email = data.get("email").textValue();
 		String password = data.get("password").textValue();
+		Logger.debug("User email: " + email + " password: " + password);
 		
 		User user = Ebean.find(User.class).select("id").where().eq("email", email).and().eq("password", password).findUnique();
 		if (user == null)
 			return notFound("user not found");
-		
+
+		Logger.debug("User found: " + user.getId());
 		return ok("K"+ ","+ user.getId());
 	}
 	
