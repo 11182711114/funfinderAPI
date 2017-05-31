@@ -70,17 +70,16 @@ public class UserController extends Controller {
 		String firstname = names[0];
 		String lastname = names[1];
 			
-		FacebookLoginInfo info = FacebookLoginInfo.find.byId(accessToken);
-		
-		if (info == null)
-			info = new FacebookLoginInfo(accessToken);
+//		FacebookLoginInfo info = FacebookLoginInfo.find.byId(accessToken);
+//		
+//		if (info == null)
+//			info = new FacebookLoginInfo(accessToken);
 
-		User user = info.getUser();
-		if (user == null)
+		User user = User.find.where().eq("email", firstname+lastname).findUnique();		
+		if (user == null) {
 			user = new User(firstname, lastname, LocalDate.now().toString(), firstname+lastname, "asdasdasdada");
-		info.setUser(user);
-		user.save();
-		Ebean.save(info);
+			user.save();
+		}
 		
 		return ok("K" + "," + user.getId());
 	}
