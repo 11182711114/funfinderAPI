@@ -26,6 +26,8 @@ public class Profile {
 	
 	@JsonInclude
 	private String hobbies;
+	
+	private String job;
 
 	public Profile(String uid, String bio, String hobbies) {
 //		this.userId = uid;
@@ -61,6 +63,14 @@ public class Profile {
 	
 	public String getHobbies() {
 		return hobbies;
+	}
+
+	public String getJob() {
+		return job;
+	}
+
+	public void setJob(String job) {
+		this.job = job;
 	}
 
 	@Override

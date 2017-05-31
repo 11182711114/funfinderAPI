@@ -107,10 +107,7 @@ public class EventController extends Controller {
 			
 			return ok(Json.toJson(newEvent));
 		} catch (NullPointerException e) {
-			Logger.debug("header: " + request().getHeader("Content-type"));
-			Logger.debug("body is: "+ request().body().asRaw().toString());
-			Logger.debug("body is: "+ request().body().toString());
-			Logger.debug("body is: "+ request().body());
+			Logger.debug("null request");
 			return badRequest("null");
 		}
 	}
@@ -184,7 +181,19 @@ public class EventController extends Controller {
 		}
 	}
 
-
+	public Result getEventByUser(Long userId) {
+		User user = User.find.byId(userId);
+		if (user == null)
+			return notFound("no such user");
+		
+		List<Event> events = Event.find.where().eq("user", user).findList();
+		if (events.isEmpty())
+			return notFound("no events for this user");
+					
+		return ok(Json.toJson(events));
+	}
+	
+	
 	/*
 	 * fillEvent method "fill the event" with the nearby restaurants
 	 * 	either as a textsearch on the location or by supplying the coordinates

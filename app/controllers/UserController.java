@@ -110,6 +110,7 @@ public class UserController extends Controller {
 		Long uid = jn.get("uid").asLong();
 		String bio = jn.get("bio").asText();
 		String hobbies = jn.get("hobbies").asText();
+		String job = jn.get("job").asText();
 		
 		User user = User.find.byId(uid);
 		if (user == null)
@@ -126,6 +127,8 @@ public class UserController extends Controller {
 			toUpdate.setBio(bio);
 		if (hobbies != null && hobbies != "")
 			toUpdate.setHobbies(hobbies);
+		if(job != null && job != "")
+			toUpdate.setJob(job);
 		
 		if (newProfile)
 			Ebean.save(toUpdate);
