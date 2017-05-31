@@ -223,7 +223,8 @@ public class ResultParser{
 						else
 							loc.setAddress("not avaliable..");
 						newRest.setLocation(loc);
-						resultsList.add(newRest);	
+						resultsList.add(newRest);
+						Logger.debug("Pared restaurant: "+ newRest.getId() +" "+ newRest.getName());
 					}
 					validObject = true;
 				}
