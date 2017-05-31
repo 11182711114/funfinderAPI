@@ -227,6 +227,12 @@ public class EventController extends Controller {
 			
 			List<Restaurant> commonRests = new ArrayList<>(myEvent.getRestaurants());
 			commonRests.retainAll(otherEvent.getRestaurants());
+			
+			if (commonRests.size()<1) {
+				Logger.debug("Common restaurants is: " + commonRests.size());
+				return badRequest("0 common restaurants");
+			}
+			
 			int i = new Random().nextInt(commonRests.size());
 			
 			BookedEvent newBooking = new BookedEvent(myUser, otherUser, myEvent.getDate(), myEvent.getTime(), commonRests.get(i));
