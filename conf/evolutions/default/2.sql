@@ -7,12 +7,12 @@ CREATE TABLE user_match_seen (
 	event int NOT NULL,
 	event_seen int NOT NULL,
 	FOREIGN KEY (event) REFERENCES Event(eventId) ON DELETE cascade,
-	FOREIGN KEY (event_seen) REFERENCES Event(eventId),
+	FOREIGN KEY (event_seen) REFERENCES Event(eventId) ON DELETE cascade,
 	PRIMARY KEY (event, event_seen)
 );
 
 ALTER TABLE Profile
-ADD COLUMN job varchar DEFAULT plebian;
+ADD COLUMN job varchar(50) DEFAULT 'plebian';
 
 # --- !Downs
 
