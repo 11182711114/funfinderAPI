@@ -28,7 +28,7 @@ public class ResultParser{
 	private static final String FIRST_KEY = "AIzaSyCEJku8qbNsDR7R1yGx5KGDr4g8ROw5LtU"; 
 	private static final String ALT_KEY = "AIzaSyDvI-9GCJ3PZrVPcj_FYCVSz4LzqPWvb1I";
 	private static final String ALT_ALT_KEY = "AIzaSyDZcTjBJj15sZk4f4pTxqyywGng0POxbHM";
-	private static final String KEY = ALT_KEY; //TODO TA BORT KEY INNAN PUSH?
+	private static final String KEY = FIRST_KEY; //TODO TA BORT KEY INNAN PUSH?
 	private final static ArrayList<String> UNWANTED_TYPES = new ArrayList<String>(){{
 		add("book_store"); 
 		add("store");
@@ -56,13 +56,12 @@ public class ResultParser{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
 			request.append(JSON_OUT);
-			Logger.debug("random log for compiling");
 			request.append("?query=restaurants+in+");
 			//FIXME : POSSIBLE FIX OF ENCODING ,, it didn't
 //			request.append(URLEncoder.encode(location, "UTF-8"));
 			request.append(location);
 			//+"+Stockholm");//TODO use this to search in sthlm vicinity
-			request.append("&key=" + ALT_ALT_KEY);
+			request.append("&key=" + KEY);
 
 //			System.out.println("<Connecting to Google API>"); //TODO remove: TEST
 			Logger.info("connected to Google API");
