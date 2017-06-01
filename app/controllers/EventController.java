@@ -131,6 +131,7 @@ public class EventController extends Controller {
 			dateArr[1] = "0" + dateArr[2];
 		if (dateArr[2].length() != 2)
 			dateArr[2] = "0" + dateArr[2];
+		date = dateArr[0] +"-"+ dateArr[1] +"-"+ dateArr[2];
 		
 		try{
 			Event newEvent;
