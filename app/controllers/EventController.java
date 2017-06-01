@@ -90,7 +90,21 @@ public class EventController extends Controller {
 			Logger.debug("time: " + time);
 			String location = jn.get("location").asText();
 			Logger.debug("location: " + location);
+
+			String[] dateArr = date.split("-");
 			
+			for (String s : dateArr)
+				Logger.debug("Arr: " + s);
+			
+			Logger.debug("date is: " + date);
+			if (dateArr[1].length() != 2)
+				dateArr[1] = "0" + dateArr[1];
+			if (dateArr[2].length() != 2)
+				dateArr[2] = "0" + dateArr[2];
+			date = dateArr[0] +"-"+ dateArr[1] +"-"+ dateArr[2];
+			for (String s : dateArr)
+				Logger.debug("After Arr: " + s);
+			Logger.debug("new date format is: " + date);
 			
 			JsonNode restaurants = jn.get("restaurants");
 			restaurants.forEach(p -> Logger.debug("rest: " + p.toString()));
