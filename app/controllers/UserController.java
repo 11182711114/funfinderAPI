@@ -9,7 +9,6 @@ import javax.persistence.PersistenceException;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import models.FacebookLoginInfo;
 import models.Profile;
 import models.User;
 import play.Logger;

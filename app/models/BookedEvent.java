@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import javax.persistence.*;
 
 import com.avaje.ebean.Model;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**

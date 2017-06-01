@@ -6,10 +6,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Expr;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.org.apache.xpath.internal.operations.And;
-
 import models.Message;
 import models.User;
 import play.libs.Json;
