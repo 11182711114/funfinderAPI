@@ -109,6 +109,14 @@ public class Event extends Model {
 		return eventid;
 	}
 	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 	public void setRestaurant(List<Restaurant> rests){
 		this.restaurants = rests;
 	}
