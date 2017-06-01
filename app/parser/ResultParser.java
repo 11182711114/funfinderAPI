@@ -28,7 +28,7 @@ public class ResultParser{
 	private static final String FIRST_KEY = "AIzaSyCEJku8qbNsDR7R1yGx5KGDr4g8ROw5LtU"; 
 	private static final String ALT_KEY = "AIzaSyDvI-9GCJ3PZrVPcj_FYCVSz4LzqPWvb1I";
 	private static final String ALT_ALT_KEY = "AIzaSyDZcTjBJj15sZk4f4pTxqyywGng0POxbHM";
-	private static final String KEY = ALT_ALT_KEY; //TODO TA BORT KEY INNAN PUSH?
+	private static final String KEY = ALT_KEY; //TODO TA BORT KEY INNAN PUSH?
 	private final static ArrayList<String> UNWANTED_TYPES = new ArrayList<String>(){{
 		add("book_store"); 
 		add("store");
