@@ -56,6 +56,7 @@ public class ResultParser{
 			StringBuilder request = new StringBuilder(PLACES_API_SOURCE);
 			request.append(typeSearch);
 			request.append(JSON_OUT);
+			Logger.debug("random log for compiling");
 			request.append("?query=restaurants+in+");
 			//FIXME : POSSIBLE FIX OF ENCODING ,, it didn't
 //			request.append(URLEncoder.encode(location, "UTF-8"));
