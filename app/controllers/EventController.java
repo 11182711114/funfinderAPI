@@ -127,11 +127,13 @@ public class EventController extends Controller {
 		String time = jn.get("time").asText();
 		String[] dateArr = date.split("-");
 		
+		Logger.debug("date is: " + date);
 		if (dateArr[1].length() != 2)
 			dateArr[1] = "0" + dateArr[2];
 		if (dateArr[2].length() != 2)
 			dateArr[2] = "0" + dateArr[2];
 		date = dateArr[0] +"-"+ dateArr[1] +"-"+ dateArr[2];
+		Logger.debug("new date format is: " + date);
 		
 		try{
 			Event newEvent;
