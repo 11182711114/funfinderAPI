@@ -62,9 +62,10 @@ public class UserController extends Controller {
 		return ok("K"+ ","+ user.getId());
 	}
 	
-	public Result authenticateFacebookUser(String accessToken) {
+	public Result authenticateFacebookUser() {
 		JsonNode rq = request().body().asJson();
 		String name = rq.get("name").asText();
+		String accessToken = rq.get("id").asText();
 		String[] names = name.split(" ");
 		String firstname = names[0];
 		String lastname = names[1];

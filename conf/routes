@@ -23,7 +23,7 @@ POST	/user/:id/update		controllers.UserController.updateUserInformation(id: Long
 POST	/user/authenticate		controllers.UserController.authenticateUser()
 
 #	Authenticate user
-POST	/user/authenticate/:accessToken		controllers.UserController.authenticateFacebookUser(accessToken: String)
+POST	/user/authenticate/facebook		controllers.UserController.authenticateFacebookUser()
 
 POST	/user/updateProfile		controllers.UserController.updateProfile()
 
