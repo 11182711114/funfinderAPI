@@ -73,14 +73,17 @@ public class UserController extends Controller {
 //		
 //		if (info == null)
 //			info = new FacebookLoginInfo(accessToken);
-
+		boolean newUser = false;
 		User user = User.find.where().eq("email", firstname+lastname).findUnique();		
 		if (user == null) {
+			newUser = true;
 			user = new User(firstname, lastname, LocalDate.now().toString(), firstname+lastname, "asdasdasdada");
 			user.save();
 		}
-		
-		return ok("K" + "," + user.getId());
+		String toReturn = "K" + "," + user.getId();
+		if (newUser)
+			toReturn += "," + "new";
+		return ok(toReturn);
 	}
 	
 	public Result updateUserInformation(Long userId) {
