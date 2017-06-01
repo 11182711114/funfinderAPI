@@ -125,6 +125,13 @@ public class EventController extends Controller {
 		User user = User.find.byId(jn.get("uid").asLong());
 		String date = jn.get("date").asText();
 		String time = jn.get("time").asText();
+		String[] dateArr = date.split("-");
+		
+		if (dateArr[1].length() != 2)
+			dateArr[1] = "0" + dateArr[2];
+		if (dateArr[2].length() != 2)
+			dateArr[2] = "0" + dateArr[2];
+		
 		try{
 			Event newEvent;
 			if(jn.has("location")){
